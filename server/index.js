@@ -40,5 +40,9 @@ app.use(errorHandlerMiddleware)
 // Routes
 app.use('./api/auth', require('./routes/api/auth'))
 
+// Default handler for false routes (routes not defined in the application)
+app.all('*', (req, res) => {
+	res.sendStatus(404)
+})
 
 app.listen(PORT, () => { console.log(`Listening on port ${PORT}`) }) // Listen to the port and see that the app is running
