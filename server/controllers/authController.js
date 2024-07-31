@@ -7,12 +7,13 @@ const bcrypt = require('bcrypt') // To hash passwords
 async function register(req, res) {
 	const { username, email, first_name, last_name, password, password_confirm } = req.body // Validation of these fields will be done by Mongoose
 
-	// If the user does fill a data field, send status 422
+	// Check if all required fields are present
 	if (!username || !email || !password || !password_confirm || !first_name || !last_name) {
 		return res.status(422).json({ 'message': 'Invalid fields' })
 	}
 
-	if (password === password_confirm) {
+	// Check if passwords match
+	if (password !== password_confirm) {
 		return res.status(422).json({ 'message': 'Passwords do not match' })
 	}
 
@@ -23,12 +24,11 @@ async function register(req, res) {
 	// If not, hash the password
 	try {
 		hashedPassword = await bcrypt.hash(password, 10)
-
-		await user.create({ email, username, password: hashedPassword, first_name, last_name }) // Create user
-
+		await User.create({ email, username, password: hashedPassword, first_name, last_name }) // Create user
 		return res.sendStatus(201) // Send response 201 (Created status)
 	} catch (error) {
-
+		console.error(error)
+		return res.status(500).json({ message: 'Internal server error' })
 	}
 }
 
