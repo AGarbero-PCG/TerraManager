@@ -39,6 +39,7 @@ app.use('/static', express.static(path.join(__dirname, 'public')))
 app.use(errorHandlerMiddleware)
 
 // Routes
+console.log('Setting up routes...');
 app.use('/api/auth', require('./routes/api/auth'))
 
 // Default handler for false routes (routes not defined in the application)
@@ -48,6 +49,6 @@ app.all('*', (req, res) => {
 
 // DB Connection
 mongoose.connection.once('open', () => { // Makes sure we only open the app once the database connection is complete
-	console.log('DB connected')
+	console.log('Database connected successfully')
 	app.listen(PORT, () => { console.log(`Listening on port ${PORT}`) }) // Listen to the port and see that the app is running
 })
