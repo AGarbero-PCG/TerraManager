@@ -5,9 +5,15 @@ const cors = require('cors')
 const cookieParser = require('cookie-parser')
 const mongoose = require('mongoose')
 const path = require('path')
+const corsOptions = require('./config/cors')
+
 
 const app = express() // Contains Express app
 const PORT = 3500 // Specify PORT to be 3500 for the app to run on
+
+
+// CORS
+app.use(cors(corsOptions))
 
 // application.x-www-form-urlencoded
 app.use(express.urlencoded({ extended: false }))
