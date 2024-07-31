@@ -1,4 +1,4 @@
-require('dotenv').config
+require('dotenv').config();
 
 const express = require('express') // Call Express.js from node modules
 const cors = require('cors')
@@ -9,6 +9,7 @@ const corsOptions = require('./config/cors')
 const connectDB = require('./config/database')
 const credentials = require('./middleware/credentials')
 const errorHandlerMiddleware = require('./middleware/error_handler')
+const { log } = require('console')
 
 
 const app = express() // Contains Express app
@@ -45,4 +46,8 @@ app.all('*', (req, res) => {
 	res.sendStatus(404)
 })
 
-app.listen(PORT, () => { console.log(`Listening on port ${PORT}`) }) // Listen to the port and see that the app is running
+// DB Connection
+mongoose.connection.once('open', () => { // Makes sure we only open the app once the database connection is complete
+	console.log('DB connected')
+	app.listen(PORT, () => { console.log(`Listening on port ${PORT}`) }) // Listen to the port and see that the app is running
+})
