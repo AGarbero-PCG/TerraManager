@@ -63,7 +63,7 @@ async function login(req, res) {
 	// Generate access token
 	const accessToken = jwt.sign(
 		{
-			id: user.username
+			id: user.id
 		},
 		process.env.ACCESS_TOKEN_SECRET,
 		{
@@ -74,7 +74,7 @@ async function login(req, res) {
 	// Generate refresh token
 	const refreshToken = jwt.sign(
 		{
-			username: user.username
+			id: user.id
 		},
 		process.env.REFRESH_TOKEN_SECRET,
 		{
@@ -114,7 +114,7 @@ async function logout(req, res) {
 	res.sendStatus(204);
 }
 
-// Refresh token
+// Refresh controller
 async function refresh(req, res) {
 	console.log('Inside refresh controller');
 	const cookies = req.cookies // Get cookie
@@ -135,10 +135,11 @@ async function refresh(req, res) {
 		process.env.REFRESH_TOKEN_SECRET,
 		(err, decoded) => {
 			// Check if user is the same as the decoded user in the database
-			if (err || user.username !== decoded.username) return res.sendStatus(403) // If not, send unauthorized response
+			// Set username to 'id' to preserve uniqueness, and so that it can't be duplicated
+			if (err || user.id !== decoded.id) return res.sendStatus(403) // If not, send unauthorized response
 
 			const accessToken = jwt.sign(
-				{ username: decoded.username },
+				{ id: decoded.id },
 				process.env.ACCESS_TOKEN_SECRET,
 				{ expiresIn: '1800s' }
 			)
