@@ -100,7 +100,7 @@ async function logout(req, res) {
 	const refreshToken = cookies.refresh_token; // Get refresh token
 	const user = await User.findOne({ refresh_token: refreshToken }).exec(); // Access user from database through refresh token
 
-	// If the user does not exist in database... clear the cookie
+	// If the user does not exist in database, clear the cookie
 	if (!user) {
 		res.clearCookie('refresh token', { httpOnly: true, sameSite: 'None', secure: true }); // Note: sameSite means we will be able to use our cookies between cross-origin requests (e.g. we will be able to use cookies between the client and our server).
 		return res.sendStatus(204);
@@ -117,7 +117,36 @@ async function logout(req, res) {
 // Refresh token
 async function refresh(req, res) {
 	console.log('Inside refresh controller');
-	res.sendStatus(200);
+	const cookies = req.cookies // Get cookie
+
+	// If refresh token doesn't exist in our cookie...
+	if (!cookies.refresh_token) return res.sendStatus(401) // Send unauthenticated response
+
+	const refreshToken = cookies.refresh_token // Grab refresh token
+
+	const user = await User.findOne({ refresh_token: refreshToken }).exec() // Use refresh token to find user
+
+	// If the user doesn't exist...
+	if (!user) return res.sendStatus(403) // Send unauthorized response
+
+	// Verify refresh token
+	jwt.verify(
+		refreshToken,
+		process.env.REFRESH_TOKEN_SECRET,
+		(err, decoded) => {
+			// Check if user is the same as the decoded user in the database
+			if (err || user.username !== decoded.username) return res.sendStatus(403) // If not, send unauthorized response
+
+			const accessToken = jwt.sign(
+				{ username: decoded.username },
+				process.env.ACCESS_TOKEN_SECRET,
+				{ expiresIn: '1800s' }
+			)
+
+			res.json({ access_token: accessToken })
+		}
+	)
+
 }
 
 // Get user data
