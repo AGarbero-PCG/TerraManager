@@ -1,7 +1,8 @@
 // Routes regarding authentication and authorization
-const express = require('express')
-const router = express.Router()
-const authControllers = require('../../controllers/authController')
+const express = require('express');
+const router = express.Router();
+const authControllers = require('../../controllers/authController');
+const authentication = require('../../middleware/authentication');
 
 
 router.post('/register', (req, res, next) => {
@@ -27,6 +28,6 @@ router.post('/refresh', (req, res, next) => {
 router.get('/user', (req, res, next) => {
 	console.log('Received request at /user');
 	next();
-}, authControllers.user) // Used for getting user data
+}, authentication, authControllers.user) // Used for getting user data
 
-module.exports = router
+module.exports = router;

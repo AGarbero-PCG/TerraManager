@@ -88,7 +88,9 @@ async function login(req, res) {
 
 	// Set the refresh token as an HTTP-only cookie
 	res.cookie('refresh_token', refreshToken, { httpOnly: true, maxAge: 24 * 60 * 1000, sameSite: 'None', secure: true }) // Refresh token will expire after 1 day
-	res.json({ access_token: accessToken })
+
+	console.log('User logged in successfully:', user.first_name, user.last_name);
+	res.json({ message: 'User logged in successfully: ' + user.first_name + ' ' + user.last_name, access_token: accessToken })
 }
 
 // User logout
@@ -153,7 +155,11 @@ async function refresh(req, res) {
 // Get user data
 async function user(req, res) {
 	console.log('Inside user controller');
-	res.sendStatus(200);
+	console.log('req.user:', req.user);
+
+	const user = req.user;
+
+	return res.status(200).json({ user });
 }
 
 module.exports = { register, login, logout, refresh, user }
