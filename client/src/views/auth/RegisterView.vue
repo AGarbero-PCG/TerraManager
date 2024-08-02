@@ -26,6 +26,35 @@
 	</div>
 </template>
 
+<script setup lang="ts">
+import { useAuthStore, type LoginData } from '../../stores/auth';
+import { reactive, ref } from 'vue';
+import { useRouter } from 'vue-router';
+
+const authStore = useAuthStore();
+const router = useRouter();
+
+const registerData = reactive<RegisterData>({
+	username: "",
+	email: "",
+	password: "",
+	password_confirm:"",
+})
+
+const errorMessage = ref<string>("")
+
+async function submit(){
+	authStore.register(registerData)
+	.then(res => {
+		router.replace({name: "login"})
+	})
+	.catch(err => {
+		errorMessage.value = err.message
+	})
+}
+
+</script>
+
 <style scoped>
 
 #register .card{
