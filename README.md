@@ -9,6 +9,8 @@ Bootstrap:
 
 Pinia:
 
+Axios:
+
 
 ### Backend:
 Bcrypt (bcrypt): Hashes passwords
