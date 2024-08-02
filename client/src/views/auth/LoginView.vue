@@ -19,4 +19,10 @@
 </template>
 
 <style scoped>
+
+#login .card{
+	max-width:40vw;
+	margin: auto;
+}
+
 </style>
