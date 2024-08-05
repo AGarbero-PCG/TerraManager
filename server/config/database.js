@@ -9,7 +9,7 @@ async function connect() {
 			useNewUrlParser: true // Use the new URL string parser to handle connection strings
 		});
 	} catch (error) {
-		console.error('Database connection failed', err)
+		console.error('Database connection failed', error)
 	}
 }
 
