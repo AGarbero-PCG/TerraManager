@@ -12,7 +12,7 @@
 	</div>
 </template>
 
-<script setup lang="ts">
+<script async setup lang="ts">
 import { useAuthStore } from '../../stores/auth';
 import { computed } from 'vue';
 
@@ -22,6 +22,11 @@ const user = computed(()=> {
 	return authStore.user
 })
 
+async function getUser(){
+	await authStore.getUser()
+}
+
+await getUser()
 
 </script>
 

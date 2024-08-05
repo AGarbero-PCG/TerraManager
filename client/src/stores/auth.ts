@@ -50,7 +50,7 @@ export const useAuthStore = defineStore('auth', {
 		// Asynchronous because we will use backend API requests
 		async login(payload: LoginData) {
 			try {
-				const { data } = await useApi.post(`/api/auth/login`, payload);
+				const { data } = await useApi().post(`/api/auth/login`, payload);
 				this.accessToken = data?.access_token // Assign received access token to state
 				return data
 			} catch (error: Error | any) {
@@ -60,7 +60,7 @@ export const useAuthStore = defineStore('auth', {
 
 		async register(payload: RegisterData) {
 			try {
-				const { data } = await useApi.post(`/api/auth/register`, payload);
+				const { data } = await useApi().post(`/api/auth/register`, payload);
 				return data
 			} catch (error: Error | any) {
 				throw error.response.message
@@ -69,7 +69,7 @@ export const useAuthStore = defineStore('auth', {
 
 		async getUser() {
 			try {
-				const { data } = await useApi.get(`/api/auth/user`);
+				const { data } = await useApi().get(`/api/auth/user`);
 				this.user = data
 				return data
 			} catch (error: Error | any) {
@@ -79,7 +79,7 @@ export const useAuthStore = defineStore('auth', {
 
 		async logout() {
 			try {
-				const { data } = await useApi.post(`/api/auth/logout`);
+				const { data } = await useApi().post(`/api/auth/logout`);
 				this.accessToken = ""
 				this.user = {} as User
 				return data
@@ -90,7 +90,7 @@ export const useAuthStore = defineStore('auth', {
 
 		async refresh() {
 			try {
-				const { data } = await useApi.post(`/api/auth/refresh`);
+				const { data } = await useApi().post(`/api/auth/refresh`);
 				this.accessToken = data?.access_token
 				return data
 			} catch (error: Error | any) {
