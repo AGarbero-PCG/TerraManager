@@ -19,11 +19,11 @@ async function register(req, res) {
 		return res.status(422).json({ 'message': 'Passwords do not match' });
 	}
 
-	const userExists = await User.exists({ email }); // Check if user already exists in database
+	const userExists = await User.exists({ email }).exec(); // Check if user already exists in database
 
 	// If user exists, return error
 	if (userExists) {
-		return res.status(409).json({ 'message': 'User already exists' });
+		return res.sendStatus(409).json({ 'message': 'User already exists' });
 	}
 
 	// If not, hash the password
@@ -32,6 +32,7 @@ async function register(req, res) {
 
 		// Create a new user
 		await User.create({ email, username, password: hashedPassword, first_name, last_name });
+		console.log('User created successfully');
 
 		return res.sendStatus(201).json({ 'message': 'User created successfully' }); // Send response 201 (Created status)
 	} catch (error) {
@@ -54,7 +55,7 @@ async function login(req, res) {
 	const user = await User.findOne({ email }).exec();
 
 	// Check if user is in database
-	if (!user) return res.sendStatus(401).json({ 'message': 'No users with this email exist' })
+	if (!user) return res.status(401).json({ 'message': 'No users with this email exist' })
 
 	// Check if passwords match using bcrypt
 	const match = await bcrypt.compare(password, user.password)

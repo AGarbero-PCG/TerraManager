@@ -1,6 +1,6 @@
 // This file is for fetching and storing authenticated users
 import { defineStore } from "pinia"
-import useApi from "../composables/useApi.js"
+import useApi from "../composables/useApi"
 
 // This user model represents our state user
 export interface User {
@@ -8,7 +8,8 @@ export interface User {
 	username: string,
 	email: string,
 	first_name: string,
-	last_name: string
+	last_name: string,
+	full_name?: string
 }
 
 export interface State {
@@ -24,6 +25,8 @@ export interface LoginData {
 export interface RegisterData {
 	username: string,
 	email: string,
+	first_name: string,
+	last_name: string,
 	password: string,
 	password_confirm: string
 }
@@ -41,7 +44,7 @@ export const useAuthStore = defineStore('auth', {
 
 	// Used to format state data
 	getters: {
-		user: (state: State) => state.user, // For returning user data
+		userDetail: (state: State) => state.user, // For returning user data
 		isAuthenticated: (state: State) => state.user?.id ? true : false // Return a boolean indicating whether user is authenticated or not
 	},
 

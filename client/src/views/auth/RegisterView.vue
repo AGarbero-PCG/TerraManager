@@ -10,6 +10,14 @@
 						<input v-model="registerData.username" type="text" class="form-control" id="username">
 					</div>
 					<div class="mb-3">
+						<label for="first_name" class="form-label">First Name</label>
+						<input v-model="registerData.first_name" type="text" class="form-control" id="first_name">
+					</div>
+					<div class="mb-3">
+						<label for="last_name" class="form-label">Last Name</label>
+						<input v-model="registerData.last_name" type="text" class="form-control" id="last_name">
+					</div>
+					<div class="mb-3">
 						<label for="email" class="form-label">Email address</label>
 						<input v-model="registerData.email" type="email" class="form-control" id="email">
 					</div>
@@ -39,6 +47,8 @@ const router = useRouter();
 const registerData = reactive<RegisterData>({
 	username: "",
 	email: "",
+	first_name: "",
+	last_name: "",
 	password: "",
 	password_confirm:"",
 })
