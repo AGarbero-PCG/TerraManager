@@ -8,12 +8,12 @@ export interface User {
 	username: string,
 	email: string,
 	first_name: string,
-	last_name: string,
+	last_name: string
 }
 
 export interface State {
 	user: User,
-	accessToken: string,
+	accessToken: string
 }
 
 export interface LoginData {
@@ -22,8 +22,10 @@ export interface LoginData {
 }
 
 export interface RegisterData {
+	username: string,
 	email: string,
-	password: string
+	password: string,
+	password_confirm: string
 }
 
 
@@ -33,7 +35,7 @@ export const useAuthStore = defineStore('auth', {
 		return {
 			// Using this interface as a model for user state
 			user: {} as User,
-			accessToken: "" as string,
+			accessToken: "" as string
 		}
 	},
 
