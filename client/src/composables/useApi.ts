@@ -1,6 +1,7 @@
 // Used for request and response handling
 import { axiosInstance } from "../utils/axios";
 import { useAuthStore } from "../stores/auth"
+import { watchEffect } from "vue";
 
 export default function useApi() {
 
