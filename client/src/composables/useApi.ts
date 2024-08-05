@@ -2,6 +2,7 @@
 import { axiosInstance } from "../utils/axios";
 import { useAuthStore } from "../stores/auth"
 import { watchEffect } from "vue";
+import type { AxiosInstance } from "axios";
 
 export default function useApi() {
 
