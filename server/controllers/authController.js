@@ -23,7 +23,7 @@ async function register(req, res) {
 
 	// If user exists, return error
 	if (userExists) {
-		return res.sendStatus(409).json({ 'message': 'User already exists' });
+		return res.status(409).json({ 'message': 'User already exists' });
 	}
 
 	// If not, hash the password
