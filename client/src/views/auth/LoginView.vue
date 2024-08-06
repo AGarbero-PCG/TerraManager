@@ -43,6 +43,7 @@ async function submit(){
 		errorMessage.value = err.message
 	})
 }
+
 </script>
 
 <style scoped>

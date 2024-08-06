@@ -1,21 +1,21 @@
 require('dotenv').config();
 
-const express = require('express') // Call Express.js from node modules
-const cors = require('cors')
-const cookieParser = require('cookie-parser')
-const mongoose = require('mongoose')
-const path = require('path')
-const corsOptions = require('./config/cors')
-const connectDB = require('./config/database')
-const credentials = require('./middleware/credentials')
-const errorHandlerMiddleware = require('./middleware/error_handler')
-const { log } = require('console')
+const express = require('express'); // Call Express.js from node modules
+const cors = require('cors');
+const cookieParser = require('cookie-parser');
+const mongoose = require('mongoose');
+const path = require('path');
+const corsOptions = require('./config/cors');
+const connectDB = require('./config/database');
+const credentials = require('./middleware/credentials');
+const errorHandlerMiddleware = require('./middleware/error_handler');
+const { log } = require('console');
 
 
-const app = express() // Contains Express app
-const PORT = 3500 // Specify PORT to be 3500 for the app to run on
+const app = express(); // Contains Express app
+const PORT = process.env.PORT || 3500; // Specify PORT to be 3500 for the app to run on
 
-connectDB()
+connectDB();
 
 // Allow Credentials
 app.use(credentials)
