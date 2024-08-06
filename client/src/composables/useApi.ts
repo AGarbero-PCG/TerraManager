@@ -1,17 +1,17 @@
 // Used for request and response handling
-import { axiosInstance } from "../utils/axios";
+import { axiosInstance, axiosPrivateInstance } from "../utils/axios";
 import { useAuthStore } from "../stores/auth"
 import { watchEffect } from "vue";
 import type { AxiosInstance } from "axios";
 import axios from "axios";
 
-export default function useApi(): AxiosInstance {
+export function useApiPrivate(): AxiosInstance {
 
 	const authStore = useAuthStore()
 
 	watchEffect(() => { // Use watchEffect to reactively trigger functionality based on dependencies
 		// Request interceptor
-		axiosInstance.interceptors.request.use(
+		axiosPrivateInstance.interceptors.request.use(
 			(config) => {
 				// If we DONT have authorization header set...
 				if (!config.headers["Authorization"]) {
@@ -24,7 +24,7 @@ export default function useApi(): AxiosInstance {
 		)
 
 		// Response interceptor
-		axiosInstance.interceptors.response.use(
+		axiosPrivateInstance.interceptors.response.use(
 			response => response,
 			async (error) => {
 				const prevRequest = error?.config; // Access error request configuration
@@ -35,7 +35,7 @@ export default function useApi(): AxiosInstance {
 					try {
 						await authStore.refresh()
 						prevRequest.headers["Authorization"] = authStore.accessToken
-						return axiosInstance(prevRequest)
+						return axiosPrivateInstance(prevRequest)
 					} catch (error) {
 						return Promise.reject(error)
 					}
@@ -47,5 +47,10 @@ export default function useApi(): AxiosInstance {
 	})
 
 
-	return axiosInstance
+	return axiosPrivateInstance;
+}
+
+
+export function useApi() {
+	return axiosInstance;
 }

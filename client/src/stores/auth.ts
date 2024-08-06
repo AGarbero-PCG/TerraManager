@@ -1,6 +1,6 @@
 // This file is for fetching and storing authenticated users
 import { defineStore } from "pinia"
-import useApi from "../composables/useApi"
+import { useApi, useApiPrivate } from "../composables/useApi"
 
 // This user model represents our state user
 export interface User {
@@ -50,7 +50,7 @@ export const useAuthStore = defineStore('auth', {
 
 	// Used to modify data inside the state
 	actions: {
-
+		// Run refresh and get user data
 		async attempt() {
 			try {
 				await this.refresh()
@@ -66,7 +66,7 @@ export const useAuthStore = defineStore('auth', {
 			try {
 				const { data } = await useApi().post(`/api/auth/login`, payload);
 				this.accessToken = data.access_token // Assign received access token to state
-				await this.getUser()
+				await this.getUser() // get and set user data
 				return data
 			} catch (error: Error | any) {
 				throw error.response.message
@@ -100,7 +100,7 @@ export const useAuthStore = defineStore('auth', {
 
 		async getUser() {
 			try {
-				const { data } = await useApi().get(`/api/auth/user`);
+				const { data } = await useApiPrivate().get(`/api/auth/user`); // We use useApiPrivate bc it has to have an auth token and a refresh token on the cookie
 				console.log('User data from API:', data);
 				this.user = data.user;
 				return data
@@ -111,7 +111,7 @@ export const useAuthStore = defineStore('auth', {
 
 		async logout() {
 			try {
-				const { data } = await useApi().post(`/api/auth/logout`);
+				const { data } = await useApiPrivate().post(`/api/auth/logout`);
 				this.accessToken = ""
 				this.user = {} as User
 				return data
