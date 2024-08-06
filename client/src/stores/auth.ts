@@ -101,10 +101,11 @@ export const useAuthStore = defineStore('auth', {
 		async getUser() {
 			try {
 				const { data } = await useApi().get(`/api/auth/user`);
-				this.user = data
+				console.log('User data from API:', data);
+				this.user = data.user;
 				return data
 			} catch (error: Error | any) {
-				throw error.response.message
+				console.error('Error fetching user data', error);
 			}
 		},
 

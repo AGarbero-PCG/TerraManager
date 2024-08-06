@@ -24,7 +24,7 @@ function authentication(req, res, next) {
 
 			if (user) { // If user exists...
 				// Assign req.user to user Object
-				req.user = user.toObject({ getters: true }) // Set getters to true to make full name and id fields available
+				req.user = user.toObject({ getters: true }); // Set getters to true to make full name and id fields available
 				console.log('User set in req:', req.user);
 			} else {
 				req.user = {} // Set req.user to empty object
@@ -39,4 +39,4 @@ function authentication(req, res, next) {
 	}
 }
 
-module.exports = authentication
+module.exports = authentication;

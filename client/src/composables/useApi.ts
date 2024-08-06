@@ -3,8 +3,9 @@ import { axiosInstance } from "../utils/axios";
 import { useAuthStore } from "../stores/auth"
 import { watchEffect } from "vue";
 import type { AxiosInstance } from "axios";
+import axios from "axios";
 
-export default function useApi() {
+export default function useApi(): AxiosInstance {
 
 	const authStore = useAuthStore()
 
@@ -31,9 +32,13 @@ export default function useApi() {
 				// Check response status against 401 and 403
 				if ((error?.response?.status === 403 || error?.response?.status === 401) && !prevRequest.sent) {
 					prevRequest.sent = true;
-					await authStore.refresh()
-					prevRequest.headers["Authorization"] = authStore.accessToken
-					return axiosInstance(prevRequest)
+					try {
+						await authStore.refresh()
+						prevRequest.headers["Authorization"] = authStore.accessToken
+						return axiosInstance(prevRequest)
+					} catch (error) {
+						return Promise.reject(error)
+					}
 				}
 
 				return Promise.reject(error)

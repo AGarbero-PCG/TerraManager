@@ -28,7 +28,7 @@ async function register(req, res) {
 
 	// If not, hash the password
 	try {
-		hashedPassword = await bcrypt.hash(password, 10)
+		hashedPassword = await bcrypt.hash(password, 10);
 
 		// Create a new user
 		await User.create({ email, username, password: hashedPassword, first_name, last_name });
@@ -163,4 +163,10 @@ async function user(req, res) {
 	return res.status(200).json({ user });
 }
 
-module.exports = { register, login, logout, refresh, user }
+module.exports = {
+	register,
+	login,
+	logout,
+	refresh,
+	user
+};
