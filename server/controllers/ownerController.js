@@ -86,8 +86,9 @@ async function updateOwner(req, res) {
 async function deleteOwner(req, res) {
 	try {
 		const owner = await Owner.findByIdAndDelete(req.params.id);
-		if (!owner) return res.status(404).json({ message: 'Owner not found' });
-
+		if (!owner) {
+			return res.status(404).json({ message: 'Owner not found' });
+		}
 		// Delete related Land Holdings
 		await LandHolding.deleteMany({ owner: req.params.id });
 
