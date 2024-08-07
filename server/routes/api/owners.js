@@ -8,12 +8,12 @@ router.post('/createOwner', (req, res, next) => {
 	next();
 }, ownerControllers.createOwner)
 
-router.post('/getOwners', (req, res, next) => {
+router.get('/getOwners', (req, res, next) => {
 	console.log('Received request at /getOwners');
 	next();
 }, ownerControllers.getOwners)
 
-router.post('/getOwnerById', (req, res, next) => {
+router.get('/getOwnerById', (req, res, next) => {
 	console.log('Received request at /getOwnerById');
 	next();
 }, ownerControllers.getOwnerById)
@@ -23,7 +23,7 @@ router.post('/updateOwner', (req, res, next) => {
 	next();
 }, ownerControllers.updateOwner)
 
-router.get('/deleteOwner', (req, res, next) => {
+router.delete('/deleteOwner', (req, res, next) => {
 	console.log('Received request at /deleteOwner');
 	next();
 }, ownerControllers.deleteOwner)
