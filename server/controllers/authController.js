@@ -19,7 +19,8 @@ async function register(req, res) {
 		return res.status(422).json({ 'message': 'Passwords do not match' });
 	}
 
-	const userExists = await User.exists({ email }).exec(); // Check if user already exists in database
+	// Check if user already exists in database
+	const userExists = await User.exists({ email }).exec();
 
 	// If user exists, return error
 	if (userExists) {

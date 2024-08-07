@@ -1,12 +1,31 @@
 // server/routes/api/owners.js
 const express = require('express');
 const router = express.Router();
-const ownerController = require('../../controllers/ownerController');
+const ownerControllers = require('../../controllers/ownerController');
 
-router.get('/', ownerController.getOwners);
-router.get('/:id', ownerController.getOwnerById);
-router.post('/', ownerController.createOwner);
-router.put('/:id', ownerController.updateOwner);
-router.delete('/:id', ownerController.deleteOwner);
+router.post('/createOwner', (req, res, next) => {
+	console.log('Received request at /createOwner');
+	next();
+}, ownerControllers.createOwner)
+
+router.post('/getOwners', (req, res, next) => {
+	console.log('Received request at /getOwners');
+	next();
+}, ownerControllers.getOwners)
+
+router.post('/getOwnerById', (req, res, next) => {
+	console.log('Received request at /getOwnerById');
+	next();
+}, ownerControllers.getOwnerById)
+
+router.post('/updateOwner', (req, res, next) => {
+	console.log('Received request at /updateOwner');
+	next();
+}, ownerControllers.updateOwner)
+
+router.get('/deleteOwner', (req, res, next) => {
+	console.log('Received request at /deleteOwner');
+	next();
+}, ownerControllers.deleteOwner)
 
 module.exports = router;

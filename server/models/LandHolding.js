@@ -1,5 +1,6 @@
 // server/models/LandHolding.js
 const mongoose = require('mongoose');
+
 const Schema = mongoose.Schema;
 
 // Define the LandHolding schema
