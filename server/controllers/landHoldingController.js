@@ -1,5 +1,7 @@
+// server/controllers/landHoldingController.js
 const LandHolding = require('../models/LandHolding');
 
+// Get all land holdings
 const getLandHoldings = async (req, res) => {
 	try {
 		const landHoldings = await LandHolding.find().populate('owner');
@@ -9,6 +11,7 @@ const getLandHoldings = async (req, res) => {
 	}
 };
 
+// Get a Land Holding by ID
 const getLandHoldingById = async (req, res) => {
 	try {
 		const landHolding = await LandHolding.findById(req.params.id).populate('owner');
@@ -19,6 +22,7 @@ const getLandHoldingById = async (req, res) => {
 	}
 };
 
+// Create a new Land Holding
 const createLandHolding = async (req, res) => {
 	const landHolding = new LandHolding(req.body);
 	try {
@@ -29,6 +33,7 @@ const createLandHolding = async (req, res) => {
 	}
 };
 
+// Update a Land Holding by ID
 const updateLandHolding = async (req, res) => {
 	try {
 		const landHolding = await LandHolding.findByIdAndUpdate(req.params.id, req.body, { new: true });
@@ -39,6 +44,7 @@ const updateLandHolding = async (req, res) => {
 	}
 };
 
+// Delete a Land Holding by ID
 const deleteLandHolding = async (req, res) => {
 	try {
 		const landHolding = await LandHolding.findByIdAndDelete(req.params.id);

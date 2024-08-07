@@ -1,6 +1,8 @@
+// server/controllers/ownerController.js
 const Owner = require('../models/Owner');
 const LandHolding = require('../models/LandHolding');
 
+// Get all Owners
 const getOwners = async (req, res) => {
 	try {
 		const owners = await Owner.find();
@@ -10,6 +12,7 @@ const getOwners = async (req, res) => {
 	}
 };
 
+// Get an Owner by ID
 const getOwnerById = async (req, res) => {
 	try {
 		const owner = await Owner.findById(req.params.id);
@@ -20,6 +23,7 @@ const getOwnerById = async (req, res) => {
 	}
 };
 
+// Create a new Owner
 const createOwner = async (req, res) => {
 	const owner = newOwner(req.body);
 	try {
@@ -30,6 +34,7 @@ const createOwner = async (req, res) => {
 	}
 };
 
+// Update an Owner by ID
 const updateOwner = async (req, res) => {
 	try {
 		const owner = await Owner.findByIdAndUpdate(req.params.id, req.body, { new: true });
@@ -40,6 +45,7 @@ const updateOwner = async (req, res) => {
 	}
 };
 
+// Delete an Owner by ID
 const deleteOwner = async (req, res) => {
 	try {
 		const owner = await Owner.findByIdAndDelete(req.params.id);

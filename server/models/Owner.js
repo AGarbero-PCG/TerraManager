@@ -1,6 +1,8 @@
+// server/models/Owner.js
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+// Define the Owner schema
 const OwnerSchema = new Schema({
 	name: {
 		type: String,
