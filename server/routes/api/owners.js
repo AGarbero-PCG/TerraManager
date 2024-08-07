@@ -13,17 +13,17 @@ router.get('/getOwners', (req, res, next) => {
 	next();
 }, ownerControllers.getOwners)
 
-router.get('/getOwnerById', (req, res, next) => {
+router.get('/getOwner/:id', (req, res, next) => {
 	console.log('Received request at /getOwnerById');
 	next();
 }, ownerControllers.getOwnerById)
 
-router.post('/updateOwner', (req, res, next) => {
+router.put('/updateOwner/:id', (req, res, next) => {
 	console.log('Received request at /updateOwner');
 	next();
 }, ownerControllers.updateOwner)
 
-router.delete('/deleteOwner', (req, res, next) => {
+router.delete('/deleteOwner/:id', (req, res, next) => {
 	console.log('Received request at /deleteOwner');
 	next();
 }, ownerControllers.deleteOwner)

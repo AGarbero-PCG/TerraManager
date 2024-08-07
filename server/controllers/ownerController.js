@@ -55,7 +55,9 @@ async function getOwners(req, res) {
 async function getOwnerById(req, res) {
 	try {
 		const owner = await Owner.findById(req.params.id);
+
 		if (!owner) return res.status(404).json({ message: 'Owner not found' });
+
 		res.json(owner);
 	} catch (error) {
 		res.status(500).json({ message: error.message });
@@ -66,11 +68,17 @@ async function getOwnerById(req, res) {
 // Update an Owner by ID
 async function updateOwner(req, res) {
 	try {
-		const owner = await Owner.findByIdAndUpdate(req.params.id, req.body, { new: true });
-		if (!owner) return res.status(404).json({ message: 'Owner not found' });
+		const owner = await Owner.findByIdAndUpdate(
+			req.params.id,
+			req.body,
+			{ new: true, runValidators: true }
+		);
+		if (!owner) {
+			return res.status(404).json({ message: 'Owner not found' });
+		}
 		res.json(owner);
 	} catch (error) {
-		res.status(400).json({ message: error.message });
+		res.status(500).json({ message: error.message });
 	}
 };
 
