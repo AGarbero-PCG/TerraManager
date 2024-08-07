@@ -42,20 +42,17 @@ const UserSchema = Schema(
 		refresh_token: String
 	},
 	{
-		virtual: {
-			full_name: {
-				get() {
-					return this.first_name + ' ' + this.last_name
-				}
-			},
-
-			id: {
-				get() {
-					return this._id
-				}
-			}
-		}
+		toJSON: { virtuals: true },
+		toObject: { virtuals: true },
 	}
 )
 
-module.exports = mongoose.model('User', UserSchema)
+UserSchema.virtual('full_name').get(function () {
+	return this.first_name + ' ' + this.last_name;
+});
+
+UserSchema.virtual('id').get(function () {
+	return this._id;
+});
+
+module.exports = mongoose.model('User', UserSchema);
