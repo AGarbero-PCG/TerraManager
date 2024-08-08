@@ -101,6 +101,8 @@ async function updateLandHolding(req, res) {
 			{ new: true }
 		);
 		if (!landHolding) {
+			console.log('Land Holding not found');
+
 			return res.status(404).json({ message: 'Land Holding not found' })
 		};
 		res.json(landHolding);
