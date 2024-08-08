@@ -9,7 +9,7 @@ async function createOwner(req, res) {
 	console.log('Request body:', req.body);
 
 	// Check if all required fields are present
-	if (!name || !entity_type || !owner_type || !address || !total_land_holdings) {
+	if (!name || !entity_type || !owner_type || !address) {
 		return res.status(422).json({ 'message': 'All fields are required' });
 	}
 

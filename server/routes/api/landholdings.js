@@ -3,7 +3,7 @@ const express = require('express');
 const router = express.Router();
 const landHoldingController = require('../../controllers/landHoldingController');
 
-router.post('/', landHoldingController.createLandHolding);
+router.post('/:id', landHoldingController.createLandHolding);
 
 router.get('/', landHoldingController.getLandHoldings);
 

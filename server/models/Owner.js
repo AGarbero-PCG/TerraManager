@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 // Define the Owner schema
-const OwnerSchema = Schema(
+const OwnerSchema = new Schema(
 	{
 		name: {
 			type: String,
@@ -33,6 +33,12 @@ const OwnerSchema = Schema(
 			type: Number,
 			default: 0,
 		},
+
+		// Create array to store list of land holdings per owner
+		land_holdings: [{
+			type: mongoose.Schema.Types.ObjectId,
+			ref: 'LandHolding'
+		}]
 	},
 	{
 		toJSON: { virtuals: true },
