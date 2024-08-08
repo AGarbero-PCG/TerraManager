@@ -5,7 +5,7 @@ const landHoldingController = require('../../controllers/landHoldingController')
 
 router.post('/:id', landHoldingController.createLandHolding);
 
-router.get('/', landHoldingController.getLandHoldings);
+router.get('/:id', landHoldingController.getLandHoldings);
 
 router.get('/:id', landHoldingController.getLandHoldingById);
 
