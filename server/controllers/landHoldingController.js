@@ -84,8 +84,10 @@ async function getLandHoldingById(req, res) {
 
 		if (!landHolding) return res.status(404).json({ message: 'Land Holding not found' });
 
-		res.json(landHolding);
+		res.status(200).json(landHolding);
 	} catch (error) {
+		console.error('Error fetching Land Holding by ID:', error);
+
 		res.status(500).json({ message: error.message });
 	}
 };

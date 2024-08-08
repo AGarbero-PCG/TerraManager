@@ -7,7 +7,7 @@ router.post('/:id', landHoldingController.createLandHolding);
 
 router.get('/:id', landHoldingController.getLandHoldings);
 
-router.get('/:id', landHoldingController.getLandHoldingById);
+router.get('/getLandHoldingById:id', landHoldingController.getLandHoldingById);
 
 router.put('/:id', landHoldingController.updateLandHolding);
 
