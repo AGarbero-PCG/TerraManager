@@ -1,7 +1,7 @@
 <template>
 	<nav class="navbar navbar-expand-lg bg-body-tertiary">
   <div class="container-fluid">
-    <router-link class="navbar-brand" :to="{name: 'home'}">Navbar</router-link>
+    <router-link class="navbar-brand" :to="{name: 'home'}"></router-link>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#appNavbar" aria-controls="appNavbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>

@@ -1,18 +1,21 @@
 require('dotenv').config();
 
 const express = require('express'); // Import Express framework
-const cors = require('cors'); // Import CORS for handling cross-origin requests
-const cookieParser = require('cookie-parser'); // Import cookie-parser for handling cookies
+const app = express(); // Contains Express app
 const mongoose = require('mongoose'); // Import mongoose for MongoDB interactions
-const bodyParser = require('body-parser');
-const path = require('path'); // Import path for handling and transforming file paths
+const cors = require('cors'); // Import CORS for handling cross-origin requests
 const corsOptions = require('./config/cors'); // Import CORS configuration
+const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser'); // Import cookie-parser for handling cookies
+const path = require('path'); // Import path for handling and transforming file paths
 const connectDB = require('./config/database'); // Import database connection configuration
 const credentials = require('./middleware/credentials'); // Import credentials middleware
 const errorHandlerMiddleware = require('./middleware/error_handler'); // Import error handler middleware
 const { log } = require('console');
 
-const app = express(); // Contains Express app
+// Routes for Owner API endpoints
+const OwnerRoutes = require('./routes/api/owners')
+
 const PORT = process.env.PORT || 3500; // Specify PORT to be 3500 for the app to run on
 
 connectDB();
@@ -43,11 +46,8 @@ app.use(errorHandlerMiddleware);
 
 // Routes
 console.log('Setting up routes...');
-app.use('/api/auth', require('./routes/api/auth'));
-
-// Additional routes for LandHolding and Owner models
-app.use('/api/landholdings', require('./routes/api/landholdings'));
-app.use('/api/owners', require('./routes/api/owners'));
+app.use('/api/auth', require('./routes/api/auth')); // Authentication
+app.use('/api/owners', OwnerRoutes); // Owner Model
 
 // Default handler for undefined routes
 app.all('*', (req, res) => {

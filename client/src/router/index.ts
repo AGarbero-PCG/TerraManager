@@ -26,6 +26,12 @@ const router = createRouter({
 			name: 'user',
 			component: () => import('../views/auth/UserView.vue'),
 			meta: { requiresAuth: true } // Only allows authenticated users to enter user route.
+		},
+		{
+			path: '/owners',
+			name: 'owners',
+			component: () => import('../views/main/OwnerManager.vue'),
+			meta: { requiresAuth: false } // Only allows authenticated users to enter user route.
 		}
 	]
 })

@@ -54,3 +54,14 @@ export function useApiPrivate(): AxiosInstance {
 export function useApi() {
 	return axiosInstance;
 }
+
+
+export const getOwners = async () => {
+	try {
+		const response = await axios.get('/api/owners/getOwners');
+		return response.data;
+	} catch (error) {
+		console.error("Error fetching owners:", error);
+		throw error;
+	}
+}
