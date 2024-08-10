@@ -1,5 +1,5 @@
+// client/src/plugins/authentication.ts
 import { useAuthStore } from "@/stores/auth"
-
 
 export const authentication = {
 	async install() {

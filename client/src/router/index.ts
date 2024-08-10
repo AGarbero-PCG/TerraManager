@@ -1,4 +1,5 @@
 import { useAuthStore } from '@/stores/auth'
+import { useOwnerStore } from '@/stores/owner'
 import { createRouter, createWebHistory } from 'vue-router'
 
 const router = createRouter({
@@ -28,10 +29,10 @@ const router = createRouter({
 			meta: { requiresAuth: true } // Only allows authenticated users to enter user route.
 		},
 		{
-			path: '/owners',
-			name: 'owners',
+			path: '/owner-management',
+			name: 'owner-management',
 			component: () => import('../views/main/OwnerManager.vue'),
-			meta: { requiresAuth: false } // Only allows authenticated users to enter user route.
+			meta: { requiresAuth: true } // Only allows authenticated users to enter user route.
 		}
 	]
 })

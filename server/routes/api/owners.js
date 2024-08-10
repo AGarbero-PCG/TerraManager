@@ -7,7 +7,7 @@ const ownerControllers = require('../../controllers/ownerController');
 // Endpoints for creating, reading, updating, and deleting owners
 
 // Create a new Owner
-router.post('/', async (req, res) => {
+router.post('/createOwner', async (req, res) => {
 	console.log('Received request at /createOwner');
 	const createOwner = new Owner(req.body)
 	try {
@@ -20,7 +20,7 @@ router.post('/', async (req, res) => {
 })
 
 // Get all Owners
-router.get('/', async (req, res) => {
+router.get('/getOwners', async (req, res) => {
 	console.log('Received request at /getOwners');
 	try {
 		const ownerList = await Owner.find()
@@ -32,7 +32,7 @@ router.get('/', async (req, res) => {
 })
 
 // Get Owner by ID
-router.get('/:id', async (req, res) => {
+router.get('/getOwner/:id', async (req, res) => {
 	console.log('Received request at /getOwnerById');
 	try {
 		const ownerUnique = await Owner.findById(id)
@@ -44,7 +44,7 @@ router.get('/:id', async (req, res) => {
 })
 
 // Update Owner by ID
-router.put('/:id', async (req, res) => {
+router.put('/updateOwner/:id', async (req, res) => {
 	console.log('Received request at /updateOwner');
 	const updateOwner = new Owner(req.body)
 	try {
@@ -57,7 +57,7 @@ router.put('/:id', async (req, res) => {
 })
 
 // Delete Owner by ID
-router.delete('/:id', async (req, res) => {
+router.delete('/deleteOwner/:id', async (req, res) => {
 	console.log('Received request at /deleteOwner');
 	try {
 		const deleteOwner = await Owner.findByIdAndDelete(id)

@@ -18,6 +18,7 @@
           </a>
           <ul class="dropdown-menu">
             <li><router-link :to="{name: 'user'}" class="dropdown-item">Profile</router-link></li>
+			<li><router-link :to="{name: 'owner-management'}" class="dropdown-item">Owner Manager</router-link></li>
             <li><hr class="dropdown-divider"></li>
             <li><button @click="logout" class="dropdown-item btn btn-danger">Logout</button></li>
           </ul>
