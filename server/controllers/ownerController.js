@@ -98,10 +98,21 @@ async function deleteOwner(req, res) {
 	}
 };
 
+// Get owner data
+async function owner(req, res) {
+	console.log('Inside user controller');
+	console.log('req.owner:', req.owner);
+
+	const owner = req.owner;
+
+	return res.status(200).json({ owner });
+}
+
 module.exports = {
 	createOwner,
 	getOwners,
 	getOwnerById,
 	updateOwner,
 	deleteOwner,
+	owner,
 };

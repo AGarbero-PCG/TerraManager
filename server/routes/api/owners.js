@@ -7,8 +7,9 @@ const ownerControllers = require('../../controllers/ownerController');
 // Endpoints for creating, reading, updating, and deleting owners
 
 // Create a new Owner
-router.post('/createOwner', async (req, res) => {
+router.post('/createOwner', async (req, res, next) => {
 	console.log('Received request at /createOwner');
+	next();
 	// const createOwner = new Owner(req.body)
 	// try {
 	// 	const owner = await createOwner.save()

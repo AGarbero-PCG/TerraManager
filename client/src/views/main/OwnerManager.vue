@@ -14,33 +14,33 @@
 				</div>
 				<!-- Entity Type -->
 				<div class="form-floating mb-3">
-					<select v-model="ownerData.entity_type" class="form-select" id="entityTypeSelect">
-						<option value="1">Company</option>
-						<option value="2">Individual</option>
-						<option value="3">Investor</option>
-						<option value="4">Trust</option>
+					<select v-model="ownerData.entity_type" class="form-select" id="entity_type">
+						<option value="Company">Company</option>
+						<option value="Individual">Individual</option>
+						<option value="Investor">Investor</option>
+						<option value="Trust">Trust</option>
 					</select>
 					<label for="entity_type">Entity Type</label>
 				</div>
 				<!-- Owner Type -->
 				<div class="form-floating mb-3">
-					<select class="form-select" id="ownerTypeSelect">
-						<option value="1">Competitor</option>
-						<option value="2">Seller</option>
-						<option value="3">Investor</option>
-						<option value="4">Professional</option>
+					<select v-model="ownerData.owner_type" class="form-select" id="entity_type">
+						<option value="Competitor">Competitor</option>
+						<option value="Seller">Seller</option>
+						<option value="Investor">Investor</option>
+						<option value="Professional">Professional</option>
 					</select>
-					<label for="entity_type">Owner Type</label>
+					<label for="owner_type">Owner Type</label>
 				</div>
 				<!-- Address -->
 				<div class="form-floating mb-3">
-					<input type="text" class="form-control" id="name" v-model="ownerData.address" required>
-					<label for="name">Name</label>
+					<input v-model="ownerData.address" type="text" class="form-control" id="name" required>
+					<label for="address">Address</label>
 				</div>
 				
 				<!-- Total Land Holdings will automatically calculated -->
 				
-				<button type="submit" class="btn btn-primary">Create Owner</button>
+				<button type="submit" class="btn btn-success">Create Owner</button>
 				</form>
 			</div>
 		</div>
@@ -77,7 +77,7 @@ import { useRouter } from 'vue-router';
 // import { computed, onMounted } from 'vue';
 
 const ownerStore = useOwnerStore();
-const router = useRouter();
+// const router = useRouter();
 
 const ownerData = reactive<OwnerData>({
 	name: "",
@@ -92,7 +92,9 @@ const errorMessage = ref<string>("")
 async function submit(){
 	await ownerStore.createOwner(ownerData)
 	.then(res => {
-		router.replace({name: "owner-management"})
+		// router.replace({name: "owner-management"})
+		console.log('Owner Created');
+		
 	})
 	.catch(err => {
 		errorMessage.value = err.message
