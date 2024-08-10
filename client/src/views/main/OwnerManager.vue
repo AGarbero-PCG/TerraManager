@@ -46,26 +46,31 @@
 		</div>
 
 		<!-- List of Owners -->
-		<!-- <table class="table table-striped">
-			<thead>
-				<tr>
-				<th scope="col">Name</th>
-				<th scope="col">Entity Type</th>
-				<th scope="col">Owner Type</th>
-				<th scope="col">Address</th>
-				<th scope="col">Total Land Holdings</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr v-for="owner in owners" :key="owner._id">
-					<th scope="row">{{ owner.name }}</th>
-					<td>{{ owner.entity_type }}</td>
-					<td>{{ owner.owner_type }}</td>
-					<td>{{ owner.address }}</td>
-					<td>{{ owner.total_land_holdings }}</td>
-				</tr>
-			</tbody>
-		</table> -->
+		<div class="container">
+			<div class="card card-body mt-4">
+				<h5 class="card-title">All Owners</h5>
+				<table class="table table-striped">
+					<thead>
+						<tr>
+						<th scope="col">Name</th>
+						<th scope="col">Entity Type</th>
+						<th scope="col">Owner Type</th>
+						<th scope="col">Address</th>
+						<th scope="col">Total Land Holdings</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr v-for="owner in owners" :key="owner.id">
+							<th scope="row">{{ owner.name }}</th>
+							<td>{{ owner.entity_type }}</td>
+							<td>{{ owner.owner_type }}</td>
+							<td>{{ owner.address }}</td>
+							<td>{{ owner.total_land_holdings }}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
 	</div>
 </template>
 
@@ -74,7 +79,7 @@
 import { useOwnerStore, type OwnerData } from '../../stores/owner';
 import { reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
-// import { computed, onMounted } from 'vue';
+import { computed, onMounted } from 'vue';
 
 const ownerStore = useOwnerStore();
 // const router = useRouter();
@@ -89,6 +94,7 @@ const ownerData = reactive<OwnerData>({
 
 const errorMessage = ref<string>("")
 
+// Creating an Owner
 async function submit(){
 	await ownerStore.createOwner(ownerData)
 	.then(res => {
@@ -100,18 +106,25 @@ async function submit(){
 		errorMessage.value = err.message
 	})
 }
-// async function getOwners(){
-// 	await ownerStore.getOwners();
-// }
+
+//Fetching all Owners
 // const owner = computed(()=> {
+// 	console.log(ownerStore.ownerDetail)
 // 	return ownerStore.ownerDetail;
 // })
 
+// async function getOwners(){
+// 	await ownerStore.getOwners();
+// }
+// // Fetch owners when the component is mounted
 // onMounted(async ()=>{
 // 	await getOwners();
 // })
 
-
+onMounted(() => {
+	ownerStore.getOwners	
+});
+const owners = ownerStore.owners;
 
 </script>
 

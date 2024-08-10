@@ -12,7 +12,7 @@ export interface Owner {
 }
 
 export interface State {
-	owner: Owner
+	owners: Owner[];
 }
 
 export interface OwnerData {
@@ -29,13 +29,13 @@ export const useOwnerStore = defineStore('owner', {
 	state: (): State => {
 		return {
 			// Using this interface as a model for owner state
-			owner: {} as Owner,
-		}
+			owners: [],
+		};
 	},
 
 	// Used to format state data
 	getters: {
-		ownerDetail: (state: State) => state.owner, // For returning owner data
+		ownerDetail: (state: State) => state.owners, // For returning owner data
 	},
 
 	// Used to modify data inside the state
@@ -60,14 +60,13 @@ export const useOwnerStore = defineStore('owner', {
 
 		},
 		async getOwners() {
-			// try {
-			// 	const { data } = await useApiPrivate().get(`/api/auth/user`); // We use useApiPrivate bc it has to have an auth token and a refresh token on the cookie
-			// 	console.log('User data from API:', data);
-			// 	this.user = data.user;
-			// 	return data
-			// } catch (error: Error | any) {
-			// 	console.error('Error fetching user data', error);
-			// }
+			try {
+				const { data } = await useApi().get<Owner[]>(`/api/owners/getOwners`);
+				this.owners = data;
+				return data
+			} catch (error: Error | any) {
+				console.error('Error fetching owners:', error);
+			}
 		},
 	}
 });

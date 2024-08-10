@@ -21,16 +21,17 @@ router.post('/createOwner', async (req, res, next) => {
 }, ownerControllers.createOwner)
 
 // Get all Owners
-router.get('/getOwners', async (req, res) => {
+router.get('/getOwners', async (req, res, next) => {
 	console.log('Received request at /getOwners');
-	try {
-		const ownerList = await Owner.find()
-		if (!ownerList) throw new Error('No owners available')
-		res.status(200).json(ownerList)
-	} catch (error) {
-		res.status(500).json({ message: error.message })
-	}
-})
+	next();
+	// try {
+	// 	const ownerList = await Owner.find()
+	// 	if (!ownerList) throw new Error('No owners available')
+	// 	res.status(200).json(ownerList)
+	// } catch (error) {
+	// 	res.status(500).json({ message: error.message })
+	// }
+}, ownerControllers.getOwners)
 
 // Get Owner by ID
 router.get('/getOwner/:id', async (req, res) => {
