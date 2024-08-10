@@ -77,12 +77,9 @@
 
 <script setup lang="ts">
 import { useOwnerStore, type OwnerData } from '../../stores/owner';
-import { reactive, ref } from 'vue';
-import { useRouter } from 'vue-router';
-import { computed, onMounted } from 'vue';
+import { reactive, ref, computed, onMounted } from 'vue';
 
 const ownerStore = useOwnerStore();
-// const router = useRouter();
 
 const ownerData = reactive<OwnerData>({
 	name: "",
@@ -94,37 +91,26 @@ const ownerData = reactive<OwnerData>({
 
 const errorMessage = ref<string>("")
 
-// Creating an Owner
+// Creating an Owner and refreshing the table
 async function submit(){
 	await ownerStore.createOwner(ownerData)
-	.then(res => {
+	.then (res => {
 		// router.replace({name: "owner-management"})
 		console.log('Owner Created');
-		
+		// await ownerStore.getOwners();
 	})
 	.catch(err => {
 		errorMessage.value = err.message
 	})
 }
 
-//Fetching all Owners
-// const owner = computed(()=> {
-// 	console.log(ownerStore.ownerDetail)
-// 	return ownerStore.ownerDetail;
-// })
-
-// async function getOwners(){
-// 	await ownerStore.getOwners();
-// }
-// // Fetch owners when the component is mounted
-// onMounted(async ()=>{
-// 	await getOwners();
-// })
-
-onMounted(() => {
-	ownerStore.getOwners	
+// Fetching all Owners on component mount
+onMounted(async () => {
+	await ownerStore.getOwners();
 });
-const owners = ownerStore.owners;
+
+// Bind the store's owners to a local variable
+const owners = computed(() => ownerStore.owners);
 
 </script>
 
