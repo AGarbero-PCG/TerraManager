@@ -26,12 +26,12 @@ const OwnerSchema = new Schema(
 
 		address: {
 			type: String,
-			required: true,
+			required: true
 		},
 
 		total_land_holdings: {
 			type: Number,
-			default: 0,
+			default: 0
 		},
 
 		// Create array to store list of land holdings per owner

@@ -9,15 +9,15 @@ const ownerControllers = require('../../controllers/ownerController');
 // Create a new Owner
 router.post('/createOwner', async (req, res) => {
 	console.log('Received request at /createOwner');
-	const createOwner = new Owner(req.body)
-	try {
-		const owner = await createOwner.save()
-		if (!owner) throw new Error('There was an error saving the new owner')
-		res.status(200).json(todo)
-	} catch (error) {
-		res.status(500).json({ message: error.message })
-	}
-})
+	// const createOwner = new Owner(req.body)
+	// try {
+	// 	const owner = await createOwner.save()
+	// 	if (!owner) throw new Error('There was an error saving the new owner')
+	// 	res.status(200).json(todo)
+	// } catch (error) {
+	// 	res.status(500).json({ message: error.message })
+	// }
+}, ownerControllers.createOwner)
 
 // Get all Owners
 router.get('/getOwners', async (req, res) => {

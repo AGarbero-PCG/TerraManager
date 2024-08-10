@@ -1,3 +1,4 @@
+// server/routes/api/auth.js
 // Routes regarding authentication and authorization
 const express = require('express');
 const router = express.Router();

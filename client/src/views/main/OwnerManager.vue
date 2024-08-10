@@ -5,7 +5,7 @@
 			<!-- Create Owner Form -->
 			<div class="card card-body mt-4">
 				<h5 class="card-title">Create Owner</h5>
-				<form @submit.prevent="createOwner">
+				<form @submit.prevent="submit">
 			
 				<!-- Owner Name -->
 				<div class="form-floating mb-3">
@@ -34,7 +34,7 @@
 				</div>
 				<!-- Address -->
 				<div class="form-floating mb-3">
-					<input type="text" class="form-control" id="name" v-model="address" required>
+					<input type="text" class="form-control" id="name" v-model="ownerData.address" required>
 					<label for="name">Name</label>
 				</div>
 				
@@ -46,7 +46,7 @@
 		</div>
 
 		<!-- List of Owners -->
-		<table class="table table-striped">
+		<!-- <table class="table table-striped">
 			<thead>
 				<tr>
 				<th scope="col">Name</th>
@@ -65,30 +65,19 @@
 					<td>{{ owner.total_land_holdings }}</td>
 				</tr>
 			</tbody>
-		</table>
+		</table> -->
 	</div>
 </template>
 
 
-<script lang="ts">
-import { error } from 'console';
+<script setup lang="ts">
 import { useOwnerStore, type OwnerData } from '../../stores/owner';
 import { reactive, ref } from 'vue';
-import { computed, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
+// import { computed, onMounted } from 'vue';
 
 const ownerStore = useOwnerStore();
-
-const owner = computed(()=> {
-	return ownerStore.ownerDetail;
-})
-
-async function getOwners(){
-	await ownerStore.getOwners();
-}
-
-onMounted(async ()=>{
-	await getOwners();
-})
+const router = useRouter();
 
 const ownerData = reactive<OwnerData>({
 	name: "",
@@ -101,11 +90,34 @@ const ownerData = reactive<OwnerData>({
 const errorMessage = ref<string>("")
 
 async function submit(){
-	try{
-		await ownerStore.createOwner(ownerData)
-	} catch(err) {
-		console.error(error);
-	}
+	await ownerStore.createOwner(ownerData)
+	.then(res => {
+		router.replace({name: "owner-management"})
+	})
+	.catch(err => {
+		errorMessage.value = err.message
+	})
 }
+// async function getOwners(){
+// 	await ownerStore.getOwners();
+// }
+// const owner = computed(()=> {
+// 	return ownerStore.ownerDetail;
+// })
+
+// onMounted(async ()=>{
+// 	await getOwners();
+// })
+
+
+
 </script>
-  
+
+<style scoped>
+
+#register .card{
+	max-width:40vw;
+	margin: auto;
+}
+
+</style>
