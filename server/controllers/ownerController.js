@@ -32,7 +32,7 @@ async function createOwner(req, res) {
 		await Owner.create({ name, entity_type, owner_type, address, total_land_holdings });
 		console.log('Owner created successfully');
 
-		return res.sendStatus(201).json({ 'message': 'Owner created successfully' }); // Send response 201 (Created status)
+		return res.status(201).json({ 'message': 'Owner created successfully' }); // Send response 201 (Created status)
 	} catch (error) {
 		console.error('Error creating Owner:', error);
 		return res.status(500).json({ 'message': 'Internal server error' });

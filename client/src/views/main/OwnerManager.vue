@@ -1,54 +1,72 @@
 <template>
 	<div class="owner-management">
 		<h1>Management Dashboard</h1>
-		<div class="container">
-			<!-- Create Owner Form -->
-			
-			<div class="card card-body mt-4">
-				<h5 class="card-title">Create Owner</h5>
-				<form @submit.prevent="submit">
-					<!-- Owner Name -->
-					<div class="form-floating mb-3">
-						<input v-model="ownerData.name" type="text" class="form-control" id="name" required>
-						<label for="name">Name</label>
-					</div>
-					<!-- Entity Type -->
-					<div class="form-floating mb-3">
-						<select v-model="ownerData.entity_type" class="form-select" id="entity_type">
-							<option value="Company">Company</option>
-							<option value="Individual">Individual</option>
-							<option value="Investor">Investor</option>
-							<option value="Trust">Trust</option>
-						</select>
-						<label for="entity_type">Entity Type</label>
-					</div>
-					<!-- Owner Type -->
-					<div class="form-floating mb-3">
-						<select v-model="ownerData.owner_type" class="form-select" id="entity_type">
-							<option value="Competitor">Competitor</option>
-							<option value="Seller">Seller</option>
-							<option value="Investor">Investor</option>
-							<option value="Professional">Professional</option>
-						</select>
-						<label for="owner_type">Owner Type</label>
-					</div>
-					<!-- Address -->
-					<div class="form-floating mb-3">
-						<input v-model="ownerData.address" type="text" class="form-control" id="name" required>
-						<label for="address">Address</label>
-					</div>
-					
-					<!-- Total Land Holdings will automatically calculated -->
-					
-					<button type="submit" class="btn btn-success">Create Owner</button>
-				</form>
-			</div>
-		</div>
 		
 		<!-- List of Owners -->
 		<div class="container">
 			<div class="card card-body mt-4">
 				<h5 class="card-title">All Owners</h5>
+				<!-- Create Owner Modal -->
+				<div class="d-flex justify-content-end mb-3">
+					<font-awesome-icon :icon="['fas', 'user-plus']"
+						data-bs-toggle="modal" 
+						data-bs-target="#createOwnerModal" 
+						class="text-success cursor-pointer" 
+						size="2x"
+					/>
+				</div>
+				
+				<!-- Create Owner Modal -->
+				<div class="modal fade" id="createOwnerModal" tabindex="-1" aria-labelledby="createOwnerModalLabel" aria-hidden="true">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title" id="createOwnerModalLabel">Create Owner</h5>
+								<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+							</div>
+							<div class="modal-body">
+								<form @submit.prevent="submit">
+									<!-- Owner Name -->
+									<div class="form-floating mb-3">
+										<input v-model="ownerData.name" type="text" class="form-control" id="name" required>
+										<label for="name">Name</label>
+									</div>
+									<!-- Entity Type -->
+									<div class="form-floating mb-3">
+										<select v-model="ownerData.entity_type" class="form-select" id="entity_type">
+											<option value="Company">Company</option>
+											<option value="Individual">Individual</option>
+											<option value="Investor">Investor</option>
+											<option value="Trust">Trust</option>
+										</select>
+										<label for="entity_type">Entity Type</label>
+									</div>
+									<!-- Owner Type -->
+									<div class="form-floating mb-3">
+										<select v-model="ownerData.owner_type" class="form-select" id="entity_type">
+											<option value="Competitor">Competitor</option>
+											<option value="Seller">Seller</option>
+											<option value="Investor">Investor</option>
+											<option value="Professional">Professional</option>
+										</select>
+										<label for="owner_type">Owner Type</label>
+									</div>
+									<!-- Address -->
+									<div class="form-floating mb-3">
+										<input v-model="ownerData.address" type="text" class="form-control" id="name" required>
+										<label for="address">Address</label>
+									</div>
+									
+									<!-- Total Land Holdings will automatically calculated -->
+									
+									<button type="submit" class="btn btn-success" data-bs-dismiss="modal">Create Owner</button>
+								</form>
+
+							</div>
+						</div>
+					</div>
+				</div>
+
 				<table class="table table-striped">
 					<thead>
 						<tr>
@@ -109,13 +127,14 @@ async function submit(){
 		errorMessage.value = err.message
 	})
 
-	// Clear the form fields by resetting ownerData
+	// Clear the Create Owner form after submission
 	ownerData.name = "";
 	ownerData.entity_type = "Company"; // Reset to the default value
 	ownerData.owner_type = "Competitor"; // Reset to the default value
 	ownerData.address = "";
 	ownerData.total_land_holdings = 0;
 }
+
 
 // Fetching all Owners on component mount
 onMounted(async () => {
