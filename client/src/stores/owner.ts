@@ -57,7 +57,6 @@ export const useOwnerStore = defineStore('owner', {
 			} catch (error: Error | any) {
 				console.error('Error during Owner creation:', error);
 			}
-
 		},
 		async getOwners() {
 			try {
@@ -65,7 +64,24 @@ export const useOwnerStore = defineStore('owner', {
 				this.owners = data;
 				return data
 			} catch (error: Error | any) {
-				console.error('Error fetching owners:', error);
+				console.error('Error fetching Owners:', error);
+			}
+		},
+		async updateOwner(payload: OwnerData) {
+			try {
+				const { data } = await useApi().put('/api/owners/updateOwner', payload);
+				return data
+			} catch (error: Error | any) {
+				console.error('Error during Owner update:', error);
+			}
+		},
+		async deleteOwner() {
+			try {
+				const { data } = await useApi().delete<Owner[]>(`/api/owners/deleteOwner`);
+				this.owners = data;
+				return data
+			} catch (error: Error | any) {
+				console.error('Error deleting Owner:', error);
 			}
 		},
 	}

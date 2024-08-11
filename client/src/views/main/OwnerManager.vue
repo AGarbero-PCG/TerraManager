@@ -1,3 +1,4 @@
+<!-- client/src/views/main/OwnerManager.vue -->
 <template>
 	<div class="owner-management">
 		<h1>Management Dashboard</h1>
@@ -6,22 +7,69 @@
 		<div class="container">
 			<div class="card card-body mt-4">
 				<h5 class="card-title">All Owners</h5>
+				
 				<!-- Create Owner Modal -->
 				<div class="d-flex justify-content-end mb-3">
 					<font-awesome-icon :icon="['fas', 'user-plus']"
 						data-bs-toggle="modal" 
-						data-bs-target="#createOwnerModal" 
+						data-bs-target="#OwnerModal" 
 						class="text-success cursor-pointer" 
 						size="2x"
+						@click="openModal('create')"
 					/>
 				</div>
 				
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th scope="col">Name</th>
+							<th scope="col">Entity Type</th>
+							<th scope="col">Owner Type</th>
+							<th scope="col">Address</th>
+							<th scope="col">Total Land Holdings</th>
+							<th scope="col" id="update"></th>
+							<th scope="col" id="delete"></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr v-for="owner in owners" :key="owner.id">
+							<th scope="row">{{ owner.name }}</th>
+							<td>{{ owner.entity_type }}</td>
+							<td>{{ owner.owner_type }}</td>
+							<td>{{ owner.address }}</td>
+							<td>{{ owner.total_land_holdings }}</td>
+							<td>
+								<!-- Update Owner Modal Trigger -->
+								<div>
+									<font-awesome-icon :icon="['fas', 'pen-to-square']"
+										data-bs-toggle="modal" 
+										data-bs-target="#OwnerModal" 
+										class="cursor-pointer" 
+										size="2x"
+										@click="openModal('update', owner)"
+									/>
+								</div>
+							</td>
+							<td>
+								<!-- Delete Owner Modal Trigger -->
+								<div>
+									<font-awesome-icon :icon="['fas', 'trash']"
+										data-bs-toggle="modal" 
+										data-bs-target="#delete OwnerModal" 
+										class="cursor-pointer" 
+										size="2x"
+									/>
+								</div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
 				<!-- Create Owner Modal -->
-				<div class="modal fade" id="createOwnerModal" tabindex="-1" aria-labelledby="createOwnerModalLabel" aria-hidden="true">
+				<div class="modal fade" id="OwnerModal" tabindex="-1" aria-labelledby="OwnerModalLabel" aria-hidden="true">
 					<div class="modal-dialog">
 						<div class="modal-content">
 							<div class="modal-header">
-								<h5 class="modal-title" id="createOwnerModalLabel">Create Owner</h5>
+								<h5 class="modal-title" id="OwnerModalLabel">{{ isUpdateMode ? 'Update Owner' : 'Create Owner' }}</h5>
 								<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 							</div>
 							<div class="modal-body">
@@ -59,38 +107,13 @@
 									
 									<!-- Total Land Holdings will automatically calculated -->
 									
-									<button type="submit" class="btn btn-success" data-bs-dismiss="modal">Create Owner</button>
+									<button type="submit" class="btn btn-success" data-bs-dismiss="modal">{{ isUpdateMode ? 'Update Owner' : 'Create Owner' }}</button>
 								</form>
-
+				
 							</div>
 						</div>
 					</div>
 				</div>
-
-				<table class="table table-striped">
-					<thead>
-						<tr>
-							<th scope="col">Name</th>
-							<th scope="col">Entity Type</th>
-							<th scope="col">Owner Type</th>
-							<th scope="col">Address</th>
-							<th scope="col">Total Land Holdings</th>
-							<th scope="col" id="update"></th>
-							<th scope="col" id="delete"></th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr v-for="owner in owners" :key="owner.id">
-							<th scope="row">{{ owner.name }}</th>
-							<td>{{ owner.entity_type }}</td>
-							<td>{{ owner.owner_type }}</td>
-							<td>{{ owner.address }}</td>
-							<td>{{ owner.total_land_holdings }}</td>
-							<td><font-awesome-icon :icon="['fas', 'pen-to-square']" /></td>
-							<td><font-awesome-icon :icon="['fas', 'trash']" /></td>
-						</tr>
-					</tbody>
-				</table>
 			</div>
 		</div>
 	</div>
@@ -114,27 +137,53 @@ const ownerData = reactive<OwnerData>({
 })
 
 const errorMessage = ref<string>("")
+const isUpdateMode = ref(false);
+const selectOwnerId = ref<number | null>(null);
 
-// Creating an Owner and refreshing the table
-async function submit(){
-	await ownerStore.createOwner(ownerData)
-	.then (res => {
-		// router.replace({name: "owner-management"})
-		console.log('Owner Created');
-		ownerStore.getOwners();
-	})
-	.catch(err => {
-		errorMessage.value = err.message
-	})
-
-	// Clear the Create Owner form after submission
-	ownerData.name = "";
-	ownerData.entity_type = "Company"; // Reset to the default value
-	ownerData.owner_type = "Competitor"; // Reset to the default value
-	ownerData.address = "";
-	ownerData.total_land_holdings = 0;
+// Function to open the modal in either 'create' or 'update' mode
+function openModal(mode: 'create' | 'update', owner: OwnerData | null = null) {
+  isUpdateMode.value = mode === 'update';
+  if (isUpdateMode.value && owner) {
+    // Populate form with owner data for update
+    ownerData.name = owner.name;
+    ownerData.entity_type = owner.entity_type;
+    ownerData.owner_type = owner.owner_type;
+    ownerData.address = owner.address;
+    ownerData.total_land_holdings = owner.total_land_holdings;
+  } else {
+    // Reset form for create mode
+    ownerData.name = "";
+    ownerData.entity_type = "Company";
+    ownerData.owner_type = "Competitor";
+    ownerData.address = "";
+    ownerData.total_land_holdings = 0;
+  }
 }
 
+// Function to handle form submission
+async function submit() {
+  if (isUpdateMode.value) {
+    // Update Owner
+    await ownerStore.updateOwner(ownerData)
+      .then(res => {
+        console.log('Owner Updated');
+        ownerStore.getOwners();
+      })
+      .catch(err => {
+        errorMessage.value = err.message;
+      });
+  } else {
+    // Create Owner
+    await ownerStore.createOwner(ownerData)
+      .then(res => {
+        console.log('Owner Created');
+        ownerStore.getOwners();
+      })
+      .catch(err => {
+        errorMessage.value = err.message;
+      });
+  }
+}
 
 // Fetching all Owners on component mount
 onMounted(async () => {

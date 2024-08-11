@@ -39,8 +39,6 @@ async function createOwner(req, res) {
 	}
 }
 
-
-
 // Get all Owners
 async function getOwners(req, res) {
 	try {
