@@ -16,6 +16,7 @@ export interface State {
 }
 
 export interface OwnerData {
+	id?: number | null, // Make id optional because it won't be present when creating a new owner
 	name: string,
 	entity_type: 'Company' | 'Individual' | 'Investor' | 'Trust',
 	owner_type: 'Competitor' | 'Seller' | 'Investor' | 'Professional',
@@ -69,7 +70,7 @@ export const useOwnerStore = defineStore('owner', {
 		},
 		async updateOwner(payload: OwnerData) {
 			try {
-				const { data } = await useApi().put('/api/owners/updateOwner', payload);
+				const { data } = await useApi().put(`/api/owners/updateOwner/${payload.id}`, payload);
 				return data
 			} catch (error: Error | any) {
 				console.error('Error during Owner update:', error);

@@ -64,7 +64,7 @@
 						</tr>
 					</tbody>
 				</table>
-				<!-- Create Owner Modal -->
+				<!-- Create/Update Owner Modal -->
 				<div class="modal fade" id="OwnerModal" tabindex="-1" aria-labelledby="OwnerModalLabel" aria-hidden="true">
 					<div class="modal-dialog">
 						<div class="modal-content">
@@ -129,6 +129,7 @@ import { FontAwesomeIcon } from '../../assets/icons';
 const ownerStore = useOwnerStore();
 
 const ownerData = reactive<OwnerData>({
+	id: null, // Initialize as null since the ID will be set when updating an existing owner
 	name: "",
 	entity_type: "Company",
 	owner_type: "Competitor",
@@ -138,13 +139,13 @@ const ownerData = reactive<OwnerData>({
 
 const errorMessage = ref<string>("")
 const isUpdateMode = ref(false);
-const selectOwnerId = ref<number | null>(null);
 
 // Function to open the modal in either 'create' or 'update' mode
 function openModal(mode: 'create' | 'update', owner: OwnerData | null = null) {
   isUpdateMode.value = mode === 'update';
   if (isUpdateMode.value && owner) {
     // Populate form with owner data for update
+	ownerData.id = owner.id; // Store the selected owner ID
     ownerData.name = owner.name;
     ownerData.entity_type = owner.entity_type;
     ownerData.owner_type = owner.owner_type;
@@ -152,6 +153,7 @@ function openModal(mode: 'create' | 'update', owner: OwnerData | null = null) {
     ownerData.total_land_holdings = owner.total_land_holdings;
   } else {
     // Reset form for create mode
+	ownerData.id = null; // Store the selected owner ID
     ownerData.name = "";
     ownerData.entity_type = "Company";
     ownerData.owner_type = "Competitor";
@@ -162,27 +164,34 @@ function openModal(mode: 'create' | 'update', owner: OwnerData | null = null) {
 
 // Function to handle form submission
 async function submit() {
-  if (isUpdateMode.value) {
-    // Update Owner
-    await ownerStore.updateOwner(ownerData)
-      .then(res => {
-        console.log('Owner Updated');
-        ownerStore.getOwners();
-      })
-      .catch(err => {
-        errorMessage.value = err.message;
-      });
-  } else {
-    // Create Owner
-    await ownerStore.createOwner(ownerData)
-      .then(res => {
-        console.log('Owner Created');
-        ownerStore.getOwners();
-      })
-      .catch(err => {
-        errorMessage.value = err.message;
-      });
-  }
+	const payload = ownerData;
+
+  	if (isUpdateMode.value && ownerData.id !== null) {
+		// Update Owner
+		console.log('Updating owner with data:', JSON.stringify(ownerData));
+		
+		await ownerStore.updateOwner(ownerData)
+		.then(res => {
+			console.log('Owner Updated');
+			ownerStore.getOwners();
+		})
+		.catch(err => {
+			console.log('Error during update:', err);
+			errorMessage.value = err.message;
+		});
+	} else {
+		// Create Owner
+		console.log('Creating owner with data:', JSON.stringify(ownerData));
+		
+		await ownerStore.createOwner(ownerData)
+		.then(res => {
+			console.log('Owner Created');
+			ownerStore.getOwners();
+		})
+		.catch(err => {
+			errorMessage.value = err.message;
+		});
+	}
 }
 
 // Fetching all Owners on component mount

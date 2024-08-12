@@ -76,6 +76,7 @@ async function updateOwner(req, res) {
 		}
 		res.json(owner);
 	} catch (error) {
+		console.log('Error in updateOwner:', error);
 		res.status(500).json({ message: error.message });
 	}
 };

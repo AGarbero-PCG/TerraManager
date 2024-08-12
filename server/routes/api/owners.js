@@ -19,19 +19,19 @@ router.get('/getOwners', async (req, res, next) => {
 }, ownerControllers.getOwners)
 
 // Get Owner by ID
-router.get('/getOwner/:id', async (req, res) => {
+router.get('/getOwner/:id', async (req, res, next) => {
 	console.log('Received request at /getOwnerById');
 	next();
 }, ownerControllers.getOwnerById)
 
 // Update Owner by ID
-router.put('/updateOwner/:id', async (req, res) => {
+router.put('/updateOwner/:id', async (req, res, next) => {
 	console.log('Received request at /updateOwner');
 	next();
 }, ownerControllers.updateOwner)
 
 // Delete Owner by ID
-router.delete('/deleteOwner/:id', async (req, res) => {
+router.delete('/deleteOwner/:id', async (req, res, next) => {
 	console.log('Received request at /deleteOwner');
 	next();
 }, ownerControllers.deleteOwner)
