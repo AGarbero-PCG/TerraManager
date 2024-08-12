@@ -18,7 +18,8 @@
 						@click="openModal('create')"
 					/>
 				</div>
-				
+
+				<!--  Table of Owners -->
 				<table class="table table-striped">
 					<thead>
 						<tr>
@@ -55,9 +56,10 @@
 								<div>
 									<font-awesome-icon :icon="['fas', 'trash']"
 										data-bs-toggle="modal" 
-										data-bs-target="#delete OwnerModal" 
+										data-bs-target="#deleteOwnerModal" 
 										class="cursor-pointer" 
 										size="2x"
+										@click="selectOwnerForDeletion(owner)"
 									/>
 								</div>
 							</td>
@@ -114,6 +116,25 @@
 						</div>
 					</div>
 				</div>
+
+				<!-- Delete Owner Modal -->
+				<div class="modal fade" id="deleteOwnerModal" tabindex="-1" aria-labelledby="deleteOwnerModalLabel" aria-hidden="true">
+					<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+						<h5 class="modal-title" id="deleteOwnerModalLabel">Delete Owner</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						</div>
+						<div class="modal-body">
+						<p>Are you sure you want to delete the owner <strong>{{ selectedOwner?.name }}</strong>?</p>
+						</div>
+						<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+						<button type="button" class="btn btn-danger" data-bs-dismiss="modal" @click="deleteOwner">Yes, Delete</button>
+						</div>
+					</div>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -139,6 +160,7 @@ const ownerData = reactive<OwnerData>({
 
 const errorMessage = ref<string>("")
 const isUpdateMode = ref(false);
+const selectedOwner = ref<OwnerData | null>(null); // For tracking the owner to delete
 
 // Function to open the modal in either 'create' or 'update' mode
 function openModal(mode: 'create' | 'update', owner: OwnerData | null = null) {
@@ -166,6 +188,9 @@ function openModal(mode: 'create' | 'update', owner: OwnerData | null = null) {
 async function submit() {
 	const payload = ownerData;
 
+	console.log('API payload:', JSON.stringify(payload));
+	
+
   	if (isUpdateMode.value && ownerData.id !== null) {
 		// Update Owner
 		console.log('Updating owner with data:', JSON.stringify(ownerData));
@@ -192,6 +217,26 @@ async function submit() {
 			errorMessage.value = err.message;
 		});
 	}
+}
+
+// Select an owner for deletion and open the delete modal
+function selectOwnerForDeletion(owner: OwnerData) {
+  selectedOwner.value = owner;
+}
+
+// Delete the selected owner
+async function deleteOwner() {
+  if (selectedOwner.value && selectedOwner.value.id !== null && selectedOwner.value.id !== undefined) {
+    await ownerStore.deleteOwner(selectedOwner.value.id)
+      .then(() => {
+        console.log('Owner Deleted');
+        ownerStore.getOwners(); // Refresh the owner list
+      })
+      .catch(err => {
+        console.log('Error during deletion:', err);
+        errorMessage.value = err.message;
+      });
+  }
 }
 
 // Fetching all Owners on component mount

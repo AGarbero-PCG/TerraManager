@@ -54,7 +54,7 @@ export const useOwnerStore = defineStore('owner', {
 		async createOwner(payload: OwnerData) {
 			try {
 				const { data } = await useApi().post('/api/owners/createOwner', payload);
-				return data
+				return data;
 			} catch (error: Error | any) {
 				console.error('Error during Owner creation:', error);
 			}
@@ -63,7 +63,7 @@ export const useOwnerStore = defineStore('owner', {
 			try {
 				const { data } = await useApi().get<Owner[]>(`/api/owners/getOwners`);
 				this.owners = data;
-				return data
+				return data;
 			} catch (error: Error | any) {
 				console.error('Error fetching Owners:', error);
 			}
@@ -71,16 +71,16 @@ export const useOwnerStore = defineStore('owner', {
 		async updateOwner(payload: OwnerData) {
 			try {
 				const { data } = await useApi().put(`/api/owners/updateOwner/${payload.id}`, payload);
-				return data
+				return data;
 			} catch (error: Error | any) {
 				console.error('Error during Owner update:', error);
 			}
 		},
-		async deleteOwner() {
+		async deleteOwner(ownerId: number) {
 			try {
-				const { data } = await useApi().delete<Owner[]>(`/api/owners/deleteOwner`);
-				this.owners = data;
-				return data
+				const { data } = await useApi().delete(`/api/owners/deleteOwner/${ownerId}`);
+				this.owners = this.owners.filter(owner => owner.id !== ownerId);
+				return data;
 			} catch (error: Error | any) {
 				console.error('Error deleting Owner:', error);
 			}
