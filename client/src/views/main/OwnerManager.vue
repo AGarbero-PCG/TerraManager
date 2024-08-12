@@ -1,14 +1,14 @@
 <!-- client/src/views/main/OwnerManager.vue -->
 <template>
-	<div class="owner-management">
-		<h1>Management Dashboard</h1>
+	<div class="owner-manager">
+		<h1>Owner Manager</h1>
 		
 		<!-- List of Owners -->
 		<div class="container">
 			<div class="card card-body mt-4">
 				<h5 class="card-title">All Owners</h5>
 				
-				<!-- Create Owner Modal -->
+				<!-- Create Owner Modal Trigger -->
 				<div class="d-flex justify-content-end mb-3">
 					<font-awesome-icon :icon="['fas', 'user-plus']"
 						data-bs-toggle="modal" 
@@ -28,6 +28,7 @@
 							<th scope="col">Owner Type</th>
 							<th scope="col">Address</th>
 							<th scope="col">Total Land Holdings</th>
+							<th scope="col" id="landholdingModal"></th>
 							<th scope="col" id="update"></th>
 							<th scope="col" id="delete"></th>
 						</tr>
@@ -39,6 +40,18 @@
 							<td>{{ owner.owner_type }}</td>
 							<td>{{ owner.address }}</td>
 							<td>{{ owner.total_land_holdings }}</td>
+							<td>
+								<!-- View Land Holdings Trigger -->
+								<div>
+									<font-awesome-icon :icon="['fas', 'house']" style="color: #000000;"
+										data-bs-toggle="modal"
+										data-bs-target="LandHoldingManagerModal"
+										class="cursor-pointer"
+										size="2x"
+										@click="openModal('update', owner)"
+									/>
+								</div>
+							</td>
 							<td>
 								<!-- Update Owner Modal Trigger -->
 								<div>
@@ -126,7 +139,7 @@
 						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 						</div>
 						<div class="modal-body">
-						<p>Are you sure you want to delete the owner <strong>{{ selectedOwner?.name }}</strong>?</p>
+						<p>Are you sure you want to delete the owner: <strong>{{ selectedOwner?.name }}</strong> ?  This will delete all related Land Holdings as well. </p>
 						</div>
 						<div class="modal-footer">
 						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>

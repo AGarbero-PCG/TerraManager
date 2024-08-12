@@ -1,3 +1,4 @@
+// client/src/stores/owner.ts
 import { defineStore } from 'pinia';
 import { useApi } from "../composables/useApi"
 
