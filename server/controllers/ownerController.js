@@ -44,6 +44,12 @@ async function getOwners(req, res) {
 	console.log('Inside getOwners controller');
 	try {
 		const owners = await Owner.find();
+
+		// Dynamically calculate total_land_holdings
+		for (let owner of owners) {
+			owner.total_land_holdings = await LandHolding.countDocuments({ owner: owner._id });
+		}
+
 		res.json(owners);
 	} catch (error) {
 		res.status(500).json({ message: error.message });

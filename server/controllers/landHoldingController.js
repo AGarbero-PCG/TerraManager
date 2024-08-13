@@ -21,10 +21,6 @@ async function createLandHolding(req, res) {
 			title_source
 		} = req.body;
 
-
-
-
-
 		// Check if all required fields are present
 		if (!owner || !legal_entity || !net_mineral_acres || !mineral_owner_royalty || !section || !township || !range || !title_source) {
 			console.error('Missing required fields');
@@ -58,15 +54,12 @@ async function createLandHolding(req, res) {
 				title_source,
 			});
 
-			// Update the owner with the new land holding and increment total_land_holdings
+			// Update the owner with the new land holding
 			ownerExists.land_holdings.push(newLandHolding._id);
-			ownerExists.total_land_holdings = ownerExists.land_holdings.length;
 
 			// Save the updated owner
-			const updatedOwner = await ownerExists.save();
-			console.log('Updated Owner:', updatedOwner);
-
-
+			await ownerExists.save();
+			console.log('Updated Owner:', ownerExists);
 
 			return res.status(201).json({ message: 'Land Holding created successfully', landHolding: newLandHolding });
 		} catch (error) {
@@ -110,9 +103,7 @@ async function getLandHoldingById(req, res) {
 
 		res.status(200).json(landHolding);
 	} catch (error) {
-		console.error('Error fetching Land Holding by ID:', error);
-
-		res.status(500).json({ message: error.message });
+		res.status(500).json({ message: 'Error fetching Land Holding by ID:' });
 	}
 };
 
@@ -144,6 +135,8 @@ async function deleteLandHolding(req, res) {
 		if (!landHolding) {
 			return res.status(404).json({ message: 'Land Holding not found' });
 		}
+		// Update total_land_holdings
+		ownerExists.total_land_holdings = ownerExists.land_holdings.length;
 		res.json({ message: 'Land Holding deleted' });
 	} catch (error) {
 		res.status(500).json({ message: error.message });
