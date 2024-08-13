@@ -40,20 +40,21 @@
 							<td>{{ owner.owner_type }}</td>
 							<td>{{ owner.address }}</td>
 							<td>{{ owner.total_land_holdings }}</td>
+
+							<!-- View Land Holdings Trigger -->
 							<td>
-								<!-- View Land Holdings Trigger -->
 								<div>
 									<font-awesome-icon :icon="['fas', 'house']" style="color: #000000;"
 										data-bs-toggle="modal"
 										data-bs-target="LandHoldingManagerModal"
 										class="cursor-pointer"
 										size="2x"
-										@click="openModal('update', owner)"
+										@click="openLandHoldingModal(owner)"
 									/>
 								</div>
 							</td>
+							<!-- Update Owner Modal Trigger -->
 							<td>
-								<!-- Update Owner Modal Trigger -->
 								<div>
 									<font-awesome-icon :icon="['fas', 'pen-to-square']"
 										data-bs-toggle="modal" 
@@ -64,8 +65,8 @@
 									/>
 								</div>
 							</td>
+							<!-- Delete Owner Modal Trigger -->
 							<td>
-								<!-- Delete Owner Modal Trigger -->
 								<div>
 									<font-awesome-icon :icon="['fas', 'trash']"
 										data-bs-toggle="modal" 
@@ -79,6 +80,14 @@
 						</tr>
 					</tbody>
 				</table>
+
+				<!-- Include LandHoldingModal component -->
+				<LandHoldingModal
+					v-if="isLandHoldingModalVisible"
+					:owner="selectedOwner"
+					@close="isLandHoldingModalVisible = false"
+				/>
+
 				<!-- Create/Update Owner Modal -->
 				<div class="modal fade" id="OwnerModal" tabindex="-1" aria-labelledby="OwnerModalLabel" aria-hidden="true">
 					<div class="modal-dialog">
@@ -157,6 +166,7 @@
 <script setup lang="ts">
 import { useOwnerStore, type OwnerData } from '../../stores/owner';
 import { reactive, ref, computed, onMounted } from 'vue';
+import LandHoldingModal from './LandHoldingModal.vue';
 // @ts-ignore
 import { FontAwesomeIcon } from '../../assets/icons';
 
@@ -173,7 +183,14 @@ const ownerData = reactive<OwnerData>({
 
 const errorMessage = ref<string>("")
 const isUpdateMode = ref(false);
+const isLandHoldingModalVisible = ref(false);
 const selectedOwner = ref<OwnerData | null>(null); // For tracking the owner to delete
+
+// Function to open Land Holding Modal
+function openLandHoldingModal(owner) {
+	selectedOwner.value = owner;
+	isLandHoldingModalVisible.value = true;
+}
 
 // Function to open the modal in either 'create' or 'update' mode
 function openModal(mode: 'create' | 'update', owner: OwnerData | null = null) {

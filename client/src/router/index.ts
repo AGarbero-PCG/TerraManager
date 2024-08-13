@@ -29,9 +29,16 @@ const router = createRouter({
 			meta: { requiresAuth: true } // Only allows authenticated users to enter user route.
 		},
 		{
-			path: '/owner-management',
-			name: 'owner-management',
+			path: '/owner-manager',
+			name: 'owner-manager',
 			component: () => import('../views/main/OwnerManager.vue'),
+			meta: { requiresAuth: true } // Only allows authenticated users to enter user route.
+		},
+		{
+			path: '/land-holding-manager',
+			name: 'land-holding-manager',
+			component: () => import('../views/main/LandHoldingModal.vue'),
+			props: true,
 			meta: { requiresAuth: true } // Only allows authenticated users to enter user route.
 		}
 	]

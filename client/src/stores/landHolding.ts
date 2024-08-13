@@ -2,7 +2,7 @@
 import { defineStore } from 'pinia';
 import { useApi } from "../composables/useApi";
 
-// Define the type for a Land Holding
+// Define the type for a land holding
 export interface LandHolding {
 	id: number,
 	owner: string, // Assuming the owner is referenced by an ID or name
@@ -37,22 +37,22 @@ export const useLandHoldingStore = defineStore('landholding', {
 	// Used to store Data
 	state: (): State => {
 		return {
-			// Using this interface as a model for landholding state
+			// Using this interface as a model for land holding state
 			landHoldings: [],
 		};
 	},
 
 	// Used to format state data
 	getters: {
-		landholdingDetail: (state: State) => state.landHoldings, // For returning landholding data
+		landholdingDetail: (state: State) => state.landHoldings, // For returning land holding data
 	},
 
 	// Used to modify data inside the state
 	actions: {
-		// Run refresh and get user data
-		async attempt() {
+		// Run refresh and get land holding data
+		async attempt(ownerId: number) {
 			try {
-				await this.getLandHoldings()
+				await this.getLandHoldings(ownerId)
 			} catch (error) {
 				return
 			}
@@ -67,13 +67,22 @@ export const useLandHoldingStore = defineStore('landholding', {
 				console.error('Error during LandHolding creation:', error);
 			}
 		},
-		async getLandHoldings() {
+		async getLandHoldings(ownerId: number) {
 			try {
-				const { data } = await useApi().get<LandHolding[]>(`/api/landholdings/getLandHoldings`);
+				const { data } = await useApi().get<LandHolding[]>(`/api/landholdings/getLandHoldings/${ownerId}`);
 				this.landHoldings = data;
 				return data;
 			} catch (error: Error | any) {
 				console.error('Error fetching LandHoldings:', error);
+			}
+		},
+		async getLandHoldingById(landHoldingId: number) {
+			try {
+				const { data } = await useApi().get<LandHolding[]>(`/api/landholdings/getLandHoldingById/${landHoldingId}`);
+				this.landHoldings = data;
+				return data;
+			} catch (error: Error | any) {
+				console.error('Error fetching Land Holding by ID:', error);
 			}
 		},
 		async updateLandHolding(payload: LandHoldingData) {
