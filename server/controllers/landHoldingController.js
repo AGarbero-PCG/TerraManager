@@ -4,6 +4,8 @@ const Owner = require('../models/Owner');
 
 // Create a new Land Holding
 async function createLandHolding(req, res) {
+	console.log('Inside createLandHolding controller');
+	console.log('Request body:', req.body);
 	try {
 		console.log('Inside create land holding controller');
 		console.log('Request body:', req.body);
@@ -16,7 +18,12 @@ async function createLandHolding(req, res) {
 			section,
 			township,
 			range,
-			title_source } = req.body;
+			title_source
+		} = req.body;
+
+		// Auto-generate the name and section_name fields
+		const name = `${section_name}-${legal_entity}`;
+		const section_name = `${section}-${township}-${range}`;
 
 
 
@@ -36,15 +43,17 @@ async function createLandHolding(req, res) {
 
 
 		// Create new land holding
-		const newLandHolding = new LandHolding({
+		const landHolding = new LandHolding({
+			name,
 			owner,
 			legal_entity,
 			net_mineral_acres,
 			mineral_owner_royalty,
 			section,
+			section_name,
 			township,
 			range,
-			title_source
+			title_source,
 		});
 
 		// Save the new land holding
@@ -69,8 +78,9 @@ async function createLandHolding(req, res) {
 
 // Get all Land Holdings
 async function getLandHoldings(req, res) {
+	console.log('Inside getLandHoldings controller');
 	try {
-		const landHoldings = await LandHolding.find().populate('owner');
+		const landHoldings = await LandHolding.find({ owner: ownerId }).populate('owner');
 		res.json(landHoldings);
 	} catch (error) {
 		res.status(500).json({ message: error.message });
@@ -79,6 +89,7 @@ async function getLandHoldings(req, res) {
 
 // Get a Land Holding by ID
 async function getLandHoldingById(req, res) {
+	console.log('Inside getLandHoldingById controller');
 	try {
 		const landHolding = await LandHolding.findById(req.params.id).populate('owner');
 
@@ -94,6 +105,7 @@ async function getLandHoldingById(req, res) {
 
 // Update a Land Holding by ID
 async function updateLandHolding(req, res) {
+	console.log('Inside updateLandHolding controller');
 	try {
 		const landHolding = await LandHolding.findByIdAndUpdate(
 			req.params.id,
@@ -113,6 +125,7 @@ async function updateLandHolding(req, res) {
 
 // Delete a Land Holding by ID
 async function deleteLandHolding(req, res) {
+	console.log('Inside deleteLandHolding controller');
 	try {
 		const landHolding = await LandHolding.findByIdAndDelete(req.params.id);
 		if (!landHolding) {

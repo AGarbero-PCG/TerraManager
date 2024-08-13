@@ -4,7 +4,7 @@ import { useApi } from "../composables/useApi"
 
 // Define the type for an Owner
 export interface Owner {
-	id: number,
+	id: string,
 	name: string,
 	entity_type: 'Company' | 'Individual' | 'Investor' | 'Trust',
 	owner_type: 'Competitor' | 'Seller' | 'Investor' | 'Professional',
@@ -17,7 +17,7 @@ export interface State {
 }
 
 export interface OwnerData {
-	id?: number | null, // Make id optional because it won't be present when creating a new owner
+	id?: string | null, // Make id optional because it won't be present when creating a new owner
 	name: string,
 	entity_type: 'Company' | 'Individual' | 'Investor' | 'Trust',
 	owner_type: 'Competitor' | 'Seller' | 'Investor' | 'Professional',
@@ -77,7 +77,7 @@ export const useOwnerStore = defineStore('owner', {
 				console.error('Error during Owner update:', error);
 			}
 		},
-		async deleteOwner(ownerId: number) {
+		async deleteOwner(ownerId: string) {
 			try {
 				const { data } = await useApi().delete(`/api/owners/deleteOwner/${ownerId}`);
 				this.owners = this.owners.filter(owner => owner.id !== ownerId);

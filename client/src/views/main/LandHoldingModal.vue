@@ -1,5 +1,6 @@
+<!-- client/src/views/main/LandHoldingModal.vue -->
 <template>
-	<div class="modal" tabindex="-1">
+	<div class="modal fade" id="LandHoldingModal" tabindex="-1">
 		<div class="modal-dialog">
 			<div class="modal-content">
 			<div class="modal-header">
@@ -18,7 +19,7 @@
 						<!-- Create Land Holding Modal Trigger -->
 						<div class="d-flex justify-content-end mb-3">
 						<font-awesome-icon
-							:icon="['fas', 'plus-circle']"
+							:icon="['fas', 'circle-plus']"
 							data-bs-toggle="modal"
 							data-bs-target="#LandHoldingModal"
 							class="text-success cursor-pointer"
@@ -228,11 +229,15 @@
 <script setup lang="ts">
 import { reactive, ref, watch, computed, onMounted } from 'vue';
 import { useLandHoldingStore, type LandHoldingData } from '../../stores/landHolding';
+import { OwnerData } from '../../stores/owner';
 import { FontAwesomeIcon } from '../../assets/icons';
 
 // Props
 const props = defineProps({
-  	owner: Object, // Expect owner object as prop
+  	owner: {
+		type: Object as () => OwnerData | null, // Expect owner object as prop
+		required: true,
+	}
 });
 
 const landHoldingStore = useLandHoldingStore();
@@ -243,10 +248,10 @@ const ownerName = computed(() => props.owner?.name || '');
 
 // Watch for owner changes and fetch land holdings accordingly
 watch(
-	() => props.owner,
+	() => props.owner, // Observe changes in the owner prop
 	async (newOwner) => {
-		if (newOwner) {
-		await landHoldingStore.getLandHoldings(newOwner.id); // Fetch land holdings for the selected owner
+		if (newOwner && newOwner.id) {
+			await landHoldingStore.getLandHoldings(newOwner.id); // Fetch land holdings for the selected owner
 		}
 	},
 	{ immediate: true } // Trigger on initial load
@@ -304,7 +309,7 @@ async function submit() {
 		})
 		.catch(err => {
 			console.log('Error during update:', err);
-			errorMessage.value = err.message;
+			errorMessage.value = `Update Error: ${err.response?.data?.message || err.message}`;
 		});
 	} else {
 		// Create Land Holding
@@ -318,11 +323,15 @@ async function submit() {
 				}
 			})
 			.catch(err => {
-				errorMessage.value = err.message;
+				console.log('Error during creation:', err);
+				errorMessage.value = `Creation Error: ${err.response?.data?.message || err.message}`;
+				if (err.response?.data?.details) {
+					console.error('Details of missing fields:', err.response.data.details);
+				}
 			});
 		} else {
 			console.log('Owner ID is missing, cannot create land holding.');
-			
+            errorMessage.value = 'Owner ID is missing, cannot create land holding.';
 		}
 	}
 }

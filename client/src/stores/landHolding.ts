@@ -4,7 +4,7 @@ import { useApi } from "../composables/useApi";
 
 // Define the type for a land holding
 export interface LandHolding {
-	id: number,
+	id: string,
 	owner: string, // Assuming the owner is referenced by an ID or name
 	name: string,
 	legal_entity: string,
@@ -21,7 +21,7 @@ export interface State {
 }
 
 export interface LandHoldingData {
-	id: number | null,
+	id: string | null,
 	owner: string, // Assuming the owner is referenced by an ID or name
 	name: string,
 	legal_entity: string,
@@ -50,7 +50,7 @@ export const useLandHoldingStore = defineStore('landholding', {
 	// Used to modify data inside the state
 	actions: {
 		// Run refresh and get land holding data
-		async attempt(ownerId: number) {
+		async attempt(ownerId: string) {
 			try {
 				await this.getLandHoldings(ownerId)
 			} catch (error) {
@@ -67,7 +67,7 @@ export const useLandHoldingStore = defineStore('landholding', {
 				console.error('Error during LandHolding creation:', error);
 			}
 		},
-		async getLandHoldings(ownerId: number) {
+		async getLandHoldings(ownerId: string) {
 			try {
 				const { data } = await useApi().get<LandHolding[]>(`/api/landholdings/getLandHoldings/${ownerId}`);
 				this.landHoldings = data;
@@ -76,7 +76,7 @@ export const useLandHoldingStore = defineStore('landholding', {
 				console.error('Error fetching LandHoldings:', error);
 			}
 		},
-		async getLandHoldingById(landHoldingId: number) {
+		async getLandHoldingById(landHoldingId: string) {
 			try {
 				const { data } = await useApi().get<LandHolding[]>(`/api/landholdings/getLandHoldingById/${landHoldingId}`);
 				this.landHoldings = data;
@@ -93,7 +93,7 @@ export const useLandHoldingStore = defineStore('landholding', {
 				console.error('Error during LandHolding update:', error);
 			}
 		},
-		async deleteLandHolding(landHoldingId: number) {
+		async deleteLandHolding(landHoldingId: string) {
 			try {
 				const { data } = await useApi().delete(`/api/landholdings/deleteLandHolding/${landHoldingId}`);
 				this.landHoldings = this.landHoldings.filter(landHolding => landHolding.id !== landHoldingId);

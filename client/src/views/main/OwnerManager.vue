@@ -7,6 +7,7 @@
 		<div class="container">
 			<div class="card card-body mt-4">
 				<h5 class="card-title">All Owners</h5>
+				<p v-if="errorMessage" class="error-message text-danger mb-4">{{ errorMessage }}</p>
 				
 				<!-- Create Owner Modal Trigger -->
 				<div class="d-flex justify-content-end mb-3">
@@ -46,7 +47,7 @@
 								<div>
 									<font-awesome-icon :icon="['fas', 'house']" style="color: #000000;"
 										data-bs-toggle="modal"
-										data-bs-target="LandHoldingManagerModal"
+										data-bs-target="LandHoldingModal"
 										class="cursor-pointer"
 										size="2x"
 										@click="openLandHoldingModal(owner)"
@@ -187,7 +188,7 @@ const isLandHoldingModalVisible = ref(false);
 const selectedOwner = ref<OwnerData | null>(null); // For tracking the owner to delete
 
 // Function to open Land Holding Modal
-function openLandHoldingModal(owner) {
+function openLandHoldingModal(owner: OwnerData) {
 	selectedOwner.value = owner;
 	isLandHoldingModalVisible.value = true;
 }

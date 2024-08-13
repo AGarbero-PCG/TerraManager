@@ -8,8 +8,8 @@ router.post('/createLandHolding/:id', (req, res, next) => {
 	next();
 }, landHoldingController.createLandHolding);
 
-router.get('/getLandHoldings', (req, res, next) => {
-	console.log('Received request at /getLandHoldings');
+router.get('/getLandHoldings/:ownerId', (req, res, next) => {
+	console.log('Received request at /getLandHoldings/:ownerId');
 	next();
 }, landHoldingController.getLandHoldings);
 

@@ -15,6 +15,8 @@ const { log } = require('console');
 
 // Routes for Owner API endpoints
 const OwnerRoutes = require('./routes/api/owners')
+// Routes for LandHoldings API endpoints
+const LandHoldingRoutes = require('./routes/api/landholdings')
 
 const PORT = process.env.PORT || 3500; // Specify PORT to be 3500 for the app to run on
 
@@ -47,7 +49,8 @@ app.use(errorHandlerMiddleware);
 // Routes
 console.log('Setting up routes...');
 app.use('/api/auth', require('./routes/api/auth')); // Authentication
-app.use('/api/owners', OwnerRoutes); // Owner Model
+app.use('/api/owners', OwnerRoutes); // Owner
+app.use('/api/landholdings', LandHoldingRoutes); // Land Holdings
 
 // Default handler for undefined routes
 app.all('*', (req, res) => {

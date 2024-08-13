@@ -6,9 +6,9 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 /* Import specific icons */
-import { faEdit, faTrash, faUserPlus, faHome } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faTrash, faUserPlus, faCirclePlus, faHome } from '@fortawesome/free-solid-svg-icons';
 
 /* Add icons to the library */
-library.add(faEdit, faTrash, faUserPlus, faHome);
+library.add(faEdit, faTrash, faUserPlus, faCirclePlus, faHome);
 
 export { FontAwesomeIcon };

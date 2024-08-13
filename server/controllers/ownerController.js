@@ -4,7 +4,7 @@ const LandHolding = require('../models/LandHolding');
 
 // Create a new Owner
 async function createOwner(req, res) {
-	console.log('Inside create owner controller');
+	console.log('Inside createOwner controller');
 	const { name, entity_type, owner_type, address, total_land_holdings } = req.body;
 	console.log('Request body:', req.body);
 
@@ -41,6 +41,7 @@ async function createOwner(req, res) {
 
 // Get all Owners
 async function getOwners(req, res) {
+	console.log('Inside getOwners controller');
 	try {
 		const owners = await Owner.find();
 		res.json(owners);
@@ -51,6 +52,7 @@ async function getOwners(req, res) {
 
 // Get an Owner by ID
 async function getOwnerById(req, res) {
+	console.log('Inside getOwnerById controller');
 	try {
 		const owner = await Owner.findById(req.params.id);
 
@@ -65,6 +67,7 @@ async function getOwnerById(req, res) {
 
 // Update an Owner by ID
 async function updateOwner(req, res) {
+	console.log('Inside updateOwner controller');
 	try {
 		const owner = await Owner.findByIdAndUpdate(
 			req.params.id,
@@ -83,6 +86,7 @@ async function updateOwner(req, res) {
 
 // Delete an Owner by ID
 async function deleteOwner(req, res) {
+	console.log('Inside deleteOwner controller');
 	try {
 		const owner = await Owner.findByIdAndDelete(req.params.id);
 		if (!owner) {
@@ -99,7 +103,7 @@ async function deleteOwner(req, res) {
 
 // Get owner data
 async function owner(req, res) {
-	console.log('Inside user controller');
+	console.log('Inside owner controller');
 	console.log('req.owner:', req.owner);
 
 	const owner = req.owner;
