@@ -42,12 +42,18 @@
 							<td>{{ owner.address }}</td>
 							<td>{{ owner.total_land_holdings }}</td>
 
+							<!-- Include LandHoldingModal component -->
+							<LandHoldingModal
+								v-if="isLandHoldingModalVisible"
+								:owner="selectedOwner"
+								@close="isLandHoldingModalVisible = false"
+							/>
 							<!-- View Land Holdings Trigger -->
 							<td>
 								<div>
 									<font-awesome-icon :icon="['fas', 'house']" style="color: #000000;"
 										data-bs-toggle="modal"
-										data-bs-target="LandHoldingModal"
+										data-bs-target="#LandHoldingManager"
 										class="cursor-pointer"
 										size="2x"
 										@click="openLandHoldingModal(owner)"
@@ -82,12 +88,6 @@
 					</tbody>
 				</table>
 
-				<!-- Include LandHoldingModal component -->
-				<LandHoldingModal
-					v-if="isLandHoldingModalVisible"
-					:owner="selectedOwner"
-					@close="isLandHoldingModalVisible = false"
-				/>
 
 				<!-- Create/Update Owner Modal -->
 				<div class="modal fade" id="OwnerModal" tabindex="-1" aria-labelledby="OwnerModalLabel" aria-hidden="true">

@@ -21,18 +21,16 @@ async function createLandHolding(req, res) {
 			title_source
 		} = req.body;
 
-		// Auto-generate the name and section_name fields
-		const name = `${section_name}-${legal_entity}`;
-		const section_name = `${section}-${township}-${range}`;
+
 
 
 
 		// Check if all required fields are present
 		if (!owner || !legal_entity || !net_mineral_acres || !mineral_owner_royalty || !section || !township || !range || !title_source) {
 			console.error('Missing required fields');
-
 			return res.status(422).json({ 'message': 'Missing required fields' });
 		}
+
 
 		const ownerExists = await Owner.findById(owner).exec();
 		if (!ownerExists) {
@@ -41,34 +39,40 @@ async function createLandHolding(req, res) {
 		}
 		console.log('Owner exists:', ownerExists);
 
+		// Auto-generate the name and section_name fields
+		const section_name = `${section}-${township}-${range}`;
+		const name = `${section_name}-${legal_entity}`;
 
 		// Create new land holding
-		const landHolding = new LandHolding({
-			name,
-			owner,
-			legal_entity,
-			net_mineral_acres,
-			mineral_owner_royalty,
-			section,
-			section_name,
-			township,
-			range,
-			title_source,
-		});
+		try {
+			const newLandHolding = await LandHolding.create({
+				name,
+				owner,
+				legal_entity,
+				net_mineral_acres,
+				mineral_owner_royalty,
+				section,
+				section_name,
+				township,
+				range,
+				title_source,
+			});
 
-		// Save the new land holding
-		const savedLandHolding = await newLandHolding.save();
-		console.log('Saved LandHolding: savedLandHolding');
+			// Update the owner with the new land holding and increment total_land_holdings
+			ownerExists.land_holdings.push(newLandHolding._id);
+			ownerExists.total_land_holdings = ownerExists.land_holdings.length;
 
-		// Update the owner with the new land holding and increment total_land_holdings
-		ownerExists.land_holdings.push(savedLandHolding._id);
-		ownerExists.total_land_holdings = ownerExists.land_holdings.length;
+			// Save the updated owner
+			const updatedOwner = await ownerExists.save();
+			console.log('Updated Owner:', updatedOwner);
 
-		// Save the updated owner
-		const updatedOwner = await ownerExists.save();
-		console.log('Updated Owner:', updatedOwner);
 
-		res.status(201).json({ savedLandHolding });
+
+			return res.status(201).json({ message: 'Land Holding created successfully', landHolding: newLandHolding });
+		} catch (error) {
+			return res.status(500).json({ 'message': 'Internal server error' });
+		}
+
 
 	} catch (error) {
 		console.error('Error creating land holding', error);
@@ -76,16 +80,25 @@ async function createLandHolding(req, res) {
 	}
 };
 
-// Get all Land Holdings
+// Get all Land Holdings for a specific owner
 async function getLandHoldings(req, res) {
 	console.log('Inside getLandHoldings controller');
 	try {
-		const landHoldings = await LandHolding.find({ owner: ownerId }).populate('owner');
+		const { ownerId } = req.params; // Extract ownerId from request parameters
+		const landHoldings = await LandHolding.find({ owner: ownerId })
+			.populate('owner', 'name') // Include only specific fields from the owner
+
+		if (!landHoldings || landHoldings.length === 0) {
+			return res.status(404).json({ message: 'No land holdings found for this owner' });
+		}
 		res.json(landHoldings);
+		console.log('Successfully returned Land Holdings for this owner');
 	} catch (error) {
+		console.error('Error fetching land holdings:', error);
 		res.status(500).json({ message: error.message });
 	}
 };
+
 
 // Get a Land Holding by ID
 async function getLandHoldingById(req, res) {
