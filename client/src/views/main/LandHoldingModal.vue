@@ -288,6 +288,8 @@ function openModal(mode: 'create' | 'update', landHolding: LandHoldingData | nul
 		// Reset form for create mode
 		Object.assign(landHoldingData, {
 		id: null,
+		name: '',
+		owner: '',
 		legal_entity: '',
 		net_mineral_acres: 0,
 		mineral_owner_royalty: 0,
