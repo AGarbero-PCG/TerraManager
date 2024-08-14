@@ -1,6 +1,6 @@
 // client/src/stores/owner.ts
 import { defineStore } from 'pinia';
-import { useApi } from "../composables/useApi"
+import { useApi } from "../composables/useApi.js"
 
 // Define the type for an Owner
 export interface Owner {

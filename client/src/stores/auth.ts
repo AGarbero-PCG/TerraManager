@@ -1,6 +1,6 @@
 // This file is for fetching and storing authenticated users
 import { defineStore } from "pinia"
-import { useApi, useApiPrivate } from "../composables/useApi"
+import { useApi, useApiPrivate } from "../composables/useApi.js"
 
 // This user model represents our state user
 export interface User {
