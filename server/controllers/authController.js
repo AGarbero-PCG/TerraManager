@@ -1,6 +1,6 @@
 const User = require('../models/User') // Import User model
 const jwt = require('jsonwebtoken') // To generate JWT tokens
-const bcrypt = require('bcrypt') // To hash passwords
+const bcrypt = require('bcryptjs') // To hash passwords
 
 
 // Register a new user
