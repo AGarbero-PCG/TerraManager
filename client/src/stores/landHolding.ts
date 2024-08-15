@@ -1,6 +1,6 @@
 // client/src/stores/landHolding.ts
 import { defineStore } from 'pinia';
-import { useApi } from "../composables/useApi";
+import { useApi } from "../composables/useApi.js";
 
 // Define the type for a land holding
 export interface LandHolding {
