@@ -87,7 +87,7 @@ async function getLandHoldings(req, res) {
 			.populate('owner', 'name') // Include only specific fields from the owner
 
 		if (!landHoldings || landHoldings.length === 0) {
-			return res.status(404).json({ message: 'No land holdings found for this owner' });
+			return res.status(200).json({ message: 'No land holdings found for this owner' });
 		}
 		res.json(landHoldings);
 		console.log('Successfully returned Land Holdings for this owner');
