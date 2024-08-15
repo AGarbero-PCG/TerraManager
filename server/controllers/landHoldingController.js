@@ -22,7 +22,16 @@ async function createLandHolding(req, res) {
 		} = req.body;
 
 		// Check if all required fields are present
-		if (!owner || !legal_entity || !net_mineral_acres || !mineral_owner_royalty || !section || !township || !range || !title_source) {
+		if (
+			owner == null ||
+			!legal_entity ||
+			net_mineral_acres == null ||
+			mineral_owner_royalty == null ||
+			!section ||
+			!township ||
+			!range ||
+			!title_source
+		) {
 			console.error('Missing required fields');
 			return res.status(422).json({ 'message': 'Missing required fields' });
 		}
@@ -40,31 +49,27 @@ async function createLandHolding(req, res) {
 		const name = `${section_name}-${legal_entity}`;
 
 		// Create new land holding
-		try {
-			const newLandHolding = await LandHolding.create({
-				name,
-				owner,
-				legal_entity,
-				net_mineral_acres,
-				mineral_owner_royalty,
-				section,
-				section_name,
-				township,
-				range,
-				title_source,
-			});
+		const newLandHolding = await LandHolding.create({
+			name,
+			owner,
+			legal_entity,
+			net_mineral_acres,
+			mineral_owner_royalty,
+			section,
+			section_name,
+			township,
+			range,
+			title_source,
+		});
 
-			// Update the owner with the new land holding
-			ownerExists.land_holdings.push(newLandHolding._id);
+		// Update the owner with the new land holding
+		ownerExists.land_holdings.push(newLandHolding._id);
 
-			// Save the updated owner
-			await ownerExists.save();
-			console.log('Updated Owner:', ownerExists);
+		// Save the updated owner
+		await ownerExists.save();
+		console.log('Updated Owner:', ownerExists);
 
-			return res.status(201).json({ message: 'Land Holding created successfully', landHolding: newLandHolding });
-		} catch (error) {
-			return res.status(500).json({ 'message': 'Internal server error' });
-		}
+		return res.status(201).json({ message: 'Land Holding created successfully', landHolding: newLandHolding });
 
 
 	} catch (error) {
@@ -82,7 +87,7 @@ async function getLandHoldings(req, res) {
 			.populate('owner', 'name') // Include only specific fields from the owner
 
 		if (!landHoldings || landHoldings.length === 0) {
-			return res.status(404).json({ message: 'No land holdings found for this owner' });
+			return res.status(200).json({ message: 'No land holdings found for this owner' });
 		}
 		res.json(landHoldings);
 		console.log('Successfully returned Land Holdings for this owner');

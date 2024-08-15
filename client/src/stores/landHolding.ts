@@ -1,6 +1,6 @@
 // client/src/stores/landHolding.ts
 import { defineStore } from 'pinia';
-import { useApi } from "../composables/useApi.js";
+import { useApi } from "../composables/useApi";
 
 // Define the type for a land holding
 export interface LandHolding {
@@ -59,9 +59,9 @@ export const useLandHoldingStore = defineStore('landholding', {
 			return
 		},
 
-		async createLandHolding(payload: LandHoldingData) {
+		async createLandHolding(payload: LandHoldingData, ownerId: string) {
 			try {
-				const { data } = await useApi().post('/api/landholdings/createLandHolding', payload);
+				const { data } = await useApi().post(`/api/landholdings/createLandHolding/${ownerId}`, payload);
 				return data;
 			} catch (error: Error | any) {
 				console.error('Error during LandHolding creation:', error);
@@ -69,6 +69,7 @@ export const useLandHoldingStore = defineStore('landholding', {
 		},
 		async getLandHoldings(ownerId: string) {
 			try {
+				console.log('Fetching LandHoldings for ownerId:', ownerId);
 				const { data } = await useApi().get<LandHolding[]>(`/api/landholdings/getLandHoldings/${ownerId}`);
 				this.landHoldings = data;
 				return data;

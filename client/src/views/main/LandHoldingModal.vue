@@ -88,7 +88,7 @@
 						</div>
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+						<button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#LandHoldingManager">Close</button>
 						<button type="button" class="btn btn-primary">Save changes</button>
 					</div>
 				</div>
@@ -108,7 +108,7 @@
 						<h5 class="modal-title" id="LandHoldingModalLabel">
 						{{ isUpdateMode ? 'Update Land Holding' : 'Create Land Holding' }}
 						</h5>
-						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						<button type="button" class="btn-close" data-bs-toggle="modal" data-bs-target="#LandHoldingManager" aria-label="Close"></button>
 					</div>
 					<div class="modal-body">
 						<form @submit.prevent="submit">
@@ -185,7 +185,7 @@
 							<label for="title_source">Title Source</label>
 						</div>
 	
-						<button type="submit" class="btn btn-success" data-bs-dismiss="modal">
+						<button type="submit" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#LandHoldingManager">
 							{{ isUpdateMode ? 'Update Land Holding' : 'Create Land Holding' }}
 						</button>
 						</form>
@@ -206,7 +206,7 @@
 				<div class="modal-content">
 					<div class="modal-header">
 						<h5 class="modal-title" id="deleteLandHoldingModalLabel">Delete Land Holding</h5>
-						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						<button type="button" class="btn-close" data-bs-toggle="modal" data-bs-target="#LandHoldingManager" aria-label="Close"></button>
 					</div>
 					<div class="modal-body">
 						<p>
@@ -215,8 +215,8 @@
 						</p>
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-						<button type="button" class="btn btn-danger" data-bs-dismiss="modal" @click="deleteLandHolding">
+						<button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#LandHoldingManager">Cancel</button>
+						<button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#LandHoldingManager" @click="deleteLandHolding">
 						Yes, Delete
 						</button>
 					</div>
@@ -321,7 +321,8 @@ async function submit() {
 		// Create Land Holding
 		if (props.owner?.id) {
 			landHoldingData.owner = props.owner.id; // Assign the current owner id
-			await landHoldingStore.createLandHolding(landHoldingData)
+
+			await landHoldingStore.createLandHolding(landHoldingData, props.owner.id)
 				.then(() => {
 					console.log('Land Holding Created');
 					if (props.owner?.id){
