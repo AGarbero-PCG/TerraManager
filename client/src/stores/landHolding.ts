@@ -70,7 +70,6 @@ export const useLandHoldingStore = defineStore('landholding', {
 		async getLandHoldings(ownerId: string) {
 			try {
 				console.log('Fetching LandHoldings for ownerId:', ownerId);
-
 				const { data } = await useApi().get<LandHolding[]>(`/api/landholdings/getLandHoldings/${ownerId}`);
 				this.landHoldings = data;
 				return data;

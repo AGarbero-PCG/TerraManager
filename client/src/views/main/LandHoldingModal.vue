@@ -23,7 +23,7 @@
 											:icon="['fas', 'circle-plus']"
 											data-bs-toggle="modal"
 											data-bs-target="#LandHoldingModal"
-											class="text-success cursor-pointer"
+											class="text-primary cursor-pointer"
 											size="2x"
 											@click="openModal('create')"
 										/>
@@ -185,7 +185,7 @@
 							<label for="title_source">Title Source</label>
 						</div>
 	
-						<button type="submit" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#LandHoldingManager">
+						<button type="submit" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#LandHoldingManager">
 							{{ isUpdateMode ? 'Update Land Holding' : 'Create Land Holding' }}
 						</button>
 						</form>
@@ -211,7 +211,7 @@
 					<div class="modal-body">
 						<p>
 						Are you sure you want to delete the land holding?
-						<strong>{{ selectedLandHolding?.name }}</strong>?
+						<strong>{{ selectedLandHolding?.name }}</strong>
 						</p>
 					</div>
 					<div class="modal-footer">

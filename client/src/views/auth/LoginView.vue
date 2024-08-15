@@ -12,7 +12,7 @@
 						<label for="password" class="form-label">Password</label>
 						<input v-model="loginData.password" type="password" class="form-control" id="password">
 					</div>
-					<button type="submit" class="btn btn-success">Login</button>
+					<button type="submit" class="btn btn-primary">Login</button>
 				</form>
 			</div>
 		</div>

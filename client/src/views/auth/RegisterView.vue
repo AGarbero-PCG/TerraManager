@@ -29,7 +29,7 @@
 						<label for="password_confirm" class="form-label">Confirm Password</label>
 						<input v-model="registerData.password_confirm" type="password" class="form-control" id="password_confirm">
 					</div>
-					<button type="submit" class="btn btn-success">Register</button>
+					<button type="submit" class="btn btn-primary">Register</button>
 				</form>
 			</div>
 		</div>
