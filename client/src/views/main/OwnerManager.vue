@@ -1,12 +1,14 @@
 <!-- client/src/views/main/OwnerManager.vue -->
 <template>
-	<div class="owner-manager">
-		<h1>Owner Manager</h1>
+	<div class="owner-manager container">
+		<h1 class="text-left">Owner Manager</h1>
 		
 		<!-- List of Owners -->
 		<div class="container">
 			<div class="card card-body mt-4">
 				<h5 class="card-title">All Owners</h5>
+
+				<!-- Error Message -->
 				<p v-if="errorMessage" class="error-message text-danger mb-4">{{ errorMessage }}</p>
 				
 				<!-- Create Owner Modal Trigger -->
@@ -14,7 +16,7 @@
 					<font-awesome-icon :icon="['fas', 'user-plus']"
 						data-bs-toggle="modal" 
 						data-bs-target="#OwnerModal" 
-						class="text-success cursor-pointer" 
+						class="text-primary cursor-pointer" 
 						size="2x"
 						@click="openModal('create')"
 					/>
@@ -285,9 +287,10 @@ const owners = computed(() => ownerStore.owners); // Bind the store's owners to 
 
 <style scoped>
 
-#register .card{
-	max-width:40vw;
-	margin: auto;
+.owner-manager {
+	margin-left: auto;
+	margin-right: auto;
+	padding: 20px;
 }
 
 </style>
