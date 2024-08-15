@@ -59,9 +59,9 @@ export const useLandHoldingStore = defineStore('landholding', {
 			return
 		},
 
-		async createLandHolding(payload: LandHoldingData) {
+		async createLandHolding(payload: LandHoldingData, ownerId: string) {
 			try {
-				const { data } = await useApi().post('/api/landholdings/createLandHolding', payload);
+				const { data } = await useApi().post(`/api/landholdings/createLandHolding/${ownerId}`, payload);
 				return data;
 			} catch (error: Error | any) {
 				console.error('Error during LandHolding creation:', error);

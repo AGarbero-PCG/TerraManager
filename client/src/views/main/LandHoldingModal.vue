@@ -288,6 +288,8 @@ function openModal(mode: 'create' | 'update', landHolding: LandHoldingData | nul
 		// Reset form for create mode
 		Object.assign(landHoldingData, {
 		id: null,
+		name: '',
+		owner: '',
 		legal_entity: '',
 		net_mineral_acres: 0,
 		mineral_owner_royalty: 0,
@@ -319,7 +321,8 @@ async function submit() {
 		// Create Land Holding
 		if (props.owner?.id) {
 			landHoldingData.owner = props.owner.id; // Assign the current owner id
-			await landHoldingStore.createLandHolding(landHoldingData)
+
+			await landHoldingStore.createLandHolding(landHoldingData, props.owner.id)
 				.then(() => {
 					console.log('Land Holding Created');
 					if (props.owner?.id){
