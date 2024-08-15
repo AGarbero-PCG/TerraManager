@@ -7,8 +7,6 @@ async function createLandHolding(req, res) {
 	console.log('Inside createLandHolding controller');
 	console.log('Request body:', req.body);
 	try {
-		console.log('Inside create land holding controller');
-		console.log('Request body:', req.body);
 
 		const {
 			owner,
@@ -32,14 +30,12 @@ async function createLandHolding(req, res) {
 			!range ||
 			!title_source
 		) {
-			console.error('Missing required fields');
 			return res.status(422).json({ 'message': 'Missing required fields' });
 		}
 
 
 		const ownerExists = await Owner.findById(owner).exec();
 		if (!ownerExists) {
-			console.error('Owner does not exist');
 			return res.status(404).json({ 'message': 'Owner does not exist' });
 		}
 		console.log('Owner exists:', ownerExists);
@@ -73,7 +69,6 @@ async function createLandHolding(req, res) {
 
 
 	} catch (error) {
-		console.error('Error creating land holding', error);
 		res.status(500).json({ message: error.message });
 	}
 };
@@ -92,7 +87,6 @@ async function getLandHoldings(req, res) {
 		res.json(landHoldings);
 		console.log('Successfully returned Land Holdings for this owner');
 	} catch (error) {
-		console.error('Error fetching land holdings:', error);
 		res.status(500).json({ message: error.message });
 	}
 };
