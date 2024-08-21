@@ -185,7 +185,11 @@
 							<label for="title_source">Title Source</label>
 						</div>
 	
+<<<<<<< HEAD
 						<button type="submit" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#LandHoldingManager">
+=======
+						<button type="submit" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#LandHoldingManager">
+>>>>>>> Deployment
 							{{ isUpdateMode ? 'Update Land Holding' : 'Create Land Holding' }}
 						</button>
 						</form>

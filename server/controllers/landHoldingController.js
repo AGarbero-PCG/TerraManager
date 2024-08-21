@@ -30,6 +30,10 @@ async function createLandHolding(req, res) {
 			!range ||
 			!title_source
 		) {
+<<<<<<< HEAD
+=======
+			console.error('Missing required fields');
+>>>>>>> Deployment
 			return res.status(422).json({ 'message': 'Missing required fields' });
 		}
 

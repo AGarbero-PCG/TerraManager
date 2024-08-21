@@ -1,6 +1,10 @@
 <!-- client/src/views/main/OwnerManager.vue -->
 <template>
+<<<<<<< HEAD
 	<div class="owner-manager">
+=======
+	<div class="owner-manager container">
+>>>>>>> Deployment
 		<h1 class="text-left">Owner Manager</h1>
 		
 		<!-- List of Owners -->
