@@ -11,13 +11,14 @@ export default defineConfig({
 		vueJsx()
 	],
 	server: {
-		// proxy: {
-		// 	'/api': {
-		// 		target: 'http://localhost:3500',
-		// 		changeOrigin: true,
-		// 		rewrite: (path) => path.replace(/^\/api/, ''),
-		// 	},
-		// },
+		// Force server target to be local host
+		proxy: {
+			'/api': {
+				target: 'http://localhost:3500',
+				changeOrigin: true,
+				rewrite: (path) => path.replace(/^\/api/, ''),
+			},
+		},
 	},
 	define: {
 		'process.env': {}
