@@ -1,4 +1,4 @@
-// client/src/main.ts
+// client/src/main.js
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import { authentication } from './plugins/authentication.js'
