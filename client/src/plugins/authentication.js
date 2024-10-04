@@ -3,63 +3,50 @@
 
 import axios from 'axios';
 
-const baseURL = process.env.MONGODB_API_ENDPOINT || 'https://us-west-2.aws.data.mongodb-api.com/app/<APP_ID>/endpoint/data/v1';
-const apiKey = process.env.MONGODB_API_KEY; // Ensure API key is in .env file
+const baseURL = process.env.VITE_MONGODB_API_ENDPOINT;
+const apiKey = process.env.VITE_MONGODB_API_KEY;
 
-export default {
-  // Register a new user
-  async register(email, password) {
-    try {
-      const response = await axios.post(`${baseURL}/auth/providers/local-userpass/register`, {
-        email,
-        password
-      }, {
-        headers: {
-          'Content-Type': 'application/json',
-          'apiKey': apiKey
-        }
-      });
-      return response.data;
-    } catch (error) {
-      throw new Error('Error registering user: ' + error.response?.data?.message || error.message);
-    }
-  },
+const authentication = {
+  install(app) {
+    const apiClient = axios.create({
+      baseURL: process.env.MONGODB_API_ENDPOINT, // Use your MongoDB Data API URL
+      headers: {
+        'Content-Type': 'application/json',
+        'apiKey': process.env.MONGODB_API_KEY // Add your MongoDB API Key from the .env file
+      }
+    });
 
-  // Login a user
-  async login(email, password) {
-    try {
-      const response = await axios.post(`${baseURL}/auth/providers/local-userpass/login`, {
-        email,
-        password
-      }, {
-        headers: {
-          'Content-Type': 'application/json',
-          'apiKey': apiKey
-        }
-      });
-      return response.data; // Returns access token and user info
-    } catch (error) {
-      throw new Error('Error logging in: ' + error.response?.data?.message || error.message);
-    }
-  },
+    // Login method
+    app.config.globalProperties.$login = async (email, password) => {
+      try {
+        const response = await apiClient.post('/auth/providers/local-userpass/login', {
+          email,
+          password
+        });
+        return response.data;
+      } catch (error) {
+        console.error('Error logging in:', error);
+        throw error;
+      }
+    };
 
-  // Log out a user (could also just clear the local token)
-  async logout() {
-    // No specific MongoDB API logout endpoint, just clear local tokens or sessions
-    try {
-      // Perform any necessary cleanup, such as removing tokens from local storage or cookies
-      return true;
-    } catch (error) {
-      throw new Error('Error logging out: ' + error.message);
-    }
-  },
+    // Register method
+    app.config.globalProperties.$register = async (email, password) => {
+      try {
+        const response = await apiClient.post('/auth/providers/local-userpass/register', {
+          email,
+          password
+        });
+        return response.data;
+      } catch (error) {
+        console.error('Error registering:', error);
+        throw error;
+      }
+    };
 
-  // Optionally refresh tokens (if you're using refresh tokens)
-  async refreshToken() {
-    try {
-      // Placeholder for handling refresh logic, if needed
-    } catch (error) {
-      throw new Error('Error refreshing token: ' + error.message);
-    }
+    // Logout method
+    // Refresh method
   }
 };
+
+export default authentication;

@@ -6,16 +6,16 @@ import { watchEffect } from 'vue';
 
 // Create a public axios instance (for non-protected routes)
 const axiosInstance = axios.create({
-  baseURL: process.env.MONGODB_API_ENDPOINT,
+  baseURL: process.env.VITE_MONGODB_API_ENDPOINT,
   headers: {
     'Content-Type': 'application/json',
-    'apiKey': process.env.MONGODB_API_KEY
+    'apiKey': process.env.VITE_MONGODB_API_KEY
   }
 });
 
 // Create a private axios instance (for protected routes)
 const axiosPrivateInstance = axios.create({
-  baseURL: process.env.VITE_MONGODB_API_URI || 'https://your-mongodb-api-url',
+  baseURL: process.env.VITE_MONGODB_API_ENDPOINT || 'https://your-mongodb-api-url',
   headers: {
     'Content-Type': 'application/json',
     'apiKey': process.env.VITE_MONGODB_API_KEY,

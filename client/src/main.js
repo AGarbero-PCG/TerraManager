@@ -1,31 +1,26 @@
 // client/src/main.js
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
-import { authentication } from './plugins/authentication.js'
 import App from './App.vue'
 import router from './router/index.js'
+import authentication from './plugins/authentication.js'
 
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 console.log('Starting the Vue application setup...');
-
-const app = createApp(App)
+const app = createApp(App);
 console.log('Vue application instance created:', app);
+
+
+app.use(authentication);
+console.log('Authentication plugin applied.');
 
 app.use(createPinia())
 console.log('Pinia store applied.');
 
-// Whenever install method triggers,
-// once it is ready to serve the promise,
-// router will be activated and the app will be mounted
-console.log('Using router:', router);
+app.use(router);
+console.log('Router applied.');
 
-authentication.install().then(() => {
-	console.log('Authentication plugin installed.');
-	app.use(router)
-	console.log('Router applied.');
-	app.mount('#app')
-	console.log('Vue application mounted');
-
-})
+app.mount('#app');
+console.log('Vue application mounted');
