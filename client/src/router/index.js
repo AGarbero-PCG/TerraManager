@@ -1,4 +1,4 @@
-import { useAuthStore } from '@/stores/auth'
+// import { useAuthStore } from '@/stores/auth'
 import { useOwnerStore } from '@/stores/owner'
 import { createRouter, createWebHistory } from 'vue-router'
 
@@ -44,17 +44,17 @@ const router = createRouter({
 	]
 })
 
-router.beforeEach((to, from) => {
+// router.beforeEach((to, from) => {
 
-	const store = useAuthStore() // Necessary to access authenticated user for check below
+// 	const store = useAuthStore() // Necessary to access authenticated user for check below
 
-	if (to.meta.requiresAuth && !store.isAuthenticated) {
-		// If the route requires authentication and the user is NOT authenticated, redirect to login page
-		return { name: 'login', query: { redirect: to.fullPath } } // Save the previous URL and if we login, we can come back to the route
-	} else if (to.meta.requiresGuest && store.isAuthenticated) { // If no...
-		// If the route requires the user to be a guest, redirect to home page
-		return { name: 'home' }
-	}
-})
+// 	if (to.meta.requiresAuth && !store.isAuthenticated) {
+// 		// If the route requires authentication and the user is NOT authenticated, redirect to login page
+// 		return { name: 'login', query: { redirect: to.fullPath } } // Save the previous URL and if we login, we can come back to the route
+// 	} else if (to.meta.requiresGuest && store.isAuthenticated) { // If no...
+// 		// If the route requires the user to be a guest, redirect to home page
+// 		return { name: 'home' }
+// 	}
+// })
 
-export default router
+// export default router
