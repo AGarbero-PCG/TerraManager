@@ -17,15 +17,21 @@ export const useAuthStore = defineStore('auth', {
   actions: {
     // Register a new user
     async register(email, password) {
+      console.log("Inside registration function");
+        
       this.loading = true;
       this.error = null;
       try {
+        console.log("Inside 'register' try block");
+        
         const response = await authentication.register(email, password);
         this.isAuthenticated = true;
         this.accessToken = response.access_token; // Use MongoDB's response token
         this.user = { email }; // You can store more user info if available
+        console.log("User registered successfully");
       } catch (error) {
         this.error = error.message;
+        console.error("Error registering user: " + error.message);
       } finally {
         this.loading = false;
       }

@@ -3,8 +3,8 @@
 
 import axios from 'axios';
 
-const baseURL = process.env.VITE_MONGODB_API_URI || 'https://us-west-2.aws.data.mongodb-api.com/app/<APP_ID>/endpoint/data/v1';
-const apiKey = process.env.VITE_MONGODB_API_KEY; // Ensure API key is in .env file
+const baseURL = process.env.MONGODB_API_ENDPOINT || 'https://us-west-2.aws.data.mongodb-api.com/app/<APP_ID>/endpoint/data/v1';
+const apiKey = process.env.MONGODB_API_KEY; // Ensure API key is in .env file
 
 export default {
   // Register a new user
