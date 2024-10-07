@@ -24,10 +24,10 @@ export const useAuthStore = defineStore('auth', {
       try {
         console.log("Inside 'register' try block");
         
-        const response = await authentication.register(email, password);
-        this.isAuthenticated = true;
-        this.accessToken = response.access_token; // Use MongoDB's response token
-        this.user = { email }; // You can store more user info if available
+        const user = await authentication.register(email, password); // User object returned from Realm
+        this.user = user;
+        this.accessToken = user.access_token; // Get the access token from the user object
+        this.isAuthenticated = true; // You can store more user info if available
         console.log("User registered successfully");
       } catch (error) {
         this.error = error.message;
@@ -42,9 +42,9 @@ export const useAuthStore = defineStore('auth', {
       this.loading = true;
       this.error = null;
       try {
-        const response = await authentication.login(email, password);
-        this.isAuthenticated = true;
-        this.accessToken = response.access_token; // Use the access token from MongoDB API
+        const user = await authentication.login(email, password);
+        this.user = user;
+        this.accessToken = user.access_token; // Use the access token from MongoDB API
         this.user = { email }; // Again, store more user info if needed
       } catch (error) {
         this.error = error.message;
