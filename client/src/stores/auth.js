@@ -42,12 +42,14 @@ export const useAuthStore = defineStore('auth', {
       this.loading = true;
       this.error = null;
       try {
-        const user = await authentication.login(email, password);
+        const user = await authentication.login(email, password); // User object returned from Realm
         this.user = user;
         this.accessToken = user.access_token; // Use the access token from MongoDB API
-        this.user = { email }; // Again, store more user info if needed
+        this.isAuthenticated = true;
+        console.log("User logged in successfully: ", user);
       } catch (error) {
         this.error = error.message;
+        console.error("Error logging in user: " + error.message);
       } finally {
         this.loading = false;
       }
@@ -85,6 +87,6 @@ export const useAuthStore = defineStore('auth', {
   // Optionally use getters for some computed state
   getters: {
     isLoggedIn: (state) => state.isAuthenticated,
-    getUserEmail: (state) => state.user?.email
+    getUserEmail: (state) => state.user?.profile?.email || null // MongoDB Realm user profile contains email
   }
 });

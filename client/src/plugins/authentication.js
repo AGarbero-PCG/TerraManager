@@ -1,51 +1,52 @@
 // client/src/plugins/authentication.js
 // This plugin will handle the actual API calls related to authentication (login, register, logout). It interacts with the MongoDB Data API for user authentication. The plugin will be used in the auth store to perform these actions.
 
-import axios from 'axios';
+import * as Realm from 'realm-web';
 
-const baseURL = process.env.VITE_MONGODB_API_ENDPOINT;
-const apiKey = process.env.VITE_MONGODB_API_KEY;
+// Create a new Realm app instance
+
+const app = new Realm.App({ id: import.meta.env.VITE_REALM_APP_ID });
+console.log("Realm App ID:", import.meta.env.VITE_REALM_APP_ID);
 
 const authentication = {
-  install(app) {
-    const apiClient = axios.create({
-      baseURL: process.env.MONGODB_API_ENDPOINT, // Use your MongoDB Data API URL
-      headers: {
-        'Content-Type': 'application/json',
-        'apiKey': process.env.MONGODB_API_KEY // Add your MongoDB API Key from the .env file
-      }
-    });
-
-    // Login method
-    app.config.globalProperties.$login = async (email, password) => {
+  install(app)  {
+    
+    // Register method
+    app.config.globalProperties.$register = async (email, password) => {
       try {
-        const response = await apiClient.post('/auth/providers/local-userpass/login', {
-          email,
-          password
-        });
-        return response.data;
-      } catch (error) {
-        console.error('Error logging in:', error);
+        await app.emailPasswordAuth.registerUser(email, password); // Register the user in MongoDB Realm
+        console.log("User registered successfully");
+        return response.data; // MongoDB Realm returns the user object
+      } catch (error){
+        console.error("Error registering user: " + error);
         throw error;
       }
     };
 
-    // Register method
-    app.config.globalProperties.$register = async (email, password) => {
+    // Login method
+    app.config.globalProperties.$login = async (email, password) => {
       try {
-        const response = await apiClient.post('/auth/providers/local-userpass/register', {
-          email,
-          password
-        });
-        return response.data;
-      } catch (error) {
-        console.error('Error registering:', error);
+        const credentials = Realm.Credentials.emailPassword(email, password);
+        const user = await app.logIn(credentials); // Log the user in
+        return user; // MongoDB Realm returns the user object
+      } catch (error){
+        console.error("Error logging in: " + error);
         throw error;
       }
     };
 
     // Logout method
-    // Refresh method
+    app.config.globalProperties.$logout = async () => {
+      try {
+        const user = app.currentUser;
+        if (user) {
+          await user.logOut(); // Log out the current user
+        }
+      } catch (error) {
+        console.error('Error logging out: ', error);
+        throw error;
+      }
+    };
   }
 };
 
