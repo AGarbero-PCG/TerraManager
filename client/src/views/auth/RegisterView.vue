@@ -5,7 +5,7 @@
 				<h5 class="card-title">Register</h5>
 				<form @submit.prevent="submit"> <!-- When this form gets submitted, we call the "submit" function -->
 					<p v-if="errorMessage" class="error-message text-danger mb-4">{{ errorMessage }}</p>
-					<div class="mb-3">
+					<!-- <div class="mb-3">
 						<label for="username" class="form-label">Username</label>
 						<input v-model="registerData.username" type="text" class="form-control" id="username">
 					</div>
@@ -16,7 +16,7 @@
 					<div class="mb-3">
 						<label for="last_name" class="form-label">Last Name</label>
 						<input v-model="registerData.last_name" type="text" class="form-control" id="last_name">
-					</div>
+					</div> -->
 					<div class="mb-3">
 						<label for="email" class="form-label">Email address</label>
 						<input v-model="registerData.email" type="email" class="form-control" id="email">
@@ -25,10 +25,10 @@
 						<label for="password" class="form-label">Password</label>
 						<input v-model="registerData.password" type="password" class="form-control" id="password">
 					</div>
-					<div class="mb-3">
+					<!-- <div class="mb-3">
 						<label for="password_confirm" class="form-label">Confirm Password</label>
 						<input v-model="registerData.password_confirm" type="password" class="form-control" id="password_confirm">
-					</div>
+					</div> -->
 					<button type="submit" class="btn btn-primary">Register</button>
 				</form>
 			</div>
@@ -45,12 +45,12 @@ const authStore = useAuthStore();
 const router = useRouter();
 
 const registerData = reactive<RegisterData>({
-	username: "",
+	//username: "",
 	email: "",
-	first_name: "",
-	last_name: "",
+	//first_name: "",
+	//last_name: "",
 	password: "",
-	password_confirm:"",
+	//password_confirm:"",
 })
 
 const errorMessage = ref<string>("")

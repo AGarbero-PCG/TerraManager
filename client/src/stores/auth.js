@@ -26,7 +26,7 @@ export const useAuthStore = defineStore('auth', {
         
         const user = await authentication.register(email, password); // User object returned from Realm
         this.user = user;
-        this.accessToken = user.access_token; // Get the access token from the user object
+        //this.accessToken = user.access_token; // Get the access token from the user object
         this.isAuthenticated = true; // You can store more user info if available
         console.log("User registered successfully");
       } catch (error) {

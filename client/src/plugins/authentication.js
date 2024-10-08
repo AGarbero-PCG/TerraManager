@@ -13,9 +13,9 @@ const authentication = {
   // Register method
   async register (email, password) {
     try {
-      await app.emailPasswordAuth.registerUser(email, password); // Register the user in MongoDB Realm
+      await app.emailPasswordAuth.registerUser( email, password ); // Register the user in MongoDB Realm
       console.log("User registered successfully");
-      return response.data; // MongoDB Realm returns the user object
+      return { success: true };
     } catch (error){
       console.error("Error registering user: " + error);
       throw error;

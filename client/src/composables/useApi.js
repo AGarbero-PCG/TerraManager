@@ -8,25 +8,6 @@ import { watchEffect } from 'vue';
 // Create a new Realm app instance
 const app = new Realm.App({ id: import.meta.env.VITE_REALM_APP_ID });
 
-// Create a public axios instance (for non-protected routes)
-const axiosInstance = axios.create({
-  baseURL: process.env.VITE_MONGODB_API_ENDPOINT,
-  headers: {
-    'Content-Type': 'application/json',
-    'apiKey': process.env.VITE_MONGODB_API_KEY
-  }
-});
-
-// Create a private axios instance (for protected routes)
-const axiosPrivateInstance = axios.create({
-  baseURL: process.env.VITE_MONGODB_API_ENDPOINT || 'https://your-mongodb-api-url',
-  headers: {
-    'Content-Type': 'application/json',
-    'apiKey': process.env.VITE_MONGODB_API_KEY,
-    'withCredentials': true // Used for requests that require credentials, like cookies or JWT tokens
-  }
-});
-
 // Authentication methods using Realm Web SDK
 export const useApi = () => {
 
@@ -34,7 +15,7 @@ export const useApi = () => {
     const register = async (email, password) => {
         try {
             const credentials = Realm.Credentials.emailPassword(email, password);
-            await app.emailPasswordAuth.registerUser(email, password); // Register the user in MongoDB Realm
+            await app.emailPasswordAuth.registerUser({email, password}); // Register the user in MongoDB Realm
             console.log("User registered successfully");
         } catch (error){
             console.error("Error registering user: " + error.message);
