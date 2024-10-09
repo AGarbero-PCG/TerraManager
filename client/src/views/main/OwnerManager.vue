@@ -166,16 +166,15 @@
 </template>
 
 
-<script setup lang="ts">
-import { useOwnerStore, type OwnerData } from '../../stores/owner';
+<script setup lang="js">
+import { useOwnerStore} from '../../stores/owner';
 import { reactive, ref, computed, onMounted } from 'vue';
 import LandHoldingModal from './LandHoldingModal.vue';
-// @ts-ignore
 import { FontAwesomeIcon } from '../../assets/icons';
 
 const ownerStore = useOwnerStore();
 
-const ownerData = reactive<OwnerData>({
+const ownerData = reactive({
 	id: null, // Initialize as null since the ID will be set when updating an existing owner
 	name: "",
 	entity_type: "Company",
@@ -184,19 +183,19 @@ const ownerData = reactive<OwnerData>({
 	total_land_holdings: 0,
 })
 
-const errorMessage = ref<string>("")
+const errorMessage = ref("")
 const isUpdateMode = ref(false);
 const isLandHoldingModalVisible = ref(false);
-const selectedOwner = ref<OwnerData | null>(null); // For tracking the owner to delete
+const selectedOwner = ref(null); // For tracking the owner to delete
 
 // Function to open Land Holding Modal
-function openLandHoldingModal(owner: OwnerData) {
+function openLandHoldingModal(owner) {
 	selectedOwner.value = owner;
 	isLandHoldingModalVisible.value = true;
 }
 
 // Function to open the modal in either 'create' or 'update' mode
-function openModal(mode: 'create' | 'update', owner: OwnerData | null = null) {
+function openModal(mode, owner = null) {
   isUpdateMode.value = mode === 'update';
   if (isUpdateMode.value && owner) {
     // Populate form with owner data for update
@@ -219,55 +218,48 @@ function openModal(mode: 'create' | 'update', owner: OwnerData | null = null) {
 
 // Function to handle form submission
 async function submit() {
-	const payload = ownerData;
-
-	console.log('API payload:', JSON.stringify(payload));
-	
-
   	if (isUpdateMode.value && ownerData.id !== null) {
 		// Update Owner
 		console.log('Updating owner with data:', JSON.stringify(ownerData));
 		
 		await ownerStore.updateOwner(ownerData)
-		.then(res => {
+		.then(() => {
 			console.log('Owner Updated');
 			ownerStore.getOwners();
 		})
 		.catch(err => {
-			console.log('Error during update:', err);
-			errorMessage.value = err.message;
+			console.error('Error during update:' + error.message);
 		});
 	} else {
 		// Create Owner
 		console.log('Creating owner with data:', JSON.stringify(ownerData));
 		
 		await ownerStore.createOwner(ownerData)
-		.then(res => {
+		.then(() => {
 			console.log('Owner Created');
 			ownerStore.getOwners();
 		})
 		.catch(err => {
-			errorMessage.value = err.message;
+			console.error('Error during creation:' + error.message);
 		});
 	}
 }
 
 // Select an owner for deletion and open the delete modal
-function selectOwnerForDeletion(owner: OwnerData) {
+function selectOwnerForDeletion(owner) {
   selectedOwner.value = owner;
 }
 
 // Delete the selected owner
 async function deleteOwner() {
-  if (selectedOwner.value && selectedOwner.value.id !== null && selectedOwner.value.id !== undefined) {
+  if (selectedOwner.value && selectedOwner.value.id !== null) {
     await ownerStore.deleteOwner(selectedOwner.value.id)
       .then(() => {
         console.log('Owner Deleted');
         ownerStore.getOwners(); // Refresh the owner list
       })
       .catch(err => {
-        console.log('Error during deletion:', err);
-        errorMessage.value = err.message;
+        console.error('Error during deletion:' + error.message);
       });
   }
 }
@@ -278,10 +270,6 @@ onMounted(async () => {
 });
 
 const owners = computed(() => ownerStore.owners); // Bind the store's owners to a local variable
-
-
-// Updating an Owner
-
 
 </script>
 

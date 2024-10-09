@@ -11,9 +11,11 @@ console.log("Realm App ID:", import.meta.env.VITE_REALM_APP_ID);
 const authentication = {
   
   // Register method
-  async register (email, password) {
+  async register ( registerData ) {
     try {
-      await app.emailPasswordAuth.registerUser( email, password ); // Register the user in MongoDB Realm
+      console.log(registerData);
+      
+      await app.emailPasswordAuth.registerUser( registerData); // Register the user in MongoDB Realm
       console.log("User registered successfully");
       return { success: true };
     } catch (error){
@@ -23,9 +25,9 @@ const authentication = {
   },
 
   // Login method
-  async login(email, password) {
+  async login( loginData ) {
     try {
-      const credentials = Realm.Credentials.emailPassword(email, password);
+      const credentials = Realm.Credentials.emailPassword( loginData.email, loginData.password );
       const user = await app.logIn(credentials); // Log the user in
       return user; // MongoDB Realm returns the user object
     } catch (error){
