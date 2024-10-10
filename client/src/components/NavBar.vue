@@ -14,7 +14,7 @@
 			<ul class="navbar-nav mx-2 mb-2 mb-lg-0">
 				<li v-if="isAuthenticated"  class="nav-item dropdown">
 				<a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-					{{ user.username }}
+					{{ authStore.registrationFields.email }}
 				</a>
 				<ul class="dropdown-menu dropdown-menu-end">
 					<li><router-link :to="{name: 'owner-manager'}" class="dropdown-item">Owner Manager</router-link></li>
@@ -39,18 +39,14 @@
 </template>
 
 
-<script setup lang="ts">
+<script setup lang="js">
 import { useRouter } from 'vue-router';
-import { useAuthStore } from '../stores/auth';
+import { useAuthStore } from '../stores/useAuthStore';
 import { computed } from 'vue';
 
 const authStore = useAuthStore();
 
-const router = useRouter()
-
-const user = computed(()=> {
-	return authStore.user
-})
+const router = useRouter();
 
 const isAuthenticated = computed(()=> {
 	return authStore.isAuthenticated

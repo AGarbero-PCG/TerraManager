@@ -2,7 +2,7 @@
 
 import axios from 'axios';
 import * as Realm from 'realm-web';
-import { useAuthStore } from "../stores/auth";
+import { useAuthStore } from "../stores/useAuthStore";
 import { watchEffect } from 'vue';
 
 // Create a new Realm app instance

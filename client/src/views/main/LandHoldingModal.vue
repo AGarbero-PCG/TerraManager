@@ -228,9 +228,9 @@
 </template>
 
 <script setup lang="ts">
-import { useOwnerStore, type OwnerData } from '../../stores/owner';
+import { useOwnerStore, type OwnerData } from '../../stores/useOwnerStore';
 import { reactive, ref, watch, computed, onMounted } from 'vue';
-import { useLandHoldingStore, type LandHoldingData } from '../../stores/landHolding';
+import { useLandHoldingStore, type LandHoldingData } from '../../stores/useLandholdingStore';
 // @ts-ignore
 import { FontAwesomeIcon } from '../../assets/icons';
 

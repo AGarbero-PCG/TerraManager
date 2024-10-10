@@ -21,7 +21,7 @@
 </template>
 
 
-<script setup lang="ts">
+<script setup lang="js">
 import { useAuthStore } from '../../stores/auth';
 import { computed, onMounted } from 'vue';
 

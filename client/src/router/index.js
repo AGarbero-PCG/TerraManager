@@ -1,6 +1,6 @@
-import { useAuthStore } from '@/stores/auth'
-import { useOwnerStore } from '@/stores/owner'
-import { createRouter, createWebHistory } from 'vue-router'
+import { useAuthStore } from '../stores/useAuthStore'
+import { useOwnerStore } from '../stores/useOwnerStore';
+import { createRouter, createWebHistory } from 'vue-router';
 
 const router = createRouter({
 	history: createWebHistory(import.meta.env.BASE_URL),

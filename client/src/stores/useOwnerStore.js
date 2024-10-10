@@ -17,6 +17,7 @@ export const useOwnerStore = defineStore('owner', {
   actions: {
     // Run refresh and get user data
     async attempt() {
+      console.log('Attempting to get owners');
       try {
         await this.getOwners();
       } catch (error) {

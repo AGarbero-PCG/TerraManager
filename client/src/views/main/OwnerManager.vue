@@ -167,7 +167,7 @@
 
 
 <script setup lang="js">
-import { useOwnerStore} from '../../stores/owner';
+import { useOwnerStore} from '../../stores/useOwnerStore';
 import { reactive, ref, computed, onMounted } from 'vue';
 import LandHoldingModal from './LandHoldingModal.vue';
 import { FontAwesomeIcon } from '../../assets/icons';
