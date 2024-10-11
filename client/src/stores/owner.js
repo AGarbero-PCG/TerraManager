@@ -1,5 +1,10 @@
 import { defineStore } from 'pinia';
-import { useApi } from "../composables/useApi.js";
+import * as Realm from "realm-web";
+
+const app = new Realm.App({ id: import.meta.env.VITE_REALM_APP_ID });
+const mongodb = app.currentUser.mongoClient("mongodb-atlas");
+// Access the owners collection in the MongoDB database
+const ownersCollection = mongodb.db("phx_db").collection("owners");
 
 // Define the store for owner data
 export const useOwnerStore = defineStore('owner', {
@@ -26,8 +31,11 @@ export const useOwnerStore = defineStore('owner', {
 
     async createOwner(payload) {
       try {
-        const { data } = await useApi().post('/api/owners/createOwner', payload);
-        this.owners.push(data);
+        // Fetch the data from the owners collection
+        const data = await ownersCollection.insertOne(payload);
+        
+        // Assign the fetched data to the component state
+        this.owners = data;
         return data;
       } catch (error) {
         console.error('Error during Owner creation:', error);
@@ -36,7 +44,10 @@ export const useOwnerStore = defineStore('owner', {
 
     async getOwners() {
       try {
-        const { data } = await useApi().get('/api/owners/getOwners');
+        // Fetch the data from the owners collection
+        const data = await ownersCollection.find();
+        
+        // Assign the fetched data to the component state
         this.owners = data;
         return data;
       } catch (error) {

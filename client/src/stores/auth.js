@@ -5,6 +5,7 @@ import { defineStore } from 'pinia';
 import authentication from '../plugins/authentication';
 import { useRouter } from 'vue-router'; // If you need to navigate after login/logout
 
+
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     user: null,
