@@ -195,11 +195,15 @@ function openLandHoldingModal(owner) {
 }
 
 // Function to open the modal in either 'create' or 'update' mode
-function openModal(mode, owner = null) {
-  isUpdateMode.value = mode === 'update';
+function openModal(mode, owner=null) {
+  if (mode === 'update') {
+	isUpdateMode.value = true;
+  } else {
+	isUpdateMode.value = false;
+  }
   if (isUpdateMode.value && owner) {
     // Populate form with owner data for update
-	ownerData.id = owner.id; // Store the selected owner ID
+	ownerData._id = owner._id; // Store the selected owner ID
     ownerData.name = owner.name;
     ownerData.entity_type = owner.entity_type;
     ownerData.owner_type = owner.owner_type;
@@ -207,7 +211,7 @@ function openModal(mode, owner = null) {
     ownerData.total_land_holdings = owner.total_land_holdings;
   } else {
     // Reset form for create mode
-	ownerData.id = null; // Store the selected owner ID
+	ownerData._id = null; // Store the selected owner ID
     ownerData.name = "";
     ownerData.entity_type = "Company";
     ownerData.owner_type = "Competitor";
@@ -218,7 +222,9 @@ function openModal(mode, owner = null) {
 
 // Function to handle form submission
 async function submit() {
-  	if (isUpdateMode.value && ownerData.id !== null) {
+	console.log("ownerData:", ownerData);
+	
+  	if (isUpdateMode.value && ownerData._id !== null) {
 		// Update Owner
 		console.log('Updating owner with data:', JSON.stringify(ownerData));
 		
