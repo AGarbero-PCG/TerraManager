@@ -1,6 +1,3 @@
-<script setup lang="js">
-</script>
-
 <template>
   	<main>
 		<div class="home-page container">
@@ -15,6 +12,9 @@
 		</div>
   	</main>
 </template>
+
+<script setup lang="js">
+</script>
 
 <style scoped>
 

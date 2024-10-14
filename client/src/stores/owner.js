@@ -2,9 +2,15 @@ import { defineStore } from 'pinia';
 import * as Realm from "realm-web";
 
 const app = new Realm.App({ id: import.meta.env.VITE_REALM_APP_ID });
-const mongodb = app.currentUser.mongoClient("mongodb-atlas");
-const ownersCollection = mongodb.db("phx_db").collection("owners");
+const currentUser = app.currentUser;
+if (currentUser && currentUser.mongoClient) {
+  var mongodb = app.currentUser.mongoClient("mongodb-atlas");
+  var ownersCollection = mongodb.db("phx_db").collection("owners");
+} else {
+  console.error("MongoDB client is not available");
+}
 // Access the owners collection in the MongoDB database
+
 
 // Define the store for owner data
 export const useOwnerStore = defineStore('owner', {
@@ -67,7 +73,7 @@ export const useOwnerStore = defineStore('owner', {
         const result = await ownersCollection.updateOne(
           // { _id: new Realm.BSON.ObjectID(payload._id) }, // Use the unique _id to filter the owner
           // { $set: { ...payload } } // Updat the owner data
-          {_id:payload._id},
+          {_id: payload._id},
           {$set: { ...payload }}
         );
 

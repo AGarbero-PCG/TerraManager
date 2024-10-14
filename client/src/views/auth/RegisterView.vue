@@ -36,15 +36,15 @@
 	</div>
 </template>
 
-<script setup lang="ts">
-import { useAuthStore, type RegisterData } from '../../stores/auth';
+<script setup lang="js">
+import { useAuthStore } from '../../stores/auth';
 import { reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 const authStore = useAuthStore();
 const router = useRouter();
 
-const registerData = reactive<RegisterData>({
+const registerData = reactive({
 	//username: "",
 	email: "",
 	//first_name: "",

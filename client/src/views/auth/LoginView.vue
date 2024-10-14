@@ -19,20 +19,20 @@
 	</div>
 </template>
 
-<script setup lang="ts">
-import { useAuthStore, type LoginData } from '../../stores/auth';
-import { reactive, ref } from 'vue';
+<script setup lang="js">
+import { useAuthStore } from '../../stores/auth';
+import { onMounted, reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 const authStore = useAuthStore();
 const router = useRouter();
 
-const loginData = reactive<LoginData>({
+const loginData = reactive({
 	email: "",
 	password: "",
 })
 
-const errorMessage = ref<string>("")
+const errorMessage = ref("")
 
 async function submit(){
 	await authStore.login(loginData)
