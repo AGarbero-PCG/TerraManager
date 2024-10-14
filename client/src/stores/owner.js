@@ -96,9 +96,19 @@ export const useOwnerStore = defineStore('owner', {
 
     async deleteOwner(ownerId) {
       try {
-        await useApi().delete(`/api/owners/deleteOwner/${ownerId}`);
-        this.owners = this.owners.filter(owner => owner.id !== ownerId);
+        // Attempt to delete the owner from the ownersCollection using the unique _id
+        const result = await ownersCollection.deleteOne({ _id: new Realm.BSON.ObjectID(ownerId) });
+    
+        // If the document was deleted
+        if (result.deletedCount > 0) {
+          // Update the local state to remove the deleted owner
+          this.owners = this.owners.filter(owner => owner._id.toString() !== ownerId);
+          console.log("Owner deleted successfully");
+        } else {
+          console.log("Owner not found");
+        }
       } catch (error) {
+        // Log any errors that occur during the deletion process
         console.error('Error deleting Owner:', error);
       }
     }

@@ -7,11 +7,13 @@
 
 <script setup lang="js">
 import { RouterView } from 'vue-router'
+import { useRouter } from 'vue-router';
 import { onMounted } from 'vue';
 import NavBar from './components/NavBar.vue';
 
 import { useAuthStore } from './stores/auth';
 
+const router = useRouter();
 onMounted(async () => {
   let authStore = useAuthStore();
 	if (window.localStorage.getItem("currentUser")) {
