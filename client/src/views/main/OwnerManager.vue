@@ -258,11 +258,12 @@ function selectOwnerForDeletion(owner) {
 
 // Delete the selected owner
 async function deleteOwner() {
-  if (selectedOwner.value && selectedOwner.value.id !== null) {
-    await ownerStore.deleteOwner(selectedOwner.value.id)
+  if (selectedOwner.value && selectedOwner.value._id) {
+    await ownerStore.deleteOwner(selectedOwner.value._id)
       .then(() => {
         console.log('Owner Deleted');
         ownerStore.getOwners(); // Refresh the owner list
+		selectedOwner.value = null; // Reset the selected owner
       })
       .catch(err => {
         console.error('Error during deletion:' + error.message);
