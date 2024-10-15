@@ -92,7 +92,13 @@
 
 
 				<!-- Create/Update Owner Modal -->
-				<div class="modal fade" id="OwnerModal" tabindex="-1" aria-labelledby="OwnerModalLabel" aria-hidden="true">
+				<div
+					class="modal fade" 
+					id="OwnerModal"
+					tabindex="-1"
+					aria-labelledby="OwnerModalLabel"
+					aria-hidden="true"
+				>
 					<div class="modal-dialog">
 						<div class="modal-content">
 							<div class="modal-header">
@@ -134,7 +140,13 @@
 									
 									<!-- Total Land Holdings will automatically calculated -->
 									
-									<button type="submit" class="btn btn-success" data-bs-dismiss="modal">{{ isUpdateMode ? 'Update Owner' : 'Create Owner' }}</button>
+									<button
+										type="submit"
+										class="btn btn-success"
+										data-bs-dismiss="modal"
+									>
+										{{ isUpdateMode ? 'Update Owner' : 'Create Owner' }}
+									</button>
 								</form>
 				
 							</div>
@@ -143,21 +155,27 @@
 				</div>
 
 				<!-- Delete Owner Modal -->
-				<div class="modal fade" id="deleteOwnerModal" tabindex="-1" aria-labelledby="deleteOwnerModalLabel" aria-hidden="true">
+				<div
+					class="modal fade"
+					id="deleteOwnerModal"
+					tabindex="-1"
+					aria-labelledby="deleteOwnerModalLabel"
+					aria-hidden="true"
+				>
 					<div class="modal-dialog">
-					<div class="modal-content">
-						<div class="modal-header">
-						<h5 class="modal-title" id="deleteOwnerModalLabel">Delete Owner</h5>
-						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title" id="deleteOwnerModalLabel">Delete Owner</h5>
+								<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+							</div>
+							<div class="modal-body">
+								<p>Are you sure you want to delete the owner: <strong>{{ selectedOwner?.name }}</strong> ?  This will delete all related Land Holdings as well. </p>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+								<button type="button" class="btn btn-danger" data-bs-dismiss="modal" @click="deleteOwner">Yes, Delete</button>
+							</div>
 						</div>
-						<div class="modal-body">
-						<p>Are you sure you want to delete the owner: <strong>{{ selectedOwner?.name }}</strong> ?  This will delete all related Land Holdings as well. </p>
-						</div>
-						<div class="modal-footer">
-						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-						<button type="button" class="btn btn-danger" data-bs-dismiss="modal" @click="deleteOwner">Yes, Delete</button>
-						</div>
-					</div>
 					</div>
 				</div>
 			</div>
@@ -169,11 +187,13 @@
 <script setup lang="js">
 import { useOwnerStore} from '../../stores/owner';
 import { reactive, ref, computed, onMounted } from 'vue';
-import LandHoldingModal from './LandHoldingModal.vue';
 import { FontAwesomeIcon } from '../../assets/icons';
+import LandHoldingModal from './LandHoldingModal.vue';
 
+// Initialize store
 const ownerStore = useOwnerStore();
 
+// Local state
 const ownerData = reactive({
 	id: null, // Initialize as null since the ID will be set when updating an existing owner
 	name: "",
@@ -185,8 +205,8 @@ const ownerData = reactive({
 
 const errorMessage = ref("")
 const isUpdateMode = ref(false);
-const isLandHoldingModalVisible = ref(false);
 const selectedOwner = ref(null); // For tracking the owner to delete
+const isLandHoldingModalVisible = ref(false);
 
 // Function to open Land Holding Modal
 function openLandHoldingModal(owner) {
@@ -201,6 +221,7 @@ function openModal(mode, owner=null) {
   } else {
 	isUpdateMode.value = false;
   }
+
   if (isUpdateMode.value && owner) {
     // Populate form with owner data for update
 	ownerData._id = owner._id; // Store the selected owner ID
@@ -229,25 +250,24 @@ async function submit() {
 		console.log('Updating owner with data:', JSON.stringify(ownerData));
 		
 		await ownerStore.updateOwner(ownerData)
-		.then(() => {
+		try {
 			console.log('Owner Updated');
 			ownerStore.getOwners();
-		})
-		.catch(err => {
+		} catch(error) {
 			console.error('Error during update:' + error.message);
-		});
+		};
 	} else {
 		// Create Owner
+		delete ownerData._id; // Remove the ID field for creation
 		console.log('Creating owner with data:', JSON.stringify(ownerData));
 		
 		await ownerStore.createOwner(ownerData)
-		.then(() => {
+		try {
 			console.log('Owner Created');
 			ownerStore.getOwners();
-		})
-		.catch(err => {
+		} catch(error) {
 			console.error('Error during creation:' + error.message);
-		});
+		};
 	}
 }
 
@@ -289,3 +309,5 @@ const owners = computed(() => ownerStore.owners); // Bind the store's owners to 
 }
 
 </style>
+
+
