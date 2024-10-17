@@ -83,8 +83,8 @@
 										data-bs-target="#deleteOwnerModal" 
 										class="cursor-pointer" 
 										size="2x"
-										@click="selectOwnerForDeletion(owner._id)"
-									/>
+										@click="openDeleteModal(owner)"
+										/>
 								</div>
 							</td>
 						</tr>
@@ -176,7 +176,7 @@
 							</div>
 							<div class="modal-footer">
 								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-								<button type="button" class="btn btn-danger" data-bs-dismiss="modal" @click="deleteOwner">Yes, Delete</button>
+								<button type="button" class="btn btn-danger" data-bs-dismiss="modal" @click="handleDeleteOwner">Yes, Delete</button>
 							</div>
 						</div>
 					</div>
@@ -195,6 +195,10 @@ import LandHoldingModal from './LandHoldingModal.vue';
 
 // Initialize store
 const ownerStore = useOwnerStore();
+// Computed properties
+// The function inside computed() returns the 'owners' array from the ownerStore 'owner'
+// The result of computed() is assigned to another variable, 'owners', a reactive reference to the owners array
+// const owners = computed(() => ownerStore.owners); // Bind the store's owners to a local variable
 const owners = computed(() => ownerStore.owners);
 
 // Reactive state for the owner data
@@ -213,10 +217,16 @@ const isUpdateMode = ref(false);
 const selectedOwner = ref(null); // For tracking the owner to delete
 const isLandHoldingModalVisible = ref(false);
 
-// Computed properties
-// The function inside computed() returns the 'owners' array from the ownerStore 'owner'
-// The result of computed() is assigned to another variable, 'owners', a reactive reference to the owners array
-// const owners = computed(() => ownerStore.owners); // Bind the store's owners to a local variable
+
+
+// Function to handle form submission
+async function handleSubmit() {
+	if (isUpdateMode.value) {
+		await handleUpdateOwner();
+	} else {
+		await handleCreateOwner();
+	}
+}
 
 // Function to open the Create Owner modal
 function openCreateModal() {
@@ -246,7 +256,6 @@ async function handleCreateOwner() {
 // Function to open the Update Owner modal
 function openUpdateModal(owner) {
 	isUpdateMode.value = true;
-	selectedOwner.value = owner;
 
 	if (isUpdateMode.value && owner) {
 		// Populate form with owner data for update
@@ -281,35 +290,30 @@ async function handleUpdateOwner() {
 	}
 }
 
-// Function to handle form submission
-async function handleSubmit() {
-	if (isUpdateMode.value) {
-		await handleUpdateOwner();
-	} else {
-		await handleCreateOwner();
-	}
-}
-
 // Select an owner for deletion and open the delete modal
-function selectOwnerForDeletion(owner) {
-  selectedOwner.value = owner;
+function openDeleteModal(owner) {
+	// Assign the selected owner to the reactive reference
+  	selectedOwner.value = owner;
+
+  	// Populate ownerData with the selected owner's data
+  	Object.assign(ownerData, owner);
 }
 
 // Delete the selected owner
-async function deleteOwner() {
-	console.log('(OwnerManager.vue) Deleting owner:', selectedOwner.value._id);
-
-	if (selectedOwner.value && selectedOwner.value._id) {
-	await ownerStore.deleteOwner(selectedOwner.value._id)
-		.then(() => {
-			console.log('Owner Deleted');
-			ownerStore.getOwners(); // Refresh the owner list
-			selectedOwner.value = null; // Reset the selected owner
-		})
-		.catch(err => {
-			console.error('Error during deletion:' + error.message);
-		});
-  	}
+async function handleDeleteOwner() {
+	if (!ownerData._id) {
+		console.error('No owner ID found for update');
+		errorMessage.value = 'No owner ID found for update';
+		return;
+	}
+		try {
+			await ownerStore.deleteOwner(ownerData);
+			console.log('Owner deleted successfully!');
+			await ownerStore.getOwners(); // Refresh the owner list
+		} catch (error) {
+			console.error('Error deleting owner:' + error.message);
+			errorMessage.value = 'Failed to delete owner. Please try again.';
+		}
 }
 
 // Function to open Land Holding Modal

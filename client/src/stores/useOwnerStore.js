@@ -6,16 +6,6 @@ import { useAuthStore } from './auth';
 
 const app = new Realm.App({ id: import.meta.env.VITE_REALM_APP_ID });
 
-// const currentUser = app.currentUser;
-// if (currentUser && currentUser.mongoClient) {
-//   var mongodb = app.currentUser.mongoClient("mongodb-atlas");
-//   var ownersCollection = mongodb.db("phx_db").collection("owners");
-// } else {
-//   console.error("MongoDB client is not available");
-// }
-// Access the owners collection in the MongoDB database
-
-
 // Define the Pinia store for managing owner data in OwnerManager.vue
 // Create a store named 'owner' using defineStore, and export is for use throughout the application
 export const useOwnerStore = defineStore('owner', {
@@ -144,15 +134,23 @@ export const useOwnerStore = defineStore('owner', {
       }
     },
 
-    async deleteOwner(ownerId) {
+    async deleteOwner(payload) {
       try {
+        // Get the current user and MongoDB client
+        const currentUser = app.currentUser;
+        if (!currentUser) {
+          throw new Error("User not authenticated");
+        }
+        const mongodb = currentUser.mongoClient("mongodb-atlas");
+        const ownersCollection = mongodb.db("phx_db").collection("owners");
+
         // Attempt to delete the owner from the ownersCollection using the unique _id
-        const result = await ownersCollection.deleteOne({ _id: new Realm.BSON.ObjectID(ownerId) });
+        const result = await ownersCollection.deleteOne({ _id: new Realm.BSON.ObjectID(payload._id) });
     
         // If the document was deleted
         if (result.deletedCount > 0) {
           // Update the local state to remove the deleted owner
-          this.owners = this.owners.filter(owner => owner._id.toString() !== ownerId);
+          this.owners = this.owners.filter(owner => owner?._id?.toString() !== payload._id.toString());
           console.log("Owner deleted successfully");
         } else {
           console.log("Owner not found");
