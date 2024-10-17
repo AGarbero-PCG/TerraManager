@@ -5,6 +5,8 @@ import App from './App.vue'
 import router from './router/index.js'
 import authentication from './plugins/authentication.js'
 
+import './input.css'
+
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
