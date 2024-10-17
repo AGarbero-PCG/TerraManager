@@ -8,13 +8,9 @@ const app = new Realm.App({ id: import.meta.env.VITE_REALM_APP_ID });
 // Define the LandHolding store
 export const useLandHoldingStore = defineStore('landholding', {
 	// Used to store Data
-	state: () => {
-		return {
+	state: () => ({
 			landHoldings: [], // Array to store land holding data
-            loading: false,
-            error: null,
-		};
-	},
+	}),
 
 	// Used to format state data
 	getters: {

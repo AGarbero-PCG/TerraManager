@@ -1,5 +1,4 @@
 import { useAuthStore } from '@/stores/auth'
-import { useOwnerStore } from '@/stores/owner'
 import { createRouter, createWebHistory } from 'vue-router'
 
 const router = createRouter({

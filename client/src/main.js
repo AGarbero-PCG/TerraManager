@@ -5,6 +5,7 @@ import App from './App.vue'
 import router from './router/index.js'
 import authentication from './plugins/authentication.js'
 
+import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
@@ -12,6 +13,10 @@ console.log('Starting the Vue application setup...');
 const app = createApp(App);
 console.log('Vue application instance created:', app);
 
+// Register the Pinia store with the Vue application
+console.log('Registering Pinia store...');
+const pinia = createPinia();
+app.use(pinia);
 
 app.use(authentication);
 console.log('Authentication plugin applied.');

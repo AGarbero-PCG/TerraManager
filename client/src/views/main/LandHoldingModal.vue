@@ -101,7 +101,7 @@
 			tabindex="-1"
 			aria-labelledby="LandHoldingModalLabel"
 			aria-hidden="true"
-			>
+		>
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header">
@@ -112,82 +112,87 @@
 					</div>
 					<div class="modal-body">
 						<form @submit.prevent="submit">
-						<!-- Land Holding Fields -->
-						<div class="form-floating mb-3">
-							<input
-							v-model="landHoldingData.legal_entity"
-							type="text"
-							class="form-control"
-							id="legal_entity"
-							required
-							/>
-							<label for="legal_entity">Legal Entity</label>
-						</div>
-						<div class="form-floating mb-3">
-							<input
-							v-model="landHoldingData.net_mineral_acres"
-							type="number"
-							class="form-control"
-							id="net_mineral_acres"
-							required
-							/>
-							<label for="net_mineral_acres">Net Mineral Acres</label>
-						</div>
-						<div class="form-floating mb-3">
-							<input
-							v-model="landHoldingData.mineral_owner_royalty"
-							type="number"
-							step="0.01"
-							class="form-control"
-							id="mineral_owner_royalty"
-							required
-							/>
-							<label for="mineral_owner_royalty">Mineral Owner Royalty</label>
-						</div>
-						<div class="form-floating mb-3">
-							<input
-							v-model="landHoldingData.section"
-							type="text"
-							class="form-control"
-							id="section"
-							required
-							/>
-							<label for="section">Section</label>
-						</div>
-						<div class="form-floating mb-3">
-							<input
-							v-model="landHoldingData.township"
-							type="text"
-							class="form-control"
-							id="township"
-							required
-							/>
-							<label for="township">Township</label>
-						</div>
-						<div class="form-floating mb-3">
-							<input
-							v-model="landHoldingData.range"
-							type="text"
-							class="form-control"
-							id="range"
-							required
-							/>
-							<label for="range">Range</label>
-						</div>
-						<div class="form-floating mb-3">
-							<input
-							v-model="landHoldingData.title_source"
-							type="text"
-							class="form-control"
-							id="title_source"
-							required
-							/>
-							<label for="title_source">Title Source</label>
-						</div>
-	
-						<button type="submit" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#LandHoldingManager">
-							{{ isUpdateMode ? 'Update Land Holding' : 'Create Land Holding' }}
-						</button>
+							<!-- Land Holding Fields -->
+							<div class="form-floating mb-3">
+								<input
+								v-model="landHoldingData.legal_entity"
+								type="text"
+								class="form-control"
+								id="legal_entity"
+								required
+								/>
+								<label for="legal_entity">Legal Entity</label>
+							</div>
+							<div class="form-floating mb-3">
+								<input
+								v-model="landHoldingData.net_mineral_acres"
+								type="number"
+								class="form-control"
+								id="net_mineral_acres"
+								required
+								/>
+								<label for="net_mineral_acres">Net Mineral Acres</label>
+							</div>
+							<div class="form-floating mb-3">
+								<input
+								v-model="landHoldingData.mineral_owner_royalty"
+								type="number"
+								step="0.01"
+								class="form-control"
+								id="mineral_owner_royalty"
+								required
+								/>
+								<label for="mineral_owner_royalty">Mineral Owner Royalty</label>
+							</div>
+							<div class="form-floating mb-3">
+								<input
+								v-model="landHoldingData.section"
+								type="text"
+								class="form-control"
+								id="section"
+								required
+								/>
+								<label for="section">Section</label>
+							</div>
+							<div class="form-floating mb-3">
+								<input
+								v-model="landHoldingData.township"
+								type="text"
+								class="form-control"
+								id="township"
+								required
+								/>
+								<label for="township">Township</label>
+							</div>
+							<div class="form-floating mb-3">
+								<input
+								v-model="landHoldingData.range"
+								type="text"
+								class="form-control"
+								id="range"
+								required
+								/>
+								<label for="range">Range</label>
+							</div>
+							<div class="form-floating mb-3">
+								<input
+								v-model="landHoldingData.title_source"
+								type="text"
+								class="form-control"
+								id="title_source"
+								required
+								/>
+								<label for="title_source">Title Source</label>
+							</div>
+		
+							<button
+								type="submit"
+								class="btn btn-success"
+								data-bs-toggle="modal"
+								data-bs-target="#LandHoldingManager"
+							>
+								{{ isUpdateMode ? 'Update Land Holding' : 'Create Land Holding' }}
+							</button>
 						</form>
 					</div>
 				</div>
@@ -196,11 +201,11 @@
 
 		<!-- Delete Land Holding Modal -->
 		<div
-		class="modal fade"
-		id="deleteLandHoldingModal"
-		tabindex="-1"
-		aria-labelledby="deleteLandHoldingModalLabel"
-		aria-hidden="true"
+			class="modal fade"
+			id="deleteLandHoldingModal"
+			tabindex="-1"
+			aria-labelledby="deleteLandHoldingModalLabel"
+			aria-hidden="true"
 		>
 			<div class="modal-dialog">
 				<div class="modal-content">
@@ -227,41 +232,18 @@
 	
 </template>
 
-<script setup lang="ts">
-import { useOwnerStore, type OwnerData } from '../../stores/owner';
-import { reactive, ref, watch, computed, onMounted } from 'vue';
-import { useLandHoldingStore, type LandHoldingData } from '../../stores/landHolding';
-// @ts-ignore
+<script setup lang="js">
+import { useOwnerStore } from '../../stores/useOwnerStore';
+import { reactive, ref } from 'vue';
+import { useLandHoldingStore } from '../../stores/landHolding';
 import { FontAwesomeIcon } from '../../assets/icons';
 
+// Initialize stores
+const landHoldingStore = useLandHoldingStore();
 const ownerStore = useOwnerStore();
 
-// Props
-const props = defineProps({
-  	owner: {
-		type: Object as () => OwnerData | null, // Expect owner object as prop
-		required: true,
-	}
-});
-
-const landHoldingStore = useLandHoldingStore();
-
-// Computed properties for land holdings and owner name
-const landHoldings = computed(() => landHoldingStore.landHoldings)
-const ownerName = computed(() => props.owner?.name || '');
-
-// Watch for owner changes and fetch land holdings accordingly
-watch(
-	() => props.owner, // Observe changes in the owner prop
-	async (newOwner) => {
-		if (newOwner && newOwner.id) {
-			await landHoldingStore.getLandHoldings(newOwner.id); // Fetch land holdings for the selected owner
-		}
-	},
-	{ immediate: true } // Trigger on initial load
-);
-
-const landHoldingData = reactive<LandHoldingData>({
+// Local state
+const landHoldingData = reactive({
 	id: null,
 	name: '',
 	owner: '',
@@ -274,13 +256,18 @@ const landHoldingData = reactive<LandHoldingData>({
 	title_source: ''
 });
 
+const errorMessage = ref("");
 const isUpdateMode = ref(false);
-const selectedLandHolding = ref<LandHoldingData | null>(null); // For tracking the land holding to delete
-const errorMessage = ref<string>('');
+const selectedLandHolding = ref(null);
 
 // Function to open the modal in either 'create' or 'update' mode
-function openModal(mode: 'create' | 'update', landHolding: LandHoldingData | null = null) {
-	isUpdateMode.value = mode === 'update';
+function openModal(mode, landHolding=null) {
+	if (mode === 'update') {
+		isUpdateMode.value = true;
+	} else {
+		isUpdateMode.value = false;
+	}
+
 	if (isUpdateMode.value && landHolding) {
 		// Populate form with land holding data for update
 		Object.assign(landHoldingData, landHolding);
@@ -304,39 +291,40 @@ function openModal(mode: 'create' | 'update', landHolding: LandHoldingData | nul
 
 // Function to handle form submission
 async function submit() {
+	console.log('Submitting landHoldingData: ', landHoldingData);
+
 	if (isUpdateMode.value && landHoldingData.id !== null) {
 		// Update Land Holding
-			await landHoldingStore.updateLandHolding(landHoldingData)
-			.then(() => {
-				console.log('Land Holding Updated');
-				if (props.owner?.id) {
-					landHoldingStore.getLandHoldings(props.owner.id);
-				}
-			})
-			.catch(err => {
-				console.log('Error during update:', err);
-				errorMessage.value = `Update Error: ${err.response?.data?.message || err.message}`;
-			});
+		console.log('Updating Land Holding with data:', JSON.stringify(landHoldingData));
+		
+		await landHoldingStore.updateLandHolding(landHoldingData)
+		try{
+			console.log('Land Holding Updated');
+			if (props.owner?.id) {
+				landHoldingStore.getLandHoldings(props.owner.id);
+			}
+		} catch(error){
+			console.log('Error during update:' + error.message);
+		};
 	} else {
 		// Create Land Holding
-		if (props.owner?.id) {
-			landHoldingData.owner = props.owner.id; // Assign the current owner id
+		if (props.owner?._id) {
+			landHoldingData.owner = props.owner._id; // Assign the current owner id
 
-			await landHoldingStore.createLandHolding(landHoldingData, props.owner.id)
-				.then(() => {
+			await landHoldingStore.createLandHolding(landHoldingData, props.owner._id)
+				try {
 					console.log('Land Holding Created');
-					if (props.owner?.id){
-						landHoldingStore.getLandHoldings(props.owner.id);
+					if (props.owner?._id){
+						landHoldingStore.getLandHoldings(props.owner._id);
 						ownerStore.getOwners();
 					}
-				})
-				.catch(err => {
+				} catch(error) {
 					console.log('Error during creation:', err);
 					errorMessage.value = `Creation Error: ${err.response?.data?.message || err.message}`;
 					if (err.response?.data?.details) {
 						console.error('Details of missing fields:', err.response.data.details);
 					}
-				});
+				};
 		} else {
 			console.log('Owner ID is missing, cannot create land holding.');
             errorMessage.value = 'Owner ID is missing, cannot create land holding.';
@@ -345,7 +333,7 @@ async function submit() {
 }
 
 // Select a land holding for deletion and open the delete modal
-function selectLandHoldingForDeletion(landHolding: LandHoldingData) {
+function selectLandHoldingForDeletion(landHolding) {
 selectedLandHolding.value = landHolding;
 }
 
@@ -376,3 +364,6 @@ async function deleteLandHolding() {
 }
 
 </style>
+
+
+

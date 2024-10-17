@@ -3,10 +3,9 @@
 
 import { defineStore } from 'pinia';
 import authentication from '../plugins/authentication';
-import { useRouter } from 'vue-router'; // If you need to navigate after login/logout
-
 
 export const useAuthStore = defineStore('auth', {
+
   state: () => ({
     user: null,
     accessToken: "",
@@ -92,15 +91,27 @@ export const useAuthStore = defineStore('auth', {
 
     // Refresh the token (if needed)
     async refresh() {
-      this.loading = true;
       try {
-        const newToken = await authentication.refreshToken();
-        this.accessToken = newToken;
+        if(!currentUser.value) {
+          console.error('No user logged in');
+          return false;
+        }
+        // Check if the access token is expired and refresh it if necessary
+        if (currentUser.value.isAccessTokenExpired) {
+          console.log('Access token expired, refreshing...');
+          await currentUser.value.refreshAccessToken();
+          console.log('Access token refreshed successfully.');
+        } else {
+          console.log('Access token is still valid.');
+        }
+
+        return true;
+
       } catch (error) {
-        this.error = error.message;
-      } finally {
-        this.loading = false;
+        console.error('Error refreshing token:', error);
+        return false;
       }
+
     }
   },
 

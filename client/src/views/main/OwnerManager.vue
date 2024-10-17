@@ -37,7 +37,8 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr v-for="owner in owners" :key="owner.id">
+						<!-- Iterate over 'owners' to display a list of owners -->
+						<tr v-for="owner in ownerStore.owners" :key="owner.id">
 							<th scope="row">{{ owner.name }}</th>
 							<td>{{ owner.entity_type }}</td>
 							<td>{{ owner.owner_type }}</td>
@@ -82,7 +83,7 @@
 										data-bs-target="#deleteOwnerModal" 
 										class="cursor-pointer" 
 										size="2x"
-										@click="selectOwnerForDeletion(owner)"
+										@click="selectOwnerForDeletion(owner._id)"
 									/>
 								</div>
 							</td>
@@ -106,7 +107,7 @@
 								<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 							</div>
 							<div class="modal-body">
-								<form @submit.prevent="submit">
+								<form @submit.prevent="handleSubmit">
 									<!-- Owner Name -->
 									<div class="form-floating mb-3">
 										<input v-model="ownerData.name" type="text" class="form-control" id="name" required>
@@ -124,7 +125,7 @@
 									</div>
 									<!-- Owner Type -->
 									<div class="form-floating mb-3">
-										<select v-model="ownerData.owner_type" class="form-select" id="entity_type">
+										<select v-model="ownerData.owner_type" class="form-select" id="owner_type">
 											<option value="Competitor">Competitor</option>
 											<option value="Seller">Seller</option>
 											<option value="Investor">Investor</option>
@@ -134,7 +135,7 @@
 									</div>
 									<!-- Address -->
 									<div class="form-floating mb-3">
-										<input v-model="ownerData.address" type="text" class="form-control" id="name" required>
+										<input v-model="ownerData.address" type="text" class="form-control" id="address" required>
 										<label for="address">Address</label>
 									</div>
 									
@@ -148,6 +149,8 @@
 										{{ isUpdateMode ? 'Update Owner' : 'Create Owner' }}
 									</button>
 								</form>
+
+								<p v-if="errorMessage" class="error">{{ errorMessage }}</p>
 				
 							</div>
 						</div>
@@ -185,45 +188,92 @@
 
 
 <script setup lang="js">
-import { useOwnerStore} from '../../stores/owner';
 import { reactive, ref, computed, onMounted } from 'vue';
+import { useOwnerStore} from '../../stores/useOwnerStore';
 import { FontAwesomeIcon } from '../../assets/icons';
 import LandHoldingModal from './LandHoldingModal.vue';
 
 // Initialize store
 const ownerStore = useOwnerStore();
 
-// Local state
+// Reactive state for the owner data
 const ownerData = reactive({
-	id: null, // Initialize as null since the ID will be set when updating an existing owner
+	_id: null,
 	name: "",
 	entity_type: "Company",
 	owner_type: "Competitor",
 	address: "",
 	total_land_holdings: 0,
-})
+});
 
+// Error message to show any issues during creation
 const errorMessage = ref("")
 const isUpdateMode = ref(false);
 const selectedOwner = ref(null); // For tracking the owner to delete
 const isLandHoldingModalVisible = ref(false);
 
-// Function to open Land Holding Modal
-function openLandHoldingModal(owner) {
+// Computed properties
+// The function inside computed() returns the 'owners' array from the ownerStore 'owner'
+// The result of computed() is assigned to another variable, 'owners', a reactive reference to the owners array
+// const owners = computed(() => ownerStore.owners); // Bind the store's owners to a local variable
+
+
+// Function to handle Create Owner form submission
+async function handleCreateOwner() {
+	try {
+		await ownerStore.createOwner(ownerData);
+		console.log('Owner created successfully!');
+		errorMessage.value = ''; // Reset error message
+
+		// Optionally reset the form fields
+		ownerData.name = '';
+		ownerData.entity_type = '';
+		ownerData.owner_type = '';
+		ownerData.address = '';
+		ownerData.total_land_holdings = 0;
+	} catch (error) {
+		console.error('Error creating owner:' + error.message);
+		errorMessage.value = 'Failed to create owner. Please try again.';
+	}
+}
+
+// Function to open the modal for updating an owner
+function openUpdateModal(owner) {
+	isUpdateMode.value = true;
 	selectedOwner.value = owner;
-	isLandHoldingModalVisible.value = true;
+
+	// Populate ownerData with the selected owner's data
+	Object.assign(ownerData, owner);
+}
+
+// Function to handle Update Owner form submission
+async function handleUpdateOwner() {
+	if (!ownerData._id) {
+		console.error('No owner ID found for update');
+		errorMessage.value = 'No owner ID found for update';
+		return;
+	}
+
+	try {
+		// Call the updateOwner method from the store
+		await ownerStore.updateOwner(ownerData);
+		console.log('Owner updated successfully!');
+	} catch (error) {
+		console.error('Error updating owner:' + error.message);
+		errorMessage.value = 'Failed to update owner. Please try again.';
+	}
 }
 
 // Function to open the modal in either 'create' or 'update' mode
 function openModal(mode, owner=null) {
-  if (mode === 'update') {
-	isUpdateMode.value = true;
-  } else {
-	isUpdateMode.value = false;
-  }
-
-  if (isUpdateMode.value && owner) {
-    // Populate form with owner data for update
+	if (mode === 'update') {
+		isUpdateMode.value = true;
+	} else {
+		isUpdateMode.value = false;
+	}
+	
+	if (isUpdateMode.value && owner) {
+		// Populate form with owner data for update
 	ownerData._id = owner._id; // Store the selected owner ID
     ownerData.name = owner.name;
     ownerData.entity_type = owner.entity_type;
@@ -232,7 +282,7 @@ function openModal(mode, owner=null) {
     ownerData.total_land_holdings = owner.total_land_holdings;
   } else {
     // Reset form for create mode
-	ownerData._id = null; // Store the selected owner ID
+	ownerData._id = null; // Reset the ID field
     ownerData.name = "";
     ownerData.entity_type = "Company";
     ownerData.owner_type = "Competitor";
@@ -242,32 +292,11 @@ function openModal(mode, owner=null) {
 }
 
 // Function to handle form submission
-async function submit() {
-	console.log("ownerData:", ownerData);
-	
-  	if (isUpdateMode.value && ownerData._id !== null) {
-		// Update Owner
-		console.log('Updating owner with data:', JSON.stringify(ownerData));
-		
-		await ownerStore.updateOwner(ownerData)
-		try {
-			console.log('Owner Updated');
-			ownerStore.getOwners();
-		} catch(error) {
-			console.error('Error during update:' + error.message);
-		};
+async function handleSubmit() {
+	if (isUpdateMode.value) {
+		await handleUpdateOwner();
 	} else {
-		// Create Owner
-		delete ownerData._id; // Remove the ID field for creation
-		console.log('Creating owner with data:', JSON.stringify(ownerData));
-		
-		await ownerStore.createOwner(ownerData)
-		try {
-			console.log('Owner Created');
-			ownerStore.getOwners();
-		} catch(error) {
-			console.error('Error during creation:' + error.message);
-		};
+		await handleCreateOwner();
 	}
 }
 
@@ -278,25 +307,31 @@ function selectOwnerForDeletion(owner) {
 
 // Delete the selected owner
 async function deleteOwner() {
-  if (selectedOwner.value && selectedOwner.value._id) {
-    await ownerStore.deleteOwner(selectedOwner.value._id)
-      .then(() => {
-        console.log('Owner Deleted');
-        ownerStore.getOwners(); // Refresh the owner list
-		selectedOwner.value = null; // Reset the selected owner
-      })
-      .catch(err => {
-        console.error('Error during deletion:' + error.message);
-      });
-  }
+	console.log('(OwnerManager.vue) Deleting owner:', selectedOwner.value._id);
+
+	if (selectedOwner.value && selectedOwner.value._id) {
+	await ownerStore.deleteOwner(selectedOwner.value._id)
+		.then(() => {
+			console.log('Owner Deleted');
+			ownerStore.getOwners(); // Refresh the owner list
+			selectedOwner.value = null; // Reset the selected owner
+		})
+		.catch(err => {
+			console.error('Error during deletion:' + error.message);
+		});
+  	}
 }
 
+// Function to open Land Holding Modal
+function openLandHoldingModal(owner) {
+	selectedOwner.value = owner;
+	isLandHoldingModalVisible.value = true;
+}
 // Fetching all Owners on component mount
 onMounted(async () => {
 	await ownerStore.getOwners();
 });
 
-const owners = computed(() => ownerStore.owners); // Bind the store's owners to a local variable
 
 </script>
 
@@ -306,6 +341,11 @@ const owners = computed(() => ownerStore.owners); // Bind the store's owners to 
 	margin-left: auto;
 	margin-right: auto;
 	padding: 20px;
+}
+
+.error {
+	color: red;
+	margin-top: 10px;
 }
 
 </style>
