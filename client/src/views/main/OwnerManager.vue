@@ -258,6 +258,7 @@ async function handleUpdateOwner() {
 		// Call the updateOwner method from the store
 		await ownerStore.updateOwner(ownerData);
 		console.log('Owner updated successfully!');
+		await ownerStore.getOwners(); // Refresh the owner list
 	} catch (error) {
 		console.error('Error updating owner:' + error.message);
 		errorMessage.value = 'Failed to update owner. Please try again.';
