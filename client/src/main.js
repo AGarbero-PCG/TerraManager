@@ -15,8 +15,8 @@ console.log('Vue application instance created:', app);
 
 // Register the Pinia store with the Vue application
 console.log('Registering Pinia store...');
-const pinia = createPinia();
-app.use(pinia);
+// const pinia = createPinia();
+// app.use(pinia);
 
 app.use(authentication);
 console.log('Authentication plugin applied.');

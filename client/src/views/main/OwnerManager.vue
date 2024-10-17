@@ -18,7 +18,7 @@
 						data-bs-target="#OwnerModal" 
 						class="text-primary cursor-pointer" 
 						size="2x"
-						@click="openModal('create')"
+						@click="openCreateModal('create')"
 					/>
 				</div>
 
@@ -38,7 +38,7 @@
 					</thead>
 					<tbody>
 						<!-- Iterate over 'owners' to display a list of owners -->
-						<tr v-for="owner in ownerStore.owners" :key="owner.id">
+						<tr v-for="owner in owners" :key="owner._id">
 							<th scope="row">{{ owner.name }}</th>
 							<td>{{ owner.entity_type }}</td>
 							<td>{{ owner.owner_type }}</td>
@@ -71,7 +71,7 @@
 										data-bs-target="#OwnerModal" 
 										class="cursor-pointer" 
 										size="2x"
-										@click="openModal('update', owner)"
+										@click="openUpdateModal(owner)"
 									/>
 								</div>
 							</td>
@@ -195,10 +195,11 @@ import LandHoldingModal from './LandHoldingModal.vue';
 
 // Initialize store
 const ownerStore = useOwnerStore();
+const owners = computed(() => ownerStore.owners);
 
 // Reactive state for the owner data
 const ownerData = reactive({
-	_id: null,
+	// _id: null,
 	name: "",
 	entity_type: "Company",
 	owner_type: "Competitor",
@@ -217,19 +218,24 @@ const isLandHoldingModalVisible = ref(false);
 // The result of computed() is assigned to another variable, 'owners', a reactive reference to the owners array
 // const owners = computed(() => ownerStore.owners); // Bind the store's owners to a local variable
 
+// Function to open the Create Owner modal
+function openCreateModal() {
+	isUpdateMode.value = false;
+}
 
 // Function to handle Create Owner form submission
 async function handleCreateOwner() {
 	try {
 		await ownerStore.createOwner(ownerData);
-		console.log('Owner created successfully!');
+		console.log('Owner created successfully!: ', ownerData);
+		
 		errorMessage.value = ''; // Reset error message
 
-		// Optionally reset the form fields
-		ownerData.name = '';
-		ownerData.entity_type = '';
-		ownerData.owner_type = '';
-		ownerData.address = '';
+		// Reset the form fields after successful creation
+		ownerData.name = "";
+		ownerData.entity_type = "Company";
+		ownerData.owner_type = "Competitor";
+		ownerData.address = "";
 		ownerData.total_land_holdings = 0;
 	} catch (error) {
 		console.error('Error creating owner:' + error.message);
@@ -237,10 +243,20 @@ async function handleCreateOwner() {
 	}
 }
 
-// Function to open the modal for updating an owner
+// Function to open the Update Owner modal
 function openUpdateModal(owner) {
 	isUpdateMode.value = true;
 	selectedOwner.value = owner;
+
+	if (isUpdateMode.value && owner) {
+		// Populate form with owner data for update
+	ownerData._id = owner._id; // Store the selected owner ID
+    ownerData.name = owner.name;
+    ownerData.entity_type = owner.entity_type;
+    ownerData.owner_type = owner.owner_type;
+    ownerData.address = owner.address;
+    ownerData.total_land_holdings = owner.total_land_holdings;
+	}
 
 	// Populate ownerData with the selected owner's data
 	Object.assign(ownerData, owner);
@@ -263,33 +279,6 @@ async function handleUpdateOwner() {
 		console.error('Error updating owner:' + error.message);
 		errorMessage.value = 'Failed to update owner. Please try again.';
 	}
-}
-
-// Function to open the modal in either 'create' or 'update' mode
-function openModal(mode, owner=null) {
-	if (mode === 'update') {
-		isUpdateMode.value = true;
-	} else {
-		isUpdateMode.value = false;
-	}
-	
-	if (isUpdateMode.value && owner) {
-		// Populate form with owner data for update
-	ownerData._id = owner._id; // Store the selected owner ID
-    ownerData.name = owner.name;
-    ownerData.entity_type = owner.entity_type;
-    ownerData.owner_type = owner.owner_type;
-    ownerData.address = owner.address;
-    ownerData.total_land_holdings = owner.total_land_holdings;
-  } else {
-    // Reset form for create mode
-	ownerData._id = null; // Reset the ID field
-    ownerData.name = "";
-    ownerData.entity_type = "Company";
-    ownerData.owner_type = "Competitor";
-    ownerData.address = "";
-    ownerData.total_land_holdings = 0;
-  }
 }
 
 // Function to handle form submission

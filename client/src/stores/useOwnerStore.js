@@ -37,6 +37,10 @@ export const useOwnerStore = defineStore('owner', {
 
     async createOwner(payload) {
       try {
+
+        console.log("payload: ", payload);
+        
+
         // Get the current user and MongoDB client
         const currentUser = app.currentUser;
         if (!currentUser) {
@@ -45,23 +49,22 @@ export const useOwnerStore = defineStore('owner', {
         const mongodb = currentUser.mongoClient("mongodb-atlas");
         const ownersCollection = mongodb.db("phx_db").collection("owners");
 
-        console.log("Payload before destructuring: ", payload);
-
-        // Create an owner data object excluding the _id field
-        const { _id, ...ownerData } = payload;
-
-        // Log the sanitized owner data
-        console.log("Owner store create payload: ", ownerData);
+        // Log the payload before insertion
+        console.log("Payload ID before insertion: ", payload._id);
 
         // Insert the new owner data into the ownersCollection
-        const result = await ownersCollection.insertOne(ownerData);
-        console.log("MongoDB insertOne response: ", result);
+        const result = await ownersCollection.insertOne(payload);
+        console.log("MongoDB insertOne response: ", result.insertedId.toString());
 
         // Check if insertedId is present and assign it to the payload
-        const createdOwner = { ...ownerData, _id: result.insertedId };
+        // const createdOwner = { ...payload, _id: result.insertedId };
+        const createdOwner = { ...payload, _id: result.insertedId };
 
         // Push the newly created owner to the 'owners' array
         this.owners.push(createdOwner);
+
+        console.log("this.owners: ", this.owners);
+        
         
         console.log("Owner created successfully: ", createdOwner);
         return createdOwner;
@@ -93,6 +96,10 @@ export const useOwnerStore = defineStore('owner', {
     },
     
     async updateOwner(payload) {
+
+      console.log("payload: ", payload);
+
+
       try {
         // Get the current user and MongoDB client
         const currentUser = app.currentUser;
@@ -106,17 +113,13 @@ export const useOwnerStore = defineStore('owner', {
         if (!payload._id) {
           throw new Error("Owner ID is required for update");
         }
-
-        // Create an update data object excluding the _id field
-        const { _id, ...updateData } = payload;
-
         // Log the sanitized updated owner data
-        console.log("Owner store update payload: ", updateData);
+        console.log("Owner store update payload: ", payload);
 
         // Attempt to update the owner in the ownersCollection
         const result = await ownersCollection.updateOne(
-          { _id: new Realm.BSON.ObjectID(_id) }, // Use the unique _id to filter the owner
-          { $set: updateData } // Use $set to update only the specified fields
+          { _id: new Realm.BSON.ObjectID(payload._id) }, // Use the unique _id to filter the owner
+          { $set: payload } // Use $set to update only the specified fields
         );
 
         console.log("MongoDB updateOne response: ", result);
@@ -124,10 +127,10 @@ export const useOwnerStore = defineStore('owner', {
         // Check if the document was modified
         if (result.modifiedCount > 0) {
           // Find the index of the updated owner in the local state array
-          const index = this.owners.findIndex(owner => owner._id.toString() === _id);
+          const index = this.owners.findIndex(owner => owner?._id?.toString() === payload._id.toString());
           if (index !== -1) {
             // Update the local state with the updated owner data
-            this.owners[index] = { ...this.owners[index], ...updateData };
+            this.owners[index] = { ...this.owners[index], ...payload };
           }
           console.log("Owner updated successfully: ", this.owners[index]);
           return this.owners[index];
@@ -137,6 +140,7 @@ export const useOwnerStore = defineStore('owner', {
         }
       } catch (error) {
         console.error('Error during Owner update: ', error);
+        throw new Error('Error during Owner update: ', + error.message);
       }
     },
 
