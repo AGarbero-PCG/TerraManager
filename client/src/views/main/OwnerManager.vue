@@ -56,7 +56,7 @@
 								<div>
 									<font-awesome-icon :icon="['fas', 'house']" style="color: #000000;"
 										data-bs-toggle="modal"
-										data-bs-target="#LandHoldingManager"
+										data-bs-target="#LandholdingManager"
 										class="cursor-pointer"
 										size="2x"
 										@click="openLandHoldingModal(owner)"
@@ -203,21 +203,22 @@ const owners = computed(() => ownerStore.owners);
 
 // Reactive state for the owner data
 const ownerData = reactive({
-	// _id: null,
-	name: "",
-	entity_type: "Company",
-	owner_type: "Competitor",
-	address: "",
+	name: '',
+	entity_type: 'Company',
+	owner_type: 'Competitor',
+	address: '',
 	total_land_holdings: 0,
 });
 
-// Error message to show any issues during creation
-const errorMessage = ref("")
+const errorMessage = ref('') // Error message to show any issues during creation
 const isUpdateMode = ref(false);
 const selectedOwner = ref(null); // For tracking the owner to delete
 const isLandHoldingModalVisible = ref(false);
 
-
+// Fetch all owners on component mount
+onMounted(async () => {
+	await ownerStore.getOwners();
+});
 
 // Function to handle form submission
 async function handleSubmit() {
@@ -321,10 +322,7 @@ function openLandHoldingModal(owner) {
 	selectedOwner.value = owner;
 	isLandHoldingModalVisible.value = true;
 }
-// Fetching all Owners on component mount
-onMounted(async () => {
-	await ownerStore.getOwners();
-});
+
 
 
 </script>

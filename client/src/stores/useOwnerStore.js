@@ -7,7 +7,7 @@ import { useAuthStore } from './auth';
 const app = new Realm.App({ id: import.meta.env.VITE_REALM_APP_ID });
 
 // Define the Pinia store for managing owner data in OwnerManager.vue
-// Create a store named 'owner' using defineStore, and export is for use throughout the application
+// Create a store named 'owner' using defineStore, and export it for use throughout the application
 export const useOwnerStore = defineStore('owner', {
   // The state function returns an object that contains the reactive state of the store
   state: () => ({
@@ -16,15 +16,17 @@ export const useOwnerStore = defineStore('owner', {
 
   // Used to modify data inside the state
   actions: {
-    // Run refresh and get user data
+    // Run refresh and get owner data
     async attempt() {
       try {
         await this.getOwners();
       } catch (error) {
-        console.error('Error during refresh:', error);
+        console.error('Error during refresh:', error.message);
+        throw new Error('Error during refresh:', + error.message);
       }
     },
 
+    // Create a new owner
     async createOwner(payload) {
       try {
 
@@ -47,7 +49,6 @@ export const useOwnerStore = defineStore('owner', {
         console.log("MongoDB insertOne response: ", result.insertedId.toString());
 
         // Check if insertedId is present and assign it to the payload
-        // const createdOwner = { ...payload, _id: result.insertedId };
         const createdOwner = { ...payload, _id: result.insertedId };
 
         // Push the newly created owner to the 'owners' array
@@ -55,11 +56,11 @@ export const useOwnerStore = defineStore('owner', {
 
         console.log("this.owners: ", this.owners);
         
-        
         console.log("Owner created successfully: ", createdOwner);
         return createdOwner;
       } catch (error) {
         console.error('Error during Owner creation:', error);
+        throw new Error('Error during Owner creation:', + error.message);
       }
     },
     
@@ -81,14 +82,14 @@ export const useOwnerStore = defineStore('owner', {
         this.owners = data;
         return data;
       } catch (error) {
-        console.error('Error fetching Owners:', error);
+        console.error('Error fetching Owners:', + error.message);
+        throw new Error('Error fetching Owners:', + error.message);
       }
     },
     
     async updateOwner(payload) {
 
       console.log("payload: ", payload);
-
 
       try {
         // Get the current user and MongoDB client
@@ -103,7 +104,7 @@ export const useOwnerStore = defineStore('owner', {
         if (!payload._id) {
           throw new Error("Owner ID is required for update");
         }
-        // Log the sanitized updated owner data
+        // Log the inserted owner data
         console.log("Owner store update payload: ", payload);
 
         // Attempt to update the owner in the ownersCollection
@@ -125,12 +126,12 @@ export const useOwnerStore = defineStore('owner', {
           console.log("Owner updated successfully: ", this.owners[index]);
           return this.owners[index];
         } else {
-          console.log("Owner not found or no changes made");
-          return null;
+          console.log("Owner not found. No changes made.");
+          throw new Error("Owner not found. No changes made.");
         }
       } catch (error) {
-        console.error('Error during Owner update: ', error);
-        throw new Error('Error during Owner update: ', + error.message);
+        console.error('Error updating owner: ', + error.message);
+        throw new Error('Error updating owner: ', + error.message);
       }
     },
 
