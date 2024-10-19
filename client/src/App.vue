@@ -1,12 +1,12 @@
 <template>
-  <div id="app">
-	<NavBar />
-	<RouterView />
-  </div>
+	<div id="app">
+		<!-- <NavBar /> -->
+		<RouterView />
+	</div>
 </template>
 
 <script setup lang="js">
-import { RouterView } from 'vue-router'
+// import { RouterView } from 'vue-router'
 import { useRouter } from 'vue-router';
 import { onMounted } from 'vue';
 import NavBar from './components/NavBar.vue';

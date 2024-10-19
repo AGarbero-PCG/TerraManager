@@ -2,21 +2,24 @@
 <template>
 	<div class="owner-manager container">
 		<h1 class="text-left">Owner Manager</h1>
-		
+
 		<!-- List of Owners -->
 		<div class="container">
 			<div class="card card-body mt-4">
 				<h5 class="card-title">All Owners</h5>
 
 				<!-- Error Message -->
-				<p v-if="errorMessage" class="error-message text-danger mb-4">{{ errorMessage }}</p>
-				
+				<p v-if="errorMessage" class="error-message text-danger mb-4">
+					{{ errorMessage }}
+				</p>
+
 				<!-- Create Owner Modal Trigger -->
 				<div class="d-flex justify-content-end mb-3">
-					<font-awesome-icon :icon="['fas', 'user-plus']"
-						data-bs-toggle="modal" 
-						data-bs-target="#OwnerModal" 
-						class="text-primary cursor-pointer" 
+					<font-awesome-icon
+						:icon="['fas', 'user-plus']"
+						data-bs-toggle="modal"
+						data-bs-target="#OwnerModal"
+						class="text-primary cursor-pointer"
 						size="2x"
 						@click="openCreateModal('create')"
 					/>
@@ -54,7 +57,9 @@
 							<!-- View Land Holdings Trigger -->
 							<td>
 								<div>
-									<font-awesome-icon :icon="['fas', 'house']" style="color: #000000;"
+									<font-awesome-icon
+										:icon="['fas', 'house']"
+										style="color: #000000"
 										data-bs-toggle="modal"
 										data-bs-target="#LandholdingManager"
 										class="cursor-pointer"
@@ -66,10 +71,11 @@
 							<!-- Update Owner Modal Trigger -->
 							<td>
 								<div>
-									<font-awesome-icon :icon="['fas', 'pen-to-square']"
-										data-bs-toggle="modal" 
-										data-bs-target="#OwnerModal" 
-										class="cursor-pointer" 
+									<font-awesome-icon
+										:icon="['fas', 'pen-to-square']"
+										data-bs-toggle="modal"
+										data-bs-target="#OwnerModal"
+										class="cursor-pointer"
 										size="2x"
 										@click="openUpdateModal(owner)"
 									/>
@@ -78,23 +84,23 @@
 							<!-- Delete Owner Modal Trigger -->
 							<td>
 								<div>
-									<font-awesome-icon :icon="['fas', 'trash']"
-										data-bs-toggle="modal" 
-										data-bs-target="#deleteOwnerModal" 
-										class="cursor-pointer" 
+									<font-awesome-icon
+										:icon="['fas', 'trash']"
+										data-bs-toggle="modal"
+										data-bs-target="#deleteOwnerModal"
+										class="cursor-pointer"
 										size="2x"
 										@click="openDeleteModal(owner)"
-										/>
+									/>
 								</div>
 							</td>
 						</tr>
 					</tbody>
 				</table>
 
-
 				<!-- Create/Update Owner Modal -->
 				<div
-					class="modal fade" 
+					class="modal fade"
 					id="OwnerModal"
 					tabindex="-1"
 					aria-labelledby="OwnerModalLabel"
@@ -103,19 +109,36 @@
 					<div class="modal-dialog">
 						<div class="modal-content">
 							<div class="modal-header">
-								<h5 class="modal-title" id="OwnerModalLabel">{{ isUpdateMode ? 'Update Owner' : 'Create Owner' }}</h5>
-								<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+								<h5 class="modal-title" id="OwnerModalLabel">
+									{{ isUpdateMode ? "Update Owner" : "Create Owner" }}
+								</h5>
+								<button
+									type="button"
+									class="btn-close"
+									data-bs-dismiss="modal"
+									aria-label="Close"
+								></button>
 							</div>
 							<div class="modal-body">
 								<form @submit.prevent="handleSubmit">
 									<!-- Owner Name -->
 									<div class="form-floating mb-3">
-										<input v-model="ownerData.name" type="text" class="form-control" id="name" required>
+										<input
+											v-model="ownerData.name"
+											type="text"
+											class="form-control"
+											id="name"
+											required
+										/>
 										<label for="name">Name</label>
 									</div>
 									<!-- Entity Type -->
 									<div class="form-floating mb-3">
-										<select v-model="ownerData.entity_type" class="form-select" id="entity_type">
+										<select
+											v-model="ownerData.entity_type"
+											class="form-select"
+											id="entity_type"
+										>
 											<option value="Company">Company</option>
 											<option value="Individual">Individual</option>
 											<option value="Investor">Investor</option>
@@ -125,7 +148,11 @@
 									</div>
 									<!-- Owner Type -->
 									<div class="form-floating mb-3">
-										<select v-model="ownerData.owner_type" class="form-select" id="owner_type">
+										<select
+											v-model="ownerData.owner_type"
+											class="form-select"
+											id="owner_type"
+										>
 											<option value="Competitor">Competitor</option>
 											<option value="Seller">Seller</option>
 											<option value="Investor">Investor</option>
@@ -135,23 +162,28 @@
 									</div>
 									<!-- Address -->
 									<div class="form-floating mb-3">
-										<input v-model="ownerData.address" type="text" class="form-control" id="address" required>
+										<input
+											v-model="ownerData.address"
+											type="text"
+											class="form-control"
+											id="address"
+											required
+										/>
 										<label for="address">Address</label>
 									</div>
-									
+
 									<!-- Total Land Holdings will automatically calculated -->
-									
+
 									<button
 										type="submit"
 										class="btn btn-success"
 										data-bs-dismiss="modal"
 									>
-										{{ isUpdateMode ? 'Update Owner' : 'Create Owner' }}
+										{{ isUpdateMode ? "Update Owner" : "Create Owner" }}
 									</button>
 								</form>
 
 								<p v-if="errorMessage" class="error">{{ errorMessage }}</p>
-				
 							</div>
 						</div>
 					</div>
@@ -168,15 +200,39 @@
 					<div class="modal-dialog">
 						<div class="modal-content">
 							<div class="modal-header">
-								<h5 class="modal-title" id="deleteOwnerModalLabel">Delete Owner</h5>
-								<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+								<h5 class="modal-title" id="deleteOwnerModalLabel">
+									Delete Owner
+								</h5>
+								<button
+									type="button"
+									class="btn-close"
+									data-bs-dismiss="modal"
+									aria-label="Close"
+								></button>
 							</div>
 							<div class="modal-body">
-								<p>Are you sure you want to delete the owner: <strong>{{ selectedOwner?.name }}</strong> ?  This will delete all related Land Holdings as well. </p>
+								<p>
+									Are you sure you want to delete the owner:
+									<strong>{{ selectedOwner?.name }}</strong> ? This will delete
+									all related Land Holdings as well.
+								</p>
 							</div>
 							<div class="modal-footer">
-								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-								<button type="button" class="btn btn-danger" data-bs-dismiss="modal" @click="handleDeleteOwner">Yes, Delete</button>
+								<button
+									type="button"
+									class="btn btn-secondary"
+									data-bs-dismiss="modal"
+								>
+									Cancel
+								</button>
+								<button
+									type="button"
+									class="btn btn-danger"
+									data-bs-dismiss="modal"
+									@click="handleDeleteOwner"
+								>
+									Yes, Delete
+								</button>
 							</div>
 						</div>
 					</div>
@@ -185,7 +241,6 @@
 		</div>
 	</div>
 </template>
-
 
 <script setup lang="js">
 import { reactive, ref, computed, onMounted } from 'vue';
@@ -239,7 +294,7 @@ async function handleCreateOwner() {
 	try {
 		await ownerStore.createOwner(ownerData);
 		console.log('Owner created successfully!: ', ownerData);
-		
+
 		errorMessage.value = ''; // Reset error message
 
 		// Reset the form fields after successful creation
@@ -322,13 +377,9 @@ function openLandHoldingModal(owner) {
 	selectedOwner.value = owner;
 	isLandHoldingModalVisible.value = true;
 }
-
-
-
 </script>
 
 <style scoped>
-
 .owner-manager {
 	margin-left: auto;
 	margin-right: auto;
@@ -339,7 +390,4 @@ function openLandHoldingModal(owner) {
 	color: red;
 	margin-top: 10px;
 }
-
 </style>
-
-
