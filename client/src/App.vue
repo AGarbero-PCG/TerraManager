@@ -9,7 +9,7 @@
 // import { RouterView } from 'vue-router'
 import { useRouter } from 'vue-router';
 import { onMounted } from 'vue';
-import NavBar from './components/NavBar.vue';
+// import NavBar from './components/NavBar.vue';
 
 import { useAuthStore } from './stores/auth';
 
@@ -22,7 +22,7 @@ onMounted(async () => {
 		authStore.isAuthenticated = true;
 	}
 	if(authStore.isLoggedIn){
-		router.replace({name: "owner-manager"})
+		router.replace({name: "dashboard"})
 	}
 })
 </script>
