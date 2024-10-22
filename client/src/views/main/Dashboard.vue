@@ -21,7 +21,7 @@
 			</div>
 			<div class="px-4 py-5 sm:p-6">
 				<!-- Content goes here -->
-				<OwnerTable />
+				<LandHoldingTable />
 			</div>
 		</div>
 	</div>
@@ -29,4 +29,5 @@
 
 <script setup>
 import OwnerTable from "@/components/tables/OwnerTable.vue";
+import LandHoldingTable from "../../components/tables/LandHoldingTable.vue";
 </script>
