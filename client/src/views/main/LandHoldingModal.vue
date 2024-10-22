@@ -2,21 +2,33 @@
 <template>
 	<teleport to="body">
 		<!-- Land Holding Manager -->
-		<div class="modal fade" id="LandHoldingManager" tabindex="-1" aria-labelledby="LandHoldingModalLabel" aria-hidden="true">
+		<div
+			class="modal fade"
+			id="LandholdingManager"
+			tabindex="-1"
+			aria-labelledby="LandHoldingModalLabel"
+			aria-hidden="true"
+		>
 			<div class="modal-dialog modal-xl modal-dialog-scrollable">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h5 class="modal-title" id="LandHoldingModalLabel">Land Holding Manager</h5>
-						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						<h5 class="modal-title" id="LandHoldingModalLabel">
+							Land Holding Manager
+						</h5>
+						<button
+							type="button"
+							class="btn-close"
+							data-bs-dismiss="modal"
+							aria-label="Close"
+						></button>
 					</div>
 					<div class="modal-body">
 						<div class="landholding-manager">
-					
 							<!-- List of Land Holdings -->
 							<div class="container">
 								<div class="card card-body mt-4">
-									<h5 class="card-title">{{ ownerName }}'s Land Holdings</h5>
-						
+									<h5 class="card-title">{{ owner.name }}'s Land Holdings</h5>
+
 									<!-- Create Land Holding Modal Trigger -->
 									<div class="d-flex justify-content-end mb-3">
 										<font-awesome-icon
@@ -28,67 +40,76 @@
 											@click="openModal('create')"
 										/>
 									</div>
-						
+
 									<!-- Table of Land Holdings -->
 									<table class="table table-striped">
-									<thead>
-										<tr>
-										<th scope="col">Legal Entity</th>
-										<th scope="col">Net Mineral Acres</th>
-										<th scope="col">Mineral Owner Royalty</th>
-										<th scope="col">Section</th>
-										<th scope="col">Township</th>
-										<th scope="col">Range</th>
-										<th scope="col">Title Source</th>
-										<th scope="col" id="update"></th>
-										<th scope="col" id="delete"></th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr v-for="landHolding in landHoldings" :key="landHolding.id">
-										<td>{{ landHolding.legal_entity }}</td>
-										<td>{{ landHolding.net_mineral_acres }}</td>
-										<td>{{ landHolding.mineral_owner_royalty }}</td>
-										<td>{{ landHolding.section }}</td>
-										<td>{{ landHolding.township }}</td>
-										<td>{{ landHolding.range }}</td>
-										<td>{{ landHolding.title_source }}</td>
-										<td>
-											<!-- Update Land Holding Modal Trigger -->
-											<div>
-												<font-awesome-icon
-													:icon="['fas', 'pen-to-square']"
-													data-bs-toggle="modal"
-													data-bs-target="#LandHoldingModal"
-													class="cursor-pointer"
-													size="2x"
-													@click="openModal('update', landHolding)"
-												/>
-											</div>
-										</td>
-										<td>
-											<!-- Delete Land Holding Modal Trigger -->
-											<div>
-											<font-awesome-icon
-												:icon="['fas', 'trash']"
-												data-bs-toggle="modal"
-												data-bs-target="#deleteLandHoldingModal"
-												class="cursor-pointer"
-												size="2x"
-												@click="selectLandHoldingForDeletion(landHolding)"
-											/>
-											</div>
-										</td>
-										</tr>
-									</tbody>
+										<thead>
+											<tr>
+												<th scope="col">Legal Entity</th>
+												<th scope="col">Net Mineral Acres</th>
+												<th scope="col">Mineral Owner Royalty</th>
+												<th scope="col">Section</th>
+												<th scope="col">Township</th>
+												<th scope="col">Range</th>
+												<th scope="col">Title Source</th>
+												<th scope="col" id="update"></th>
+												<th scope="col" id="delete"></th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr
+												v-for="landHolding in landHoldings"
+												:key="landHolding.id"
+											>
+												<td>{{ landHolding.legal_entity }}</td>
+												<td>{{ landHolding.net_mineral_acres }}</td>
+												<td>{{ landHolding.mineral_owner_royalty }}</td>
+												<td>{{ landHolding.section }}</td>
+												<td>{{ landHolding.township }}</td>
+												<td>{{ landHolding.range }}</td>
+												<td>{{ landHolding.title_source }}</td>
+												<td>
+													<!-- Update Land Holding Modal Trigger -->
+													<div>
+														<font-awesome-icon
+															:icon="['fas', 'pen-to-square']"
+															data-bs-toggle="modal"
+															data-bs-target="#LandHoldingModal"
+															class="cursor-pointer"
+															size="2x"
+															@click="openModal('update', landHolding)"
+														/>
+													</div>
+												</td>
+												<td>
+													<!-- Delete Land Holding Modal Trigger -->
+													<div>
+														<font-awesome-icon
+															:icon="['fas', 'trash']"
+															data-bs-toggle="modal"
+															data-bs-target="#deleteLandHoldingModal"
+															class="cursor-pointer"
+															size="2x"
+															@click="selectLandHoldingForDeletion(landHolding)"
+														/>
+													</div>
+												</td>
+											</tr>
+										</tbody>
 									</table>
-						
 								</div>
 							</div>
 						</div>
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#LandHoldingManager">Close</button>
+						<button
+							type="button"
+							class="btn btn-secondary"
+							data-bs-toggle="modal"
+							data-bs-target="#LandHoldingManager"
+						>
+							Close
+						</button>
 						<button type="button" class="btn btn-primary">Save changes</button>
 					</div>
 				</div>
@@ -106,92 +127,100 @@
 				<div class="modal-content">
 					<div class="modal-header">
 						<h5 class="modal-title" id="LandHoldingModalLabel">
-						{{ isUpdateMode ? 'Update Land Holding' : 'Create Land Holding' }}
+							{{ isUpdateMode ? "Update Land Holding" : "Create Land Holding" }}
 						</h5>
-						<button type="button" class="btn-close" data-bs-toggle="modal" data-bs-target="#LandHoldingManager" aria-label="Close"></button>
+						<button
+							type="button"
+							class="btn-close"
+							data-bs-toggle="modal"
+							data-bs-target="#LandHoldingManager"
+							aria-label="Close"
+						></button>
 					</div>
 					<div class="modal-body">
 						<form @submit.prevent="submit">
 							<!-- Land Holding Fields -->
 							<div class="form-floating mb-3">
 								<input
-								v-model="landHoldingData.legal_entity"
-								type="text"
-								class="form-control"
-								id="legal_entity"
-								required
+									v-model="landHoldingData.legal_entity"
+									type="text"
+									class="form-control"
+									id="legal_entity"
+									required
 								/>
 								<label for="legal_entity">Legal Entity</label>
 							</div>
 							<div class="form-floating mb-3">
 								<input
-								v-model="landHoldingData.net_mineral_acres"
-								type="number"
-								class="form-control"
-								id="net_mineral_acres"
-								required
+									v-model="landHoldingData.net_mineral_acres"
+									type="number"
+									class="form-control"
+									id="net_mineral_acres"
+									required
 								/>
 								<label for="net_mineral_acres">Net Mineral Acres</label>
 							</div>
 							<div class="form-floating mb-3">
 								<input
-								v-model="landHoldingData.mineral_owner_royalty"
-								type="number"
-								step="0.01"
-								class="form-control"
-								id="mineral_owner_royalty"
-								required
+									v-model="landHoldingData.mineral_owner_royalty"
+									type="number"
+									step="0.01"
+									class="form-control"
+									id="mineral_owner_royalty"
+									required
 								/>
 								<label for="mineral_owner_royalty">Mineral Owner Royalty</label>
 							</div>
 							<div class="form-floating mb-3">
 								<input
-								v-model="landHoldingData.section"
-								type="text"
-								class="form-control"
-								id="section"
-								required
+									v-model="landHoldingData.section"
+									type="text"
+									class="form-control"
+									id="section"
+									required
 								/>
 								<label for="section">Section</label>
 							</div>
 							<div class="form-floating mb-3">
 								<input
-								v-model="landHoldingData.township"
-								type="text"
-								class="form-control"
-								id="township"
-								required
+									v-model="landHoldingData.township"
+									type="text"
+									class="form-control"
+									id="township"
+									required
 								/>
 								<label for="township">Township</label>
 							</div>
 							<div class="form-floating mb-3">
 								<input
-								v-model="landHoldingData.range"
-								type="text"
-								class="form-control"
-								id="range"
-								required
+									v-model="landHoldingData.range"
+									type="text"
+									class="form-control"
+									id="range"
+									required
 								/>
 								<label for="range">Range</label>
 							</div>
 							<div class="form-floating mb-3">
 								<input
-								v-model="landHoldingData.title_source"
-								type="text"
-								class="form-control"
-								id="title_source"
-								required
+									v-model="landHoldingData.title_source"
+									type="text"
+									class="form-control"
+									id="title_source"
+									required
 								/>
 								<label for="title_source">Title Source</label>
 							</div>
-		
+
 							<button
 								type="submit"
 								class="btn btn-success"
 								data-bs-toggle="modal"
 								data-bs-target="#LandHoldingManager"
 							>
-								{{ isUpdateMode ? 'Update Land Holding' : 'Create Land Holding' }}
+								{{
+									isUpdateMode ? "Update Land Holding" : "Create Land Holding"
+								}}
 							</button>
 						</form>
 					</div>
@@ -210,32 +239,53 @@
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h5 class="modal-title" id="deleteLandHoldingModalLabel">Delete Land Holding</h5>
-						<button type="button" class="btn-close" data-bs-toggle="modal" data-bs-target="#LandHoldingManager" aria-label="Close"></button>
+						<h5 class="modal-title" id="deleteLandHoldingModalLabel">
+							Delete Land Holding
+						</h5>
+						<button
+							type="button"
+							class="btn-close"
+							data-bs-toggle="modal"
+							data-bs-target="#LandHoldingManager"
+							aria-label="Close"
+						></button>
 					</div>
 					<div class="modal-body">
 						<p>
-						Are you sure you want to delete the land holding?
-						<strong>{{ selectedLandHolding?.name }}</strong>?
+							Are you sure you want to delete the land holding?
+							<strong>{{ selectedLandHolding?.name }}</strong
+							>?
 						</p>
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#LandHoldingManager">Cancel</button>
-						<button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#LandHoldingManager" @click="deleteLandHolding">
-						Yes, Delete
+						<button
+							type="button"
+							class="btn btn-secondary"
+							data-bs-toggle="modal"
+							data-bs-target="#LandHoldingManager"
+						>
+							Cancel
+						</button>
+						<button
+							type="button"
+							class="btn btn-danger"
+							data-bs-toggle="modal"
+							data-bs-target="#LandHoldingManager"
+							@click="deleteLandHolding"
+						>
+							Yes, Delete
 						</button>
 					</div>
 				</div>
 			</div>
 		</div>
 	</teleport>
-	
 </template>
 
 <script setup lang="js">
 import { useOwnerStore } from '../../stores/useOwnerStore';
 import { reactive, ref } from 'vue';
-import { useLandHoldingStore } from '../../stores/landHolding';
+import { useLandHoldingStore } from '../../stores/useLandHoldingStore';
 import { FontAwesomeIcon } from '../../assets/icons';
 
 // Initialize stores
@@ -244,7 +294,6 @@ const ownerStore = useOwnerStore();
 
 // Local state
 const landHoldingData = reactive({
-	id: null,
 	name: '',
 	owner: '',
 	legal_entity: '',
@@ -259,6 +308,32 @@ const landHoldingData = reactive({
 const errorMessage = ref("");
 const isUpdateMode = ref(false);
 const selectedLandHolding = ref(null);
+
+// Fetch all land holdings on component mount
+onMounted(async () => {
+	if (props.owner?.id) {
+		await landHoldingStore.getLandHoldings(props.owner.id);
+	}
+});
+
+// Function to handle form submission
+async function handleSubmit() {
+	if (isUpdateMode.value) {
+		await handleUpdateLandHolding();
+	} else {
+		await handleCreateLandHolding();
+	}
+}
+
+// Function to open the Create Land Holding modal
+function openCreateLandHoldingModal() {
+	isUpdateMode.value = false;
+}
+
+// Function to handle Create Land Holding form submission
+async function handleCreateLandHolding() {
+
+}
 
 // Function to open the modal in either 'create' or 'update' mode
 function openModal(mode, landHolding=null) {
@@ -288,7 +363,6 @@ function openModal(mode, landHolding=null) {
 	}
 }
 
-
 // Function to handle form submission
 async function submit() {
 	console.log('Submitting landHoldingData: ', landHoldingData);
@@ -296,7 +370,7 @@ async function submit() {
 	if (isUpdateMode.value && landHoldingData.id !== null) {
 		// Update Land Holding
 		console.log('Updating Land Holding with data:', JSON.stringify(landHoldingData));
-		
+
 		await landHoldingStore.updateLandHolding(landHoldingData)
 		try{
 			console.log('Land Holding Updated');
@@ -357,13 +431,8 @@ async function deleteLandHolding() {
 </script>
 
 <style scoped>
-
-#register .card{
-	max-width:40vw;
+#register .card {
+	max-width: 40vw;
 	margin: auto;
 }
-
 </style>
-
-
-

@@ -1,7 +1,9 @@
-<!-- src/components/drawers/CreateUpdateOwners.vue -->
+<!-- client/src/components/drawers/CreateUpdateLandHolding.vue -->
 <template>
 	<TransitionRoot as="template" :show="isVisible">
 		<Dialog class="relative z-10" @close="closeDrawer">
+			<div class="fixed inset-0" />
+
 			<div class="fixed inset-0 overflow-hidden">
 				<div class="absolute inset-0 overflow-hidden">
 					<div
@@ -18,102 +20,259 @@
 						>
 							<DialogPanel class="pointer-events-auto w-screen max-w-md">
 								<div
-									class="flex h-full flex-col divide-y divide-gray-200 bg-white shadow-xl"
+									class="flex h-full flex-col overflow-y-scroll bg-white py-6 shadow-xl"
 								>
-									<div
-										class="flex min-h-0 flex-1 flex-col overflow-y-scroll py-6"
-									>
-										<div class="px-4 sm:px-6">
-											<div class="flex items-start justify-between">
-												<DialogTitle
-													class="text-base font-semibold leading-6 text-gray-900"
-													>{{
-														mode === "create" ? "Create Owner" : "Update Owner"
-													}}</DialogTitle
+									<div class="px-4 sm:px-6">
+										<div class="flex items-start justify-between">
+											<DialogTitle
+												class="text-base font-semibold leading-6 text-gray-900"
+											>
+												{{
+													isUpdateMode
+														? "Update Land Holding"
+														: "Create Land Holding"
+												}}
+											</DialogTitle>
+											<div class="ml-3 flex h-7 items-center">
+												<button
+													type="button"
+													class="relative rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+													@click="closeDrawer"
 												>
-												<div class="ml-3 flex h-7 items-center">
-													<button
-														type="button"
-														class="relative rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-														@click="closeDrawer"
-													>
-														<span class="absolute -inset-2.5" />
-														<span class="sr-only">Close panel</span>
-														<XMarkIcon class="h-6 w-6" aria-hidden="true" />
-													</button>
-												</div>
+													<span class="absolute -inset-2.5" />
+													<span class="sr-only">Close panel</span>
+													<XMarkIcon class="h-6 w-6" aria-hidden="true" />
+												</button>
 											</div>
 										</div>
-										<div class="relative mt-6 flex-1 px-4 sm:px-6">
-											<form @submit.prevent="handleSubmit">
-												<!-- Owner Name -->
-												<div class="form-floating mb-3">
-													<input
-														v-model="ownerData.name"
-														type="text"
-														class="form-control"
-														id="name"
-														required
-													/>
-													<label for="name">Name</label>
-												</div>
-												<!-- Entity Type -->
-												<div class="form-floating mb-3">
-													<select
-														v-model="ownerData.entity_type"
-														class="form-select"
-														id="entity_type"
-													>
-														<option value="Company">Company</option>
-														<option value="Individual">Individual</option>
-														<option value="Investor">Investor</option>
-														<option value="Trust">Trust</option>
-													</select>
-													<label for="entity_type">Entity Type</label>
-												</div>
-												<!-- Owner Type -->
-												<div class="form-floating mb-3">
-													<select
-														v-model="ownerData.owner_type"
-														class="form-select"
-														id="owner_type"
-													>
-														<option value="Competitor">Competitor</option>
-														<option value="Seller">Seller</option>
-														<option value="Investor">Investor</option>
-														<option value="Professional">Professional</option>
-													</select>
-													<label for="owner_type">Owner Type</label>
-												</div>
-												<!-- Address -->
-												<div class="form-floating mb-3">
-													<input
-														v-model="ownerData.address"
-														type="text"
-														class="form-control"
-														id="address"
-														required
-													/>
-													<label for="address">Address</label>
-												</div>
+									</div>
 
-												<div class="flex flex-shrink-0 justify-end px-4 py-4">
-													<button
-														type="button"
-														class="rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:ring-gray-400"
-														@click="closeDrawer"
+									<!-- Form content starts here -->
+									<div class="relative mt-6 flex-1 px-4 sm:px-6">
+										<form>
+											<div class="space-y-12">
+												<div class="border-b border-gray-200 pb-12">
+													<h2
+														class="text-base font-semibold leading-7 text-gray-900"
 													>
-														Cancel
-													</button>
-													<button
-														type="submit"
-														class="ml-4 inline-flex justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+														Land Holding Information
+													</h2>
+													<p class="mt-1 text-sm leading-6 text-gray-500">
+														Fill in the details for the land holding.
+													</p>
+
+													<div
+														class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6"
 													>
-														{{ isUpdateMode ? "Update Owner" : "Create Owner" }}
-													</button>
+														<!-- Land Holding Name (Autogenerated) -->
+														<div class="sm:col-span-4">
+															<label
+																for="name"
+																class="block text-sm font-medium leading-6 text-gray-900"
+															>
+																Land Holding Name (Autogenerated)
+															</label>
+															<div class="mt-2">
+																<input
+																	v-model="landHoldingData.name"
+																	id="name"
+																	name="name"
+																	type="text"
+																	class="block w-full border border-gray-300 rounded-md shadow-sm py-1.5 px-3 bg-gray-100 text-gray-600 sm:text-sm sm:leading-6"
+																	readonly
+																/>
+															</div>
+														</div>
+
+														<!-- Legal Entity -->
+														<div class="sm:col-span-4">
+															<label
+																for="legal-entity"
+																class="block text-sm font-medium leading-6 text-gray-900"
+															>
+																Legal Entity
+															</label>
+															<div class="mt-2">
+																<input
+																	v-model="landHoldingData.legal_entity"
+																	id="legal-entity"
+																	type="text"
+																	class="block w-full rounded-md border-0 bg-gray-50 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-500 sm:text-sm sm:leading-6"
+																	required
+																/>
+															</div>
+														</div>
+
+														<!-- Net Mineral Acres -->
+														<div class="sm:col-span-4">
+															<label
+																for="net-mineral-acres"
+																class="block text-sm font-medium leading-6 text-gray-900"
+															>
+																Net Mineral Acres
+															</label>
+															<div class="mt-2">
+																<input
+																	v-model="landHoldingData.net_mineral_acres"
+																	id="net-mineral-acres"
+																	type="number"
+																	class="block w-full rounded-md border-0 bg-gray-50 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-500 sm:text-sm sm:leading-6"
+																	required
+																/>
+															</div>
+														</div>
+
+														<!-- Mineral Owner Royalty (%) -->
+														<div class="sm:col-span-4">
+															<label
+																for="mineral-owner-royalty"
+																class="block text-sm font-medium leading-6 text-gray-900"
+															>
+																Mineral Owner Royalty (%)
+															</label>
+															<div class="mt-2">
+																<input
+																	v-model="
+																		landHoldingData.mineral_owner_royalty
+																	"
+																	id="mineral-owner-royalty"
+																	type="number"
+																	step="0.01"
+																	min="0"
+																	max="100"
+																	class="block w-full rounded-md border-0 bg-gray-50 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-500 sm:text-sm sm:leading-6"
+																	required
+																/>
+															</div>
+														</div>
+
+														<!-- Section Name (Autogenerated from Section, Township, Range) -->
+														<div class="sm:col-span-4">
+															<label
+																for="section-name"
+																class="block text-sm font-medium leading-6 text-gray-900"
+															>
+																Section Name (Autogenerated)
+															</label>
+															<div class="mt-2">
+																<input
+																	v-model="landHoldingData.section_name"
+																	id="section-name"
+																	type="text"
+																	class="block w-full rounded-md border-0 bg-gray-50 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-500 sm:text-sm sm:leading-6"
+																	readonly
+																/>
+															</div>
+														</div>
+
+														<!-- Section (3 characters) -->
+														<div class="sm:col-span-2">
+															<label
+																for="section"
+																class="block text-sm font-medium leading-6 text-gray-900"
+															>
+																Section (3 digits)
+															</label>
+															<div class="mt-2">
+																<input
+																	v-model="landHoldingData.section"
+																	id="section"
+																	type="text"
+																	maxlength="3"
+																	class="block w-full rounded-md border-0 bg-gray-50 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-500 sm:text-sm sm:leading-6"
+																	required
+																/>
+															</div>
+														</div>
+
+														<!-- Township (4 characters) -->
+														<div class="sm:col-span-2">
+															<label
+																for="township"
+																class="block text-sm font-medium leading-6 text-gray-900"
+															>
+																Township (Format: 123N or 456S)
+															</label>
+															<div class="mt-2">
+																<input
+																	v-model="landHoldingData.township"
+																	id="township"
+																	type="text"
+																	maxlength="4"
+																	pattern="[0-9]{3}[NS]"
+																	class="block w-full rounded-md border-0 bg-gray-50 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-500 sm:text-sm sm:leading-6"
+																	required
+																/>
+															</div>
+														</div>
+
+														<!-- Range (4 characters) -->
+														<div class="sm:col-span-2">
+															<label
+																for="range"
+																class="block text-sm font-medium leading-6 text-gray-900"
+															>
+																Range (Format: 123E or 456W)
+															</label>
+															<div class="mt-2">
+																<input
+																	v-model="landHoldingData.range"
+																	id="range"
+																	type="text"
+																	maxlength="4"
+																	pattern="[0-9]{3}[EW]"
+																	class="block w-full rounded-md border-0 bg-gray-50 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-500 sm:text-sm sm:leading-6"
+																	required
+																/>
+															</div>
+														</div>
+
+														<!-- Title Source -->
+														<div class="sm:col-span-4">
+															<label
+																for="title-source"
+																class="block text-sm font-medium leading-6 text-gray-900"
+															>
+																Title Source
+															</label>
+															<div class="mt-2">
+																<select
+																	v-model="landHoldingData.title_source"
+																	id="title-source"
+																	class="block w-full rounded-md border-0 bg-gray-50 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-500 sm:text-sm sm:leading-6"
+																>
+																	<option value="Class A">Class A</option>
+																	<option value="Class B">Class B</option>
+																	<option value="Class C">Class C</option>
+																	<option value="Class D">Class D</option>
+																</select>
+															</div>
+														</div>
+													</div>
 												</div>
-											</form>
-										</div>
+											</div>
+
+											<!-- Buttons -->
+											<div class="mt-6 flex items-center justify-end gap-x-6">
+												<button
+													type="button"
+													class="text-sm font-semibold leading-6 text-gray-900"
+													@click="closeDrawer"
+												>
+													Cancel
+												</button>
+												<button
+													type="submit"
+													class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+												>
+													{{
+														isUpdateMode
+															? "Update Land Holding"
+															: "Create Land Holding"
+													}}
+												</button>
+											</div>
+										</form>
 									</div>
 								</div>
 							</DialogPanel>
@@ -136,12 +295,14 @@ import {
 import { XMarkIcon } from "@heroicons/vue/24/outline";
 import { reactive, ref, watch } from "vue";
 import { useOwnerStore } from "../../stores/useOwnerStore";
+import { useLandHoldingStore } from "../../stores/useLandHoldingStore";
 
 const isUpdateMode = ref(false);
 const errorMessage = ref("");
 
 // Initialize store
 const ownerStore = useOwnerStore();
+const landHoldingStore = useLandHoldingStore();
 
 // // Local state to control drawer visibility
 // const isVisible = ref(false);
@@ -153,34 +314,46 @@ const props = defineProps({
 	owner: Object,
 });
 
-// Reactive state for the owner data
-const ownerData = reactive({
+// Reactive state for the land holding data
+const landHoldingData = reactive({
 	name: "",
-	entity_type: "Company",
-	owner_type: "Competitor",
-	address: "",
-	total_land_holdings: 0,
+	owner: props.owner?._id || "",
+	legal_entity: "",
+	net_mineral_acres: 0,
+	mineral_owner_royalty: 0,
+	section: "",
+	township: "",
+	range: "",
+	title_source: "",
 });
-// const ownerData = reactive({ ...props.owner });
-
-// Emits the close event
-const emit = defineEmits(["close"]);
 
 // Watch for changes in the selected owner and update ownerData accordingly
 watch(
 	() => props.owner,
 	(newOwner) => {
 		if (newOwner) {
-			ownerData._id = newOwner._id;
-			ownerData.name = newOwner.name;
-			ownerData.entity_type = newOwner.entity_type;
-			ownerData.owner_type = newOwner.owner_type;
-			ownerData.address = newOwner.address;
-			ownerData.total_land_holdings = newOwner.total_land_holdings;
+			landHoldingData.owner_id = newOwner._id; // Double check this
 		}
 	},
 	{ immediate: true } // Ensures that the initial value is also caught
 );
+
+// Watch for changes in section, township, and range to auto-generate the section name and name
+watch(
+	[
+		() => landHoldingData.legal_entity,
+		() => landHoldingData.section,
+		() => landHoldingData.township,
+		() => landHoldingData.range,
+	],
+	([section, township, range]) => {
+		landHoldingData.section_name = `${section}-${township}-${range}`;
+		landHoldingData.name = `${landHoldingData.section_name} (${landHoldingData.owner})`;
+	}
+);
+
+// Emits the close event
+const emit = defineEmits(["close"]);
 
 // Function to close the drawer
 function closeDrawer() {
@@ -189,14 +362,23 @@ function closeDrawer() {
 
 // Handle form submit
 async function handleSubmit() {
-	if (props.mode === "create") {
-		console.log("Creating owner...");
-		await handleCreateOwner();
-	} else {
-		console.log("Updating owner...");
-		await handleUpdateOwner();
+	// if (props.mode === "create") {
+	// 	console.log("Creating owner...");
+	// 	await handleCreateOwner();
+	// } else {
+	// 	console.log("Updating owner...");
+	// 	await handleUpdateOwner();
+	// }
+	// closeDrawer();
+
+	try {
+		await landHoldingStore.createLandHolding(landHoldingData);
+		console.log("Land Holding created successfully!: ", landHoldingData);
+		closeDrawer();
+	} catch (error) {
+		console.error("Error creating land holding:" + error.message);
+		errorMessage.value = "Failed to create land holding. Please try again.";
 	}
-	closeDrawer();
 }
 
 // Function to handle Create Owner form submission

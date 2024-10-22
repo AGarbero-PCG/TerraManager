@@ -1,13 +1,12 @@
-<!-- src/components/tables/LandHoldingTable.vue -->
+<!-- client/src/components/tables/LandHoldingTable.vue -->
 <template>
-	<!-- <html class="h-full bg-gray-100"> -->
 	<div class="h-full">
 		<div class="min-h-full">
 			<div class="bg-gray-800 pb-32">
 				<header class="py-10">
 					<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 						<h1 class="text-3xl font-bold tracking-tight text-white">
-							Landholding Manager
+							Land Holding Manager
 						</h1>
 					</div>
 				</header>
@@ -37,7 +36,7 @@
 									<font-awesome-icon
 										:icon="['fas', 'square-plus']"
 										size="2x"
-										@click="openCreateTable('create')"
+										@click="openCreateDrawer('create')"
 									/>
 									Add Land Holding
 								</div>
@@ -183,7 +182,7 @@
 															<font-awesome-icon
 																:icon="['fas', 'pen-to-square']"
 																size="2x"
-																@click="openUpdateTable(landholding)"
+																@click="openUpdateDrawer(landholding)"
 															/>
 														</div>
 													</td>
@@ -267,15 +266,15 @@ function closeDrawer() {
 }
 
 // Function to open the Create Land Holding table
-function openCreateTable() {
+function openCreateDrawer() {
 	isUpdateMode.value = false;
 	selectedLandHolding.value = null;
 	isLandHoldingDrawerVisible.value = true;
 }
 
 // Function to open the Update Land Holding table
-function openUpdateTable(landholding) {
-	console.log("Inside openUpdateTable");
+function openUpdateDrawer(landholding) {
+	console.log("Inside openUpdateDrawer");
 	isUpdateMode.value = true;
 	isLandHoldingDrawerVisible.value = true;
 

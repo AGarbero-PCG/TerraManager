@@ -1,6 +1,5 @@
-<!-- src/components/tables/OwnerTable.vue -->
+<!-- client/src/components/tables/OwnerTable.vue -->
 <template>
-	<!-- <html class="h-full bg-gray-100"> -->
 	<div class="h-full">
 		<div class="min-h-full">
 			<div class="bg-gray-800 pb-32">
@@ -37,9 +36,9 @@
 									<font-awesome-icon
 										:icon="['fas', 'user-plus']"
 										size="2x"
-										@click="openCreateTable('create')"
+										@click="openCreateDrawer('create')"
 									/>
-									Add owner
+									Add Owner
 								</div>
 							</div>
 							<div class="mt-8 flow-root">
@@ -133,10 +132,8 @@
 															<font-awesome-icon
 																:icon="['fas', 'house']"
 																style="color: #000000"
-																data-bs-toggle="modal"
-																data-bs-target="#LandholdingManager"
 																size="2x"
-																@click="openLandHoldingModal(owner)"
+																@click="openCreateLandHoldingDrawer(owner)"
 															/>
 														</div>
 													</td>
@@ -148,7 +145,7 @@
 															<font-awesome-icon
 																:icon="['fas', 'pen-to-square']"
 																size="2x"
-																@click="openUpdateTable(owner)"
+																@click="openUpdateDrawer(owner)"
 															/>
 														</div>
 													</td>
@@ -170,12 +167,25 @@
 									</div>
 								</div>
 							</div>
-							<!-- Drawer component -->
+							<!-- create/update owner drawer component -->
 							<CreateUpdateOwner
 								:isVisible="isOwnerDrawerVisible"
 								:mode="isUpdateMode ? 'update' : 'create'"
 								:owner="selectedOwner"
 								@close="closeDrawer"
+							/>
+							<!-- delete owner modal component -->
+							<DeleteOwner
+								:isVisible="isDeleteModalVisible"
+								:owner="selectedOwner"
+								@close="isDeleteModalVisible = false"
+							/>
+							<!-- create land holding drawer component -->
+							<CreateLandHolding
+								:isVisible="isLandHoldingDrawerVisible"
+								:mode="isUpdateMode ? 'update' : 'create'"
+								:owner="selectedOwner"
+								@close="isLandHoldingDrawerVisible = false"
 							/>
 						</div>
 						<!-------------------------------------- END Table of Owners -------------------------------------->
@@ -192,6 +202,8 @@ import { reactive, ref, computed, onMounted } from "vue";
 import { FontAwesomeIcon } from "../../assets/icons";
 import { useOwnerStore } from "../../stores/useOwnerStore";
 import CreateUpdateOwner from "../drawers/CreateUpdateOwner.vue";
+import DeleteOwner from "../modals/DeleteOwner.vue";
+import CreateLandHolding from "../drawers/CreateUpdateLandHolding.vue";
 
 // Initialize store
 const ownerStore = useOwnerStore();
@@ -212,9 +224,10 @@ const ownerData = reactive({
 
 const errorMessage = ref(""); // Error message to show any issues during creation
 const isOwnerDrawerVisible = ref(false);
+const isDeleteModalVisible = ref(false);
+const isLandHoldingDrawerVisible = ref(false);
 const isUpdateMode = ref(false);
 const selectedOwner = ref(null); // For tracking the owner to delete
-const isLandHoldingModalVisible = ref(false);
 
 // Fetch all owners on component mount
 onMounted(async () => {
@@ -226,16 +239,16 @@ function closeDrawer() {
 	isOwnerDrawerVisible.value = false;
 }
 
-// Function to open the Create Owner table
-function openCreateTable() {
+// Function to open the Create Owner drawer
+function openCreateDrawer() {
 	isUpdateMode.value = false;
 	selectedOwner.value = null;
 	isOwnerDrawerVisible.value = true;
 }
 
-// Function to open the Update Owner table
-function openUpdateTable(owner) {
-	console.log("Inside openUpdateTable");
+// Function to open the Update Owner drawer
+function openUpdateDrawer(owner) {
+	console.log("Inside openUpdateDrawer");
 	isUpdateMode.value = true;
 	isOwnerDrawerVisible.value = true;
 
@@ -245,10 +258,17 @@ function openUpdateTable(owner) {
 
 // Select an owner for deletion and open the delete modal
 function openDeleteModal(owner) {
+	isDeleteModalVisible.value = true;
 	// Assign the selected owner to the reactive reference
 	selectedOwner.value = owner;
+}
 
-	// Populate ownerData with the selected owner's data
-	Object.assign(ownerData, owner);
+// Function to open the Land Holding drawer
+function openCreateLandHoldingDrawer(owner) {
+	isUpdateMode.value = false;
+	isLandHoldingDrawerVisible.value = true;
+	// Assign the selected owner to the reactive reference
+	selectedOwner.value = owner;
+	console.log("Selected Owner: ", selectedOwner.value);
 }
 </script>
