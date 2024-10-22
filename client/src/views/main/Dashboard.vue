@@ -21,7 +21,7 @@
 			</div>
 			<div class="px-4 py-5 sm:p-6">
 				<!-- Content goes here -->
-				<LandHoldingTable />
+				<!-- <LandHoldingTable /> -->
 			</div>
 		</div>
 	</div>

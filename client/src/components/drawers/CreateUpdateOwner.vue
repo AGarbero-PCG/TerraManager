@@ -1,4 +1,4 @@
-<!-- src/components/drawers/CreateUpdateOwners.vue -->
+<!-- client/src/components/drawers/CreateUpdateOwners.vue -->
 <template>
 	<TransitionRoot as="template" :show="isVisible">
 		<Dialog class="relative z-10" @close="closeDrawer">
@@ -143,9 +143,6 @@ const errorMessage = ref("");
 // Initialize store
 const ownerStore = useOwnerStore();
 
-// // Local state to control drawer visibility
-// const isVisible = ref(false);
-
 // Props for mode and selected owner
 const props = defineProps({
 	isVisible: Boolean,
@@ -237,6 +234,4 @@ async function handleUpdateOwner() {
 		errorMessage.value = "Failed to update owner. Please try again.";
 	}
 }
-
-const open = ref(true);
 </script>
