@@ -6,8 +6,8 @@ const router = createRouter({
 	routes: [
 		{
 			path: '/',
-			name: 'home',
-			component: () => import('../views/HomeView.vue')
+			name: 'welcome',
+			component: () => import('../views/Welcome.vue')
 		},
 		{
 			path: '/login',
@@ -28,18 +28,24 @@ const router = createRouter({
 			meta: { requiresAuth: true } // Only allows authenticated users to enter user route.
 		},
 		{
-			path: '/owner-manager',
-			name: 'owner-manager',
-			component: () => import('../views/main/OwnerManager.vue'),
-			meta: { requiresAuth: true } // Only allows authenticated users to enter user route.
+			path: '/dashboard',
+			name: 'dashboard',
+			component: () => import('../views/main/Dashboard.vue'),
+			meta: { requiresAuth: true } // Only allows authenticated users to enter dashboard route.
 		},
-		{
-			path: '/land-holding-manager',
-			name: 'land-holding-manager',
-			component: () => import('../views/main/LandHoldingModal.vue'),
-			props: true,
-			meta: { requiresAuth: true } // Only allows authenticated users to enter user route.
-		}
+		// {
+		// 	path: '/owner-manager',
+		// 	name: 'owner-manager',
+		// 	component: () => import('../views/main/OwnerManager.vue'),
+		// 	meta: { requiresAuth: true } // Only allows authenticated users to enter owner-manager route.
+		// },
+		// {
+		// 	path: '/landholding-manager',
+		// 	name: 'landholding-manager',
+		// 	component: () => import('../views/main/Dashboard.vue'),
+		// 	props: true,
+		// 	meta: { requiresAuth: true } // Only allows authenticated users to enter landholding-manager route.
+		// }
 	]
 })
 

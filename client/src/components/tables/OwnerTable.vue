@@ -188,12 +188,6 @@
 </template>
 
 <script setup>
-import {
-	Menu,
-	Disclosure,
-	DisclosureButton,
-	DisclosurePanel,
-} from "@headlessui/vue";
 import { reactive, ref, computed, onMounted } from "vue";
 import { FontAwesomeIcon } from "../../assets/icons";
 import { useOwnerStore } from "../../stores/useOwnerStore";
@@ -221,43 +215,32 @@ const isOwnerDrawerVisible = ref(false);
 const isUpdateMode = ref(false);
 const selectedOwner = ref(null); // For tracking the owner to delete
 const isLandHoldingModalVisible = ref(false);
-// const isLandHoldingModalVisible = ref(false);
 
 // Fetch all owners on component mount
 onMounted(async () => {
 	await ownerStore.getOwners();
 });
 
-// Function to close the drawer
+// // Function to close the drawer
 function closeDrawer() {
 	isOwnerDrawerVisible.value = false;
-	emit("close");
-	selectedOwner.value = null; // Reset the selected owner
 }
 
 // Function to open the Create Owner table
 function openCreateTable() {
 	isUpdateMode.value = false;
+	selectedOwner.value = null;
 	isOwnerDrawerVisible.value = true;
 }
 
 // Function to open the Update Owner table
 function openUpdateTable(owner) {
+	console.log("Inside openUpdateTable");
 	isUpdateMode.value = true;
 	isOwnerDrawerVisible.value = true;
 
-	if (isUpdateMode.value && owner) {
-		// Populate form with owner data for update
-		ownerData._id = owner._id; // Store the selected owner ID
-		ownerData.name = owner.name;
-		ownerData.entity_type = owner.entity_type;
-		ownerData.owner_type = owner.owner_type;
-		ownerData.address = owner.address;
-		ownerData.total_land_holdings = owner.total_land_holdings;
-	}
-
-	// Populate ownerData with the selected owner's data
-	Object.assign(ownerData, owner);
+	selectedOwner.value = owner;
+	console.log("Selected Owner: ", selectedOwner.value);
 }
 
 // Select an owner for deletion and open the delete modal

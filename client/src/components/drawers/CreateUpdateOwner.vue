@@ -97,32 +97,23 @@
 													<label for="address">Address</label>
 												</div>
 
-												<!-- Total Land Holdings will automatically calculated -->
-
-												<button
-													type="submit"
-													class="btn btn-success"
-													data-bs-dismiss="modal"
-												>
-													{{ isUpdateMode ? "Update Owner" : "Create Owner" }}
-												</button>
+												<div class="flex flex-shrink-0 justify-end px-4 py-4">
+													<button
+														type="button"
+														class="rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:ring-gray-400"
+														@click="closeDrawer"
+													>
+														Cancel
+													</button>
+													<button
+														type="submit"
+														class="ml-4 inline-flex justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+													>
+														{{ isUpdateMode ? "Update Owner" : "Create Owner" }}
+													</button>
+												</div>
 											</form>
 										</div>
-									</div>
-									<div class="flex flex-shrink-0 justify-end px-4 py-4">
-										<button
-											type="button"
-											class="rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:ring-gray-400"
-											@click="open = false"
-										>
-											Cancel
-										</button>
-										<button
-											type="submit"
-											class="ml-4 inline-flex justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
-										>
-											Save
-										</button>
 									</div>
 								</div>
 							</DialogPanel>
@@ -143,7 +134,7 @@ import {
 	TransitionRoot,
 } from "@headlessui/vue";
 import { XMarkIcon } from "@heroicons/vue/24/outline";
-import { reactive, ref } from "vue";
+import { reactive, ref, watch } from "vue";
 import { useOwnerStore } from "../../stores/useOwnerStore";
 
 const isUpdateMode = ref(false);
@@ -151,15 +142,6 @@ const errorMessage = ref("");
 
 // Initialize store
 const ownerStore = useOwnerStore();
-
-// Reactive state for the owner data
-const ownerData = reactive({
-	name: "",
-	entity_type: "Company",
-	owner_type: "Competitor",
-	address: "",
-	total_land_holdings: 0,
-});
 
 // // Local state to control drawer visibility
 // const isVisible = ref(false);
@@ -171,8 +153,34 @@ const props = defineProps({
 	owner: Object,
 });
 
+// Reactive state for the owner data
+const ownerData = reactive({
+	name: "",
+	entity_type: "Company",
+	owner_type: "Competitor",
+	address: "",
+	total_land_holdings: 0,
+});
+// const ownerData = reactive({ ...props.owner });
+
 // Emits the close event
 const emit = defineEmits(["close"]);
+
+// Watch for changes in the selected owner and update ownerData accordingly
+watch(
+	() => props.owner,
+	(newOwner) => {
+		if (newOwner) {
+			ownerData._id = newOwner._id;
+			ownerData.name = newOwner.name;
+			ownerData.entity_type = newOwner.entity_type;
+			ownerData.owner_type = newOwner.owner_type;
+			ownerData.address = newOwner.address;
+			ownerData.total_land_holdings = newOwner.total_land_holdings;
+		}
+	},
+	{ immediate: true } // Ensures that the initial value is also caught
+);
 
 // Function to close the drawer
 function closeDrawer() {
@@ -189,10 +197,6 @@ async function handleSubmit() {
 		await handleUpdateOwner();
 	}
 	closeDrawer();
-}
-
-function openCreateDrawer() {
-	isUpdateMode.value = false;
 }
 
 // Function to handle Create Owner form submission
@@ -213,24 +217,6 @@ async function handleCreateOwner() {
 		console.error("Error creating owner:" + error.message);
 		errorMessage.value = "Failed to create owner. Please try again.";
 	}
-}
-
-// Function to open the Update Owner modal
-function openUpdateDrawer(owner) {
-	isUpdateMode.value = false;
-
-	if (!isUpdateMode.value && owner) {
-		// Populate form with owner data for update
-		ownerData._id = owner._id; // Store the selected owner ID
-		ownerData.name = owner.name;
-		ownerData.entity_type = owner.entity_type;
-		ownerData.owner_type = owner.owner_type;
-		ownerData.address = owner.address;
-		ownerData.total_land_holdings = owner.total_land_holdings;
-	}
-
-	// Populate ownerData with the selected owner's data
-	Object.assign(ownerData, owner);
 }
 
 // Function to handle Update Owner form submission
