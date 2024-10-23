@@ -133,7 +133,9 @@
 																:icon="['fas', 'house']"
 																style="color: #000000"
 																size="2x"
-																@click="openCreateLandHoldingDrawer(owner)"
+																@click="
+																	openCreateUpdateLandHoldingDrawer(owner)
+																"
 															/>
 														</div>
 													</td>
@@ -185,6 +187,7 @@
 								:isVisible="isLandHoldingDrawerVisible"
 								:mode="isUpdateMode ? 'update' : 'create'"
 								:owner="selectedOwner"
+								:owners="owners"
 								@close="isLandHoldingDrawerVisible = false"
 							/>
 						</div>
@@ -241,6 +244,12 @@ function closeDrawer() {
 
 // Function to open the Create Owner drawer
 function openCreateDrawer() {
+	ownerData.name = "";
+	ownerData.entity_type = "Company";
+	ownerData.owner_type = "Competitor";
+	ownerData.address = "";
+	ownerData.total_land_holdings = 0;
+
 	isUpdateMode.value = false;
 	selectedOwner.value = null;
 	isOwnerDrawerVisible.value = true;
@@ -264,11 +273,9 @@ function openDeleteModal(owner) {
 }
 
 // Function to open the Land Holding drawer
-function openCreateLandHoldingDrawer(owner) {
+function openCreateUpdateLandHoldingDrawer(owner) {
 	isUpdateMode.value = false;
+	selectedOwner.value = owner; // Assign the selected owner to the reactive reference
 	isLandHoldingDrawerVisible.value = true;
-	// Assign the selected owner to the reactive reference
-	selectedOwner.value = owner;
-	console.log("Selected Owner: ", selectedOwner.value);
 }
 </script>

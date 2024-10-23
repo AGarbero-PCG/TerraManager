@@ -235,7 +235,11 @@ const ownerStore = useOwnerStore();
 // The function inside computed() returns the 'landholdings' array from the landHoldingStore 'landholding'
 // The result of computed() is assigned to another variable, 'landholdings', a reactive reference to the landholdings array
 // const landholdings = computed(() => landHoldingStore.landholdings); // Bind the store's land holdings to a local variable
-const landholdings = computed(() => landHoldingStore.landholdings);
+const landholdings = computed(() => {
+	return landHoldingStore.landholdings.filter(
+		(landholding) => landholding.owner === selectedOwner._id // Filter land holdings by owner
+	);
+});
 
 // Reactive state for the land holding data
 const landHoldingData = reactive({
@@ -253,6 +257,7 @@ const landHoldingData = reactive({
 const errorMessage = ref(""); // Error message to show any issues during creation
 const isLandHoldingDrawerVisible = ref(false);
 const isUpdateMode = ref(false);
+const selectedOwner = ref(null); // For tracking the owner whose land holdings are being viewed
 const selectedLandHolding = ref(null); // For tracking the land holding to delete
 
 // Fetch all land holdings on component mount
