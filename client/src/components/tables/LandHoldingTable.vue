@@ -5,8 +5,11 @@
 			<div class="bg-gray-800 pb-32">
 				<header class="py-10">
 					<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-						<h1 class="text-3xl font-bold tracking-tight text-white">
-							Land Holding Manager
+						<h1
+							v-if="owner"
+							class="text-3xl font-bold tracking-tight text-white"
+						>
+							Land Holding Manager for {{ owner?.name }}
 						</h1>
 					</div>
 				</header>
@@ -20,15 +23,16 @@
 							<div class="sm:flex sm:items-center">
 								<div class="sm:flex-auto">
 									<h1 class="text-base font-semibold leading-6 text-gray-900">
-										(Owner Name's) Landholdings
+										{{ owner?.name }}'s Landholdings
 									</h1>
 									<!-- Error Message -->
 									<p v-if="errorMessage" class="error-message text-red-600">
 										{{ errorMessage }}
 									</p>
 									<p class="mt-2 text-sm text-gray-700">
-										A list of all the landholdings visible to (owner) including
-										their name, legal entity, net mineral acres, and more.
+										A list of all the landholdings visible to
+										{{ owner?.name }} including their name, legal entity, net
+										mineral acres, and more.
 									</p>
 								</div>
 								<!-- Open create land holding drawer -->
@@ -124,7 +128,7 @@
 											<!-- Populated Data -->
 											<tbody class="bg-white">
 												<tr
-													v-for="landholding in landholdings"
+													v-for="landholding in landHoldingStore.landholdings"
 													:key="landholding._id"
 													class="even:bg-gray-50"
 												>
@@ -209,6 +213,7 @@
 								:isVisible="isLandHoldingDrawerVisible"
 								:mode="isUpdateMode ? 'update' : 'create'"
 								:landholding="selectedLandHolding"
+								:owner="owner"
 								@close="closeDrawer"
 							/>
 						</div>
@@ -224,22 +229,33 @@
 <script setup>
 import { reactive, ref, computed, onMounted } from "vue";
 import { FontAwesomeIcon } from "../../assets/icons";
+import { useRoute } from "vue-router";
 import { useOwnerStore } from "../../stores/useOwnerStore";
 import { useLandHoldingStore } from "../../stores/useLandHoldingStore";
 import CreateUpdateLandHolding from "../drawers/CreateUpdateLandHolding.vue";
 
+const route = useRoute(); // Access the current route to get the owner._id
+
 // Initialize store
-const landHoldingStore = useLandHoldingStore();
 const ownerStore = useOwnerStore();
+const landHoldingStore = useLandHoldingStore();
+
+const ownerId = route.params.ownerId; // Get the owner's ID from the route
+
 // Computed properties
 // The function inside computed() returns the 'landholdings' array from the landHoldingStore 'landholding'
 // The result of computed() is assigned to another variable, 'landholdings', a reactive reference to the landholdings array
 // const landholdings = computed(() => landHoldingStore.landholdings); // Bind the store's land holdings to a local variable
-const landholdings = computed(() => {
-	return landHoldingStore.landholdings.filter(
-		(landholding) => landholding.owner === selectedOwner._id // Filter land holdings by owner
-	);
-});
+
+// Fetch the owner data based on the ownerId
+// const owner = await ownerStore.getOwnerById(ownerId);
+
+// Fetch land holdings based on the owner's ID
+const landholdings = computed(() =>
+	landHoldingStore.landholdings.filter(
+		(landholding) => landholding.owner === ownerId
+	)
+);
 
 // Reactive state for the land holding data
 const landHoldingData = reactive({
@@ -253,16 +269,32 @@ const landHoldingData = reactive({
 	range: "",
 	title_source: "",
 });
-
+const owner = ref(null); // Owner data
 const errorMessage = ref(""); // Error message to show any issues during creation
 const isLandHoldingDrawerVisible = ref(false);
 const isUpdateMode = ref(false);
-const selectedOwner = ref(null); // For tracking the owner whose land holdings are being viewed
 const selectedLandHolding = ref(null); // For tracking the land holding to delete
 
 // Fetch all land holdings on component mount
 onMounted(async () => {
-	await landHoldingStore.getLandHoldings();
+	try {
+		const ownerId = route.params.ownerId; // Get the ownerId from the route params
+
+		// Fetch the owner by ID
+		owner.value = await ownerStore.getOwnerById(ownerId);
+
+		if (!owner.value) {
+			throw new Error("Owner not found");
+		}
+	} catch (error) {
+		console.error("Error fetching owner: ", error);
+	}
+	try {
+		await landHoldingStore.getLandHoldings(ownerId);
+		console.log("Land Holdings: ", landHoldingStore.landholdings);
+	} catch (error) {
+		errorMessage.value = "Error fetching land holdings";
+	}
 });
 
 // // Function to close the drawer

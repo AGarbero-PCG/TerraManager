@@ -86,6 +86,28 @@ export const useOwnerStore = defineStore('owner', {
         throw new Error('Error fetching Owners:', + error.message);
       }
     },
+
+    async getOwnerById(ownerId) {
+      try {
+        // Get the current user and MongoDB client
+        const currentUser = app.currentUser;
+        if (!currentUser) {
+          throw new Error("User not authenticated");
+        }
+        const mongodb = currentUser.mongoClient("mongodb-atlas");
+        const ownersCollection = mongodb.db("phx_db").collection("owners");
+
+        // Fetch the owner by _id from the owners collection
+        const owner = await ownersCollection.findOne({ _id: new Realm.BSON.ObjectID(ownerId) });
+        console.log("Owner by ID: ", owner);
+
+        // Return the owner data
+        return owner;
+      } catch (error) {
+        console.error('Error fetching Owner by ID:', + error.message);
+        throw new Error('Error fetching Owner by ID:', + error.message);
+      }
+    },
     
     async updateOwner(payload) {
 

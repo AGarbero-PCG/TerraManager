@@ -133,9 +133,7 @@
 																:icon="['fas', 'house']"
 																style="color: #000000"
 																size="2x"
-																@click="
-																	openCreateUpdateLandHoldingDrawer(owner)
-																"
+																@click="goToLandHoldings(owner)"
 															/>
 														</div>
 													</td>
@@ -183,13 +181,13 @@
 								@close="isDeleteModalVisible = false"
 							/>
 							<!-- create land holding drawer component -->
-							<CreateLandHolding
+							<!-- <CreateLandHolding
 								:isVisible="isLandHoldingDrawerVisible"
 								:mode="isUpdateMode ? 'update' : 'create'"
 								:owner="selectedOwner"
 								:owners="owners"
 								@close="isLandHoldingDrawerVisible = false"
-							/>
+							/> -->
 						</div>
 						<!-------------------------------------- END Table of Owners -------------------------------------->
 					</div>
@@ -202,14 +200,15 @@
 
 <script setup>
 import { reactive, ref, computed, onMounted } from "vue";
+import { useRouter } from "vue-router";
 import { FontAwesomeIcon } from "../../assets/icons";
 import { useOwnerStore } from "../../stores/useOwnerStore";
 import CreateUpdateOwner from "../drawers/CreateUpdateOwner.vue";
 import DeleteOwner from "../modals/DeleteOwner.vue";
-import CreateLandHolding from "../drawers/CreateUpdateLandHolding.vue";
+// import CreateLandHolding from "../drawers/CreateUpdateLandHolding.vue";
 
-// Initialize store
-const ownerStore = useOwnerStore();
+const router = useRouter(); // Initialize router
+const ownerStore = useOwnerStore(); // Initialize store
 // Computed properties
 // The function inside computed() returns the 'owners' array from the ownerStore 'owner'
 // The result of computed() is assigned to another variable, 'owners', a reactive reference to the owners array
@@ -228,9 +227,14 @@ const ownerData = reactive({
 const errorMessage = ref(""); // Error message to show any issues during creation
 const isOwnerDrawerVisible = ref(false);
 const isDeleteModalVisible = ref(false);
-const isLandHoldingDrawerVisible = ref(false);
 const isUpdateMode = ref(false);
 const selectedOwner = ref(null); // For tracking the owner to delete
+
+// Method to go to the Land Holdings table
+const goToLandHoldings = (owner) => {
+	// Navigate to the Land Holding table with the selected owner's ID
+	router.push({ name: "landholdings", params: { ownerId: owner._id } });
+};
 
 // Fetch all owners on component mount
 onMounted(async () => {
@@ -270,12 +274,5 @@ function openDeleteModal(owner) {
 	isDeleteModalVisible.value = true;
 	// Assign the selected owner to the reactive reference
 	selectedOwner.value = owner;
-}
-
-// Function to open the Land Holding drawer
-function openCreateUpdateLandHoldingDrawer(owner) {
-	isUpdateMode.value = false;
-	selectedOwner.value = owner; // Assign the selected owner to the reactive reference
-	isLandHoldingDrawerVisible.value = true;
 }
 </script>

@@ -42,9 +42,6 @@ export const useLandHoldingStore = defineStore('landholding', {
                 const landHoldingsCollection = mongodb.db('phx_db').collection('landholdings');
 
 				console.log("payload.owner: ", payload.owner);
-				// Log the payload before insertion
-				console.log("Payload ID before insertion: ", payload._id);
-
 				// Insert the new land holding data into the landHoldingsCollection
                 const result = await landHoldingsCollection.insertOne(payload);
 				console.log("MongoDB insertOne response: ", result.insertedId.toString());
@@ -77,7 +74,7 @@ export const useLandHoldingStore = defineStore('landholding', {
 
 				console.log("landHoldingsCollection: ", landHoldingsCollection);
 				// Fetch all land holdings for the owner
-                const data = await landHoldingsCollection.find({ ownerId: ownerId });
+                const data = await landHoldingsCollection.find({ owner: new Realm.BSON.ObjectID(ownerId) });
 
 				// Assign the fetched data to the component state
                 this.landholdings = data;

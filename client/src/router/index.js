@@ -33,6 +33,13 @@ const router = createRouter({
 			component: () => import('../views/main/Dashboard.vue'),
 			meta: { requiresAuth: true } // Only allows authenticated users to enter dashboard route.
 		},
+		{
+			path: '/landholdings/:ownerId',
+			name: 'landholdings',
+			component: () => import('../components/tables/LandHoldingTable.vue'),
+			meta: { requiresAuth: true },
+			props: true,
+		}
 		// {
 		// 	path: '/owner-manager',
 		// 	name: 'owner-manager',

@@ -336,12 +336,12 @@ const props = defineProps({
 	mode: String, // 'create' or 'update'
 	owner: Object, // Owner object
 	owners: Array, // List of owners
+	landholding: Object, // Land holding object
 });
 
 // Reactive state for the land holding data
 const landHoldingData = reactive({
 	name: "",
-	owner: props.landholding?.owner || "",
 	legal_entity: props.landholding?.legal_entity || "",
 	net_mineral_acres: props.landholding?.net_mineral_acres || 0,
 	mineral_owner_royalty: props.landholding?.mineral_owner_royalty || 0,
@@ -365,15 +365,15 @@ watch(
 
 // Watch for changes in section, township, and range to auto-generate the section name and name
 watch(
-	[
-		() => landHoldingData.legal_entity,
-		() => landHoldingData.section,
-		() => landHoldingData.township,
-		() => landHoldingData.range,
+	() => [
+		landHoldingData.legal_entity,
+		landHoldingData.section,
+		landHoldingData.township,
+		landHoldingData.range,
 	],
-	([section, township, range]) => {
+	([legal_entity, section, township, range]) => {
 		landHoldingData.section_name = `${section}-${township}-${range}`;
-		landHoldingData.name = `${landHoldingData.section_name} (${landHoldingData.legal_entity})`;
+		landHoldingData.name = `${landHoldingData.section_name} (${legal_entity})`;
 	}
 );
 
@@ -399,24 +399,16 @@ async function handleSubmit() {
 
 // Function to handle Create Land Holding form submission
 async function handleCreateLandHolding() {
-	if (!landHoldingData.owner) {
-		console.error("No owner ID found for land holding creation");
-		throw new Error("No owner ID found for land holding creation");
-	}
-
 	try {
 		// Ensure land holding is associated with the ownerId
 		landHoldingData.owner = props.owner._id;
 
-		await landHoldingStore.createLandHolding(
-			landHoldingData,
-			landHoldingData.owner
-		);
+		await landHoldingStore.createLandHolding(landHoldingData);
 		console.log("Land Holding created successfully!: ", landHoldingData);
 		console.log("Land Holding data owner: ", landHoldingData.owner);
 
 		errorMessage.value = ""; // Reset error message
-
+		// await landHoldingStore.getLandHoldings(props.owner._id);
 		await landHoldingStore.getLandHoldings(props.owner._id); // Refresh the land holding list
 	} catch (error) {
 		console.error("Error creating land holding:" + error.message);
@@ -426,6 +418,9 @@ async function handleCreateLandHolding() {
 
 // Function to handle Update Land Holding form submission
 async function handleUpdateLandHolding() {
+	// Ensure land holding is associated with the ownerId
+	landHoldingData.owner = props.owner._id;
+
 	if (!landHoldingData._id) {
 		console.error("No land holding ID found for update");
 		errorMessage.value = "No land holding ID found for update";
@@ -436,7 +431,7 @@ async function handleUpdateLandHolding() {
 		// Call the updateLandHolding method from the store
 		await landHoldingStore.updateLandHolding(landHoldingData);
 		console.log("Land Holding updated successfully!");
-		await landHoldingStore.getLandHoldings(); // Refresh the land holding list
+		await landHoldingStore.getLandHoldings(landHoldingData.owner); // Refresh the land holding list
 	} catch (error) {
 		console.error("Error updating land holding:" + error.message);
 		errorMessage.value = "Failed to update land holding. Please try again.";
