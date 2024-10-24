@@ -145,19 +145,21 @@ export const useLandHoldingStore = defineStore('landholding', {
                 const landHoldingsCollection = mongodb.db('phx_db').collection('landholdings');
 		
 				// Attempt to delete the owner from the ownersCollection using the unique _id
-				const result = await landholdings.deleteOne({ _id: new Realm.BSON.ObjectID(payload._id) });
+				const result = await landHoldingsCollection.deleteOne({ _id: new Realm.BSON.ObjectID(payload._id) });
 			
 				// If the document was deleted
 				if (result.deletedCount > 0) {
-				  // Update the local state to remove the deleted owner
-				  this.owners = this.owners.filter(owner => owner?._id?.toString() !== payload._id.toString());
-				  console.log("Owner deleted successfully");
+				  // Update the local state to remove the deleted land holding
+				  this.landholdings = this.landholdings.filter(
+					landholding => landholding?._id?.toString() !== payload._id.toString()
+				  );
+				  console.log("Land Holding deleted successfully");
 				} else {
-				  console.log("Owner not found");
+				  console.log("Land Holding not found");
 				}
 			} catch (error) {
 				// Log any errors that occur during the deletion process
-				console.error('Error deleting Owner:', error);
+				console.error('Error deleting Land Holdinf:', error);
 			}
 		},
 	}

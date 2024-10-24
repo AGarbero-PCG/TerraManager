@@ -208,13 +208,20 @@
 									</div>
 								</div>
 							</div>
-							<!-- Drawer component -->
+							<!-- Create/Update land holding drawer component -->
 							<CreateUpdateLandHolding
 								:isVisible="isLandHoldingDrawerVisible"
 								:mode="isUpdateMode ? 'update' : 'create'"
 								:landholding="selectedLandHolding"
 								:owner="owner"
 								@close="closeDrawer"
+							/>
+							<!-- Delete land holding modal component -->
+							<DeleteLandHolding
+								:isVisible="isDeleteModalVisible"
+								:landholding="selectedLandHolding"
+								:owner="owner"
+								@close="isDeleteModalVisible = false"
 							/>
 						</div>
 						<!-------------------------------------- END Table of Land Holdings -------------------------------------->
@@ -233,6 +240,7 @@ import { useRoute } from "vue-router";
 import { useOwnerStore } from "../../stores/useOwnerStore";
 import { useLandHoldingStore } from "../../stores/useLandHoldingStore";
 import CreateUpdateLandHolding from "../drawers/CreateUpdateLandHolding.vue";
+import DeleteLandHolding from "../modals/DeleteLandHolding.vue";
 
 const route = useRoute(); // Access the current route to get the owner._id
 
@@ -241,21 +249,6 @@ const ownerStore = useOwnerStore();
 const landHoldingStore = useLandHoldingStore();
 
 const ownerId = route.params.ownerId; // Get the owner's ID from the route
-
-// Computed properties
-// The function inside computed() returns the 'landholdings' array from the landHoldingStore 'landholding'
-// The result of computed() is assigned to another variable, 'landholdings', a reactive reference to the landholdings array
-// const landholdings = computed(() => landHoldingStore.landholdings); // Bind the store's land holdings to a local variable
-
-// Fetch the owner data based on the ownerId
-// const owner = await ownerStore.getOwnerById(ownerId);
-
-// Fetch land holdings based on the owner's ID
-const landholdings = computed(() =>
-	landHoldingStore.landholdings.filter(
-		(landholding) => landholding.owner === ownerId
-	)
-);
 
 // Reactive state for the land holding data
 const landHoldingData = reactive({
@@ -272,6 +265,7 @@ const landHoldingData = reactive({
 const owner = ref(null); // Owner data
 const errorMessage = ref(""); // Error message to show any issues during creation
 const isLandHoldingDrawerVisible = ref(false);
+const isDeleteModalVisible = ref(false);
 const isUpdateMode = ref(false);
 const selectedLandHolding = ref(null); // For tracking the land holding to delete
 
@@ -321,10 +315,8 @@ function openUpdateDrawer(landholding) {
 
 // Select an land holding for deletion and open the delete modal
 function openDeleteModal(landholding) {
+	isDeleteModalVisible.value = true;
 	// Assign the selected LandHolding to the reactive reference
 	selectedLandHolding.value = landholding;
-
-	// Populate landHoldingData with the selected landolding's data
-	Object.assign(landHoldingData, landholding);
 }
 </script>

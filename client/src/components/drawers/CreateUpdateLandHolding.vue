@@ -319,18 +319,14 @@ import {
 } from "@headlessui/vue";
 import { XMarkIcon } from "@heroicons/vue/24/outline";
 import { reactive, ref, watch } from "vue";
-import { useOwnerStore } from "../../stores/useOwnerStore";
 import { useLandHoldingStore } from "../../stores/useLandHoldingStore";
 
-const isUpdateMode = ref(false);
 const errorMessage = ref("");
+
 // Initialize store
 const landHoldingStore = useLandHoldingStore();
 
-// // Local state to control drawer visibility
-// const isVisible = ref(false);
-
-// Props for mode and selected owner
+// Props for mode and selected land holding
 const props = defineProps({
 	isVisible: Boolean,
 	mode: String, // 'create' or 'update'

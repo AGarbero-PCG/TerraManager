@@ -167,27 +167,19 @@
 									</div>
 								</div>
 							</div>
-							<!-- create/update owner drawer component -->
+							<!-- Create/Update owner drawer component -->
 							<CreateUpdateOwner
 								:isVisible="isOwnerDrawerVisible"
 								:mode="isUpdateMode ? 'update' : 'create'"
 								:owner="selectedOwner"
 								@close="closeDrawer"
 							/>
-							<!-- delete owner modal component -->
+							<!-- Delete owner modal component -->
 							<DeleteOwner
 								:isVisible="isDeleteModalVisible"
 								:owner="selectedOwner"
 								@close="isDeleteModalVisible = false"
 							/>
-							<!-- create land holding drawer component -->
-							<!-- <CreateLandHolding
-								:isVisible="isLandHoldingDrawerVisible"
-								:mode="isUpdateMode ? 'update' : 'create'"
-								:owner="selectedOwner"
-								:owners="owners"
-								@close="isLandHoldingDrawerVisible = false"
-							/> -->
 						</div>
 						<!-------------------------------------- END Table of Owners -------------------------------------->
 					</div>
