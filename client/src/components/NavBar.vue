@@ -1,105 +1,166 @@
 <template>
-	<nav class="navbar navbar-expand-lg bg-body-tertiary">
-		<div class="container-fluid">
-			<router-link class="navbar-brand" :to="{ name: 'home' }"></router-link>
-			<button
-				class="navbar-toggler"
-				type="button"
-				data-bs-toggle="collapse"
-				data-bs-target="#appNavbar"
-				aria-controls="appNavbar"
-				aria-expanded="false"
-				aria-label="Toggle navigation"
-			>
-				<span class="navbar-toggler-icon"></span>
-			</button>
-			<div class="collapse navbar-collapse" id="appNavbar">
-				<ul class="navbar-nav me-auto mb-2 mb-lg-0">
-					<li class="nav-item">
-						<router-link
-							:to="{ name: 'home' }"
-							class="nav-link"
-							aria-current="page"
-							>Home</router-link
-						>
-					</li>
-				</ul>
-				<ul class="navbar-nav mx-2 mb-2 mb-lg-0">
-					<li v-if="isAuthenticated" class="nav-item dropdown">
-						<a
-							class="nav-link dropdown-toggle"
-							href="#"
-							role="button"
-							data-bs-toggle="dropdown"
-							aria-expanded="false"
-						>
-							{{ user.username }}
-						</a>
-						<ul class="dropdown-menu dropdown-menu-end">
-							<li>
-								<router-link
-									:to="{ name: 'owner-manager' }"
-									class="dropdown-item"
-									>Owner Manager</router-link
-								>
-							</li>
-							<li>
-								<router-link :to="{ name: 'user' }" class="dropdown-item"
-									>Profile</router-link
-								>
-							</li>
-							<li><hr class="dropdown-divider" /></li>
-							<li>
-								<button @click="logout" class="dropdown-item btn btn-danger">
-									Logout
-								</button>
-							</li>
-						</ul>
-					</li>
+	<header class="bg-gray-900">
+		<nav
+			class="flex items-center justify-between p-6 lg:px-8"
+			aria-label="Global"
+		>
+			<div class="flex lg:flex-1">
+				<a href="/" class="-m-1.5 p-1.5">
+					<span class="sr-only">Terra Manager</span>
+					<img
+						class="h-8 w-auto"
+						src="https://tailwindui.com/plus/img/logos/mark.svg?color=indigo&shade=500"
+						alt="Terra Manager Logo"
+					/>
+				</a>
+			</div>
+			<div class="flex lg:hidden">
+				<button
+					type="button"
+					class="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-400"
+					@click="mobileMenuOpen = true"
+				>
+					<span class="sr-only">Open main menu</span>
+					<Bars3Icon class="h-6 w-6" aria-hidden="true" />
+				</button>
+			</div>
+			<!-- Desktop Menu -->
+			<div class="hidden lg:flex lg:gap-x-12">
+				<a
+					v-for="item in filteredNavigation"
+					:key="item.name"
+					:href="item.href"
+					class="text-sm font-semibold leading-6 text-white"
+					>{{ item.name }}</a
+				>
+			</div>
+			<div class="hidden lg:flex lg:flex-1 lg:justify-end">
+				<router-link
+					v-if="!isAuthenticated"
+					to="/login"
+					class="text-sm font-semibold leading-6 text-white"
+					>Login <span aria-hidden="true">&rarr;</span></router-link
+				>
+				<router-link
+					v-if="!isAuthenticated"
+					to="/register"
+					class="ml-4 text-sm font-semibold leading-6 text-white"
+					>Register</router-link
+				>
+				<a
+					v-if="isAuthenticated"
+					href="#"
+					class="text-sm font-semibold leading-6 text-white"
+					@click.prevent="logout"
+					>Logout <span aria-hidden="true">&rarr;</span></a
+				>
+			</div>
+		</nav>
 
-					<template v-else>
-						<li class="nav-item">
-							<router-link to="/login" class="nav-link" aria-current="page"
+		<!-- Mobile Menu -->
+		<Dialog
+			@close="mobileMenuOpen = false"
+			:open="mobileMenuOpen"
+			class="lg:hidden"
+		>
+			<div class="fixed inset-0 z-50" />
+			<DialogPanel
+				class="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-gray-900 px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-white/10"
+			>
+				<div class="flex items-center justify-between">
+					<a href="/" class="-m-1.5 p-1.5">
+						<span class="sr-only">Terra Manager</span>
+						<img
+							class="h-8 w-auto"
+							src="https://tailwindui.com/plus/img/logos/mark.svg?color=indigo&shade=500"
+							alt="Terra Manager Logo"
+						/>
+					</a>
+					<button
+						type="button"
+						class="-m-2.5 rounded-md p-2.5 text-gray-400"
+						@click="mobileMenuOpen = false"
+					>
+						<span class="sr-only">Close menu</span>
+						<XMarkIcon class="h-6 w-6" aria-hidden="true" />
+					</button>
+				</div>
+				<div class="mt-6 flow-root">
+					<div class="-my-6 divide-y divide-gray-500/25">
+						<div class="space-y-2 py-6">
+							<a
+								v-for="item in filteredNavigation"
+								:key="item.name"
+								:href="item.href"
+								class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-white hover:bg-gray-800"
+								>{{ item.name }}</a
+							>
+						</div>
+						<div class="py-6">
+							<router-link
+								v-if="!isAuthenticated"
+								to="/login"
+								class="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-white hover:bg-gray-800"
 								>Login</router-link
 							>
-						</li>
-						<li class="nav-item">
-							<router-link to="/register" class="nav-link" aria-current="page"
+							<router-link
+								v-if="!isAuthenticated"
+								to="/register"
+								class="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-white hover:bg-gray-800"
 								>Register</router-link
 							>
-						</li>
-					</template>
-				</ul>
-			</div>
-		</div>
-	</nav>
+							<a
+								v-if="isAuthenticated"
+								href="#"
+								class="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-white hover:bg-gray-800"
+								@click.prevent="logout"
+								>Logout</a
+							>
+						</div>
+					</div>
+				</div>
+			</DialogPanel>
+		</Dialog>
+	</header>
 </template>
 
-<script setup lang="ts">
+<script setup>
+import { ref, computed } from "vue";
+import { useAuthStore } from "@/stores/useAuthStore";
+import { Dialog, DialogPanel } from "@headlessui/vue";
+import { Bars3Icon, XMarkIcon } from "@heroicons/vue/24/outline";
 import { useRouter } from "vue-router";
-import { useAuthStore } from "../stores/auth";
-import { computed } from "vue";
 
+// Navigation items for both authenticated and unauthenticated users
+const navigationUnauthenticated = [{ name: "Home", href: "/" }];
+
+const navigationAuthenticated = [
+	{ name: "Home", href: "/" },
+	{ name: "Owner Manager", href: "/dashboard" },
+];
+
+// Reactive state for mobile menu
+const mobileMenuOpen = ref(false);
+
+// Access authentication store
 const authStore = useAuthStore();
 
+// Access router for redirection
 const router = useRouter();
 
-const user = computed(() => {
-	return authStore.user;
+// Computed property for authentication status
+const isAuthenticated = computed(() => authStore.isAuthenticated);
+
+// Filtered navigation based on auth status
+const filteredNavigation = computed(() => {
+	return isAuthenticated.value
+		? navigationAuthenticated
+		: navigationUnauthenticated;
 });
 
-const isAuthenticated = computed(() => {
-	return authStore.isAuthenticated;
-});
-
-async function logout() {
-	await authStore
-		.logout()
-		.then((res) => {
-			router.replace({ name: "welcome" });
-		})
-		.catch((err) => {
-			console.log(err.message);
-		});
-}
+// Logout function with redirection
+const logout = async () => {
+	await authStore.logout();
+	router.push("/login"); // Redirect to login page after logout
+};
 </script>

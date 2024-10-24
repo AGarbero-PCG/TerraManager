@@ -1,7 +1,7 @@
 // client/src/stores/useOwnerStore.js
 import { defineStore } from 'pinia';
 import * as Realm from "realm-web";
-import { useAuthStore } from './auth';
+import { useAuthStore } from '@/stores/useAuthStore';
 
 
 const app = new Realm.App({ id: import.meta.env.VITE_REALM_APP_ID });

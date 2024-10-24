@@ -1,17 +1,18 @@
+<!-- client/src/App.vue -->
 <template>
-	<div id="app">
-		<!-- <NavBar /> -->
+	<div id="app" class="min-h-screen h-full bg-gray-900">
+		<NavBar />
 		<RouterView />
 	</div>
 </template>
 
 <script setup lang="js">
-// import { RouterView } from 'vue-router'
+import { RouterView } from 'vue-router'
 import { useRouter } from 'vue-router';
 import { onMounted } from 'vue';
-// import NavBar from './components/NavBar.vue';
+import NavBar from './components/NavBar.vue';
 
-import { useAuthStore } from './stores/auth';
+import { useAuthStore } from './stores/useAuthStore';
 
 const router = useRouter();
 onMounted(async () => {

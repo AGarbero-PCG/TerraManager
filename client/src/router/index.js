@@ -1,4 +1,4 @@
-import { useAuthStore } from '@/stores/auth'
+import { useAuthStore } from '@/stores/useAuthStore'
 import { createRouter, createWebHistory } from 'vue-router'
 
 const router = createRouter({
@@ -6,8 +6,9 @@ const router = createRouter({
 	routes: [
 		{
 			path: '/',
-			name: 'welcome',
-			component: () => import('../views/Welcome.vue')
+			name: 'home',
+			component: () => import('../views/Home.vue'),
+			meta: { requiresAuth: false } // Only allows guest users to enter login route.
 		},
 		{
 			path: '/login',
@@ -22,12 +23,6 @@ const router = createRouter({
 			meta: { requiresGuest: true }  // Only allows guest users to enter register route.
 		},
 		{
-			path: '/user',
-			name: 'user',
-			component: () => import('../views/auth/UserView.vue'),
-			meta: { requiresAuth: true } // Only allows authenticated users to enter user route.
-		},
-		{
 			path: '/dashboard',
 			name: 'dashboard',
 			component: () => import('../views/main/Dashboard.vue'),
@@ -40,19 +35,6 @@ const router = createRouter({
 			meta: { requiresAuth: true },
 			props: true,
 		}
-		// {
-		// 	path: '/owner-manager',
-		// 	name: 'owner-manager',
-		// 	component: () => import('../views/main/OwnerManager.vue'),
-		// 	meta: { requiresAuth: true } // Only allows authenticated users to enter owner-manager route.
-		// },
-		// {
-		// 	path: '/landholding-manager',
-		// 	name: 'landholding-manager',
-		// 	component: () => import('../views/main/Dashboard.vue'),
-		// 	props: true,
-		// 	meta: { requiresAuth: true } // Only allows authenticated users to enter landholding-manager route.
-		// }
 	]
 })
 

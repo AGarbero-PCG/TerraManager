@@ -3,7 +3,6 @@ import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import App from './App.vue'
 import router from './router/index.js'
-import authentication from './plugins/authentication.js'
 
 import './input.css'
 // import 'bootstrap';
@@ -18,9 +17,6 @@ console.log('Vue application instance created:', app);
 console.log('Registering Pinia store...');
 // const pinia = createPinia();
 // app.use(pinia);
-
-app.use(authentication);
-console.log('Authentication plugin applied.');
 
 app.use(createPinia())
 console.log('Pinia store applied.');
